@@ -332,23 +332,23 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `auth_key` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `status` smallint(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `link` varchar(450) COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` int(11) NOT NULL,
-  `user_level_id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `user_level_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `username` (`username`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`),
-  KEY `fk_user_user_level1_idx` (`user_level_id`),
-  CONSTRAINT `fk_user_user_level1` FOREIGN KEY (`user_level_id`) REFERENCES `user_level` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `fk_user_user_level1_idx` (`user_level_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,7 +357,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','Uek95ngbqlOBh-jaQ0Gv3SQ9FD4CGFC3','$2y$13$dOgQuJVwIEy7JLEEb.RhhOf2eHwMkzVEgf7vpdS1t0DbuwkI/Zcea',NULL,'admin@admin.com',10,1513230560,NULL,1513230560,0);
+INSERT INTO `user` VALUES (1,'admin','Uek95ngbqlOBh-jaQ0Gv3SQ9FD4CGFC3','$2y$13$dOgQuJVwIEy7JLEEb.RhhOf2eHwMkzVEgf7vpdS1t0DbuwkI/Zcea',NULL,'admin@admin.com',10,1513230560,NULL,1513230560,NULL,0),(2,NULL,NULL,NULL,NULL,NULL,10,1513678022,NULL,1513678022,NULL,NULL),(3,NULL,'Bnr9mbgWr7nBdN9BtRtdJRxNykqXq8jL',NULL,NULL,NULL,10,1513678350,NULL,1513678350,NULL,NULL),(4,NULL,NULL,NULL,NULL,NULL,10,1513678683,NULL,1513678683,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -370,15 +370,15 @@ DROP TABLE IF EXISTS `user_product_level`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_product_level` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_level_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `units` int(11) DEFAULT NULL,
   `price` double DEFAULT NULL,
+  `user_level_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_user_product_level_user_level1_idx` (`user_level_id`),
   KEY `fk_user_product_level_product1_idx` (`product_id`),
+  KEY `fk_user_product_level_user_level1_idx` (`user_level_id`),
   CONSTRAINT `fk_user_product_level_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_product_level_user_level1` FOREIGN KEY (`user_level_id`) REFERENCES `user_level` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_user_product_level_user_level1` FOREIGN KEY (`user_level_id`) REFERENCES `users_level` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -390,6 +390,32 @@ LOCK TABLES `user_product_level` WRITE;
 /*!40000 ALTER TABLE `user_product_level` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user_product_level` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `users_level`
+--
+
+DROP TABLE IF EXISTS `users_level`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users_level` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(450) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `max_user` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_level`
+--
+
+LOCK TABLES `users_level` WRITE;
+/*!40000 ALTER TABLE `users_level` DISABLE KEYS */;
+INSERT INTO `users_level` VALUES (1,'MR',NULL,20);
+/*!40000 ALTER TABLE `users_level` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -400,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-18 19:00:31
+-- Dump completed on 2017-12-20 16:15:16
