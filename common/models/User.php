@@ -44,6 +44,10 @@ class User extends ActiveRecord implements IdentityInterface
             TimestampBehavior::className(),
         ];
     }
+        public function getPassword()
+    {
+        return '';
+    }
 
     /**
      * @inheritdoc
