@@ -8,23 +8,36 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * User model
- *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
- */
+* User model
+* This is the model class for table "user".
+*
+* @property integer $id
+* @property string $username
+* @property string $auth_key 
+* @property string $password_hash
+* @property string $password_reset_token
+* @property string $email
+* @property string $auth_key 
+* @property integer $status
+* @property integer $created_at
+* @property string $link 
+* @property integer $updated_at
+* @property string $password write-only password
+* @property integer $parent_id
+* @property integer $user_level_id
+* @property string $phone_no
+* @property string $address
+* @property integer $city
+* @property integer $country
+*
+* @property Order[] $orders
+* @property StockIn[] $stockIns
+*/
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $password;
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE = 1;
 
 
     /**
@@ -55,8 +68,19 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'password','email'], 'string', 'max' => 255],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            //['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country'], 'safe'],
+            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 32],
+            [['link'], 'string', 'max' => 450],
+            [['phone_no'], 'string', 'max' => 45],
+            [['address'], 'string', 'max' => 5000],
+            [['email'], 'unique'],
+            [['username'], 'unique'],
+            [['password_reset_token'], 'unique'],
         ];
     }
 
@@ -154,6 +178,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
+        
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
@@ -189,5 +214,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+    public function getOrders()
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return $this->hasMany(Order::className(), ['user_id' => 'id']);
+    }
+    public function getStockIns()
+    {
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 }

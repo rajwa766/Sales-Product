@@ -31,8 +31,11 @@ AppAsset::register($this);
             <?php $this->endContent(); ?>
 
     <div class="page-container row-fluid">
+    <?php  if (!Yii::$app->user->isGuest) {?>
    <?php $this->beginContent('@app/views/layouts/sidebar.php'); ?>
-            <?php $this->endContent(); ?>
+            <?php $this->endContent(); 
+    }
+            ?>
             <section id="main-content">
                  <section class="wrapper main-wrapper" style=''>
         <?= $content ?>

@@ -2,40 +2,88 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model common\models\User */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <div class="row">
+    <div class="col-md-6">
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+    
+    </div>
+    <div class="col-md-6">
+    <?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
+    
+    </div>
+</div>    
 
-    <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password_hash')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'password_reset_token')->textInput(['maxlength' => true]) ?>
-
+  
+    <div class="row">
+    <div class="col-md-6">
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+    
+    </div>
+    <div class="col-md-6">
+    <?php
+        if ($model->isNewRecord) {
+            $model->status = '1';
+        }
+        ?>
+<?= $form->field($model, 'status')->checkbox() ?>
+    
+    </div>
+</div>   
+    
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <div class="row">
+    <div class="col-md-6">
+    <label>Use Level</label>
+                <?php
+                echo Select2::widget([
+                    'model' => $model,
+                    'attribute' => 'user_level_id',
+                    'data' => common\models\UsersLevel::getlevel(),
+                    'id' => 'account-type',
+                    'options' => ['placeholder' => 'Select Customer Name ...'],
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ]);
+                ?>
+    </div>
+    <div class="col-md-6">
+    <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true]) ?>
+    </div>
+</div>   
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
 
-    <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'parent_id')->textInput() ?>
-
-    <?= $form->field($model, 'user_level_id')->textInput() ?>
+    <div class="row">
+    <div class="col-md-6">
+    <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
+    
+    </div>
+    <div class="col-md-6">
+    <?= $form->field($model, 'city')->textInput() ?>
+    
+    </div>
+</div>   
+<div class="row">
+    <div class="col-md-6">
+    <?= $form->field($model, 'country')->textInput() ?>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>  
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

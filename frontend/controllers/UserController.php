@@ -3,8 +3,8 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\User;
-use app\models\SearchUser;
+use common\models\User;
+use common\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,7 +17,6 @@ class UserController extends Controller
     /**
      * @inheritdoc
      */
-    public $layout='main';
     public function behaviors()
     {
         return [
@@ -36,7 +35,7 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new SearchUser();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -66,8 +65,19 @@ class UserController extends Controller
     {
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $current_level_id =  \common\models\UsersLevel::findOne($model->user_level_id);
+            $model->parent_id = Yii::$app->user->identity->id;  
+            $total_user_current_level = User::find()->where(['=','parent_id',$model->parent_id])->count();
+            $model->setPassword($model->password);
+            $model->generateAuthKey();
+            $model->getpassword();
+            if($total_user_current_level>$current_level_id->max_user){
+                return $this->redirect(['more_user', 'id' => $model->id]);  
+            }else{
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,

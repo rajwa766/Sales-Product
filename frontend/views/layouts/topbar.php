@@ -11,6 +11,7 @@
                                 <i class="fa fa-bars"></i>
                             </a>
                         </li>
+                        <?php  if (!Yii::$app->user->isGuest) {?>
                         <li class="message-toggle-wrapper">
                             <a href="#" data-toggle="dropdown" class="toggle">
                                 <i class="fa fa-envelope"></i>
@@ -299,14 +300,21 @@
                                 </form>
                             </div>
                         </li>
+                        <?php } ?>
                     </ul>
                 </div>      
                 <div class='pull-right'>
                     <ul class="info-menu right-links list-inline list-unstyled">
+                    <?php  if (Yii::$app->user->isGuest) {?>
+                       
+                      <li><a data-method="POST" href="<?= Yii::$app->request->baseUrl;?>/site/login">Login</a></li>
+                      <?php }else{?>
+                       
+               
                         <li class="profile">
                             <a href="#" data-toggle="dropdown" class="toggle">
                                 <img src="data/profile/profile.png" alt="user-image" class="img-circle img-inline">
-                                <span>Jason Bourne <i class="fa fa-angle-down"></i></span>
+                                <span><?php echo Yii::$app->user->identity->username ?> <i class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu profile animated fadeIn">
                                 <li>
@@ -328,13 +336,14 @@
                                     </a>
                                 </li>
                                 <li class="last">
-                                    <a href="ui-login.html">
+                                    <a data-method="post" href="<?= Yii::$app->request->baseUrl;?>/site/logout">
                                         <i class="fa fa-lock"></i>
                                         Logout
                                     </a>
                                 </li>
                             </ul>
                         </li>
+                      <?php } ?>
                         <li class="chat-toggle-wrapper">
                             <a href="#" data-toggle="chatbar" class="toggle_chat">
                                 <i class="fa fa-comments"></i>
