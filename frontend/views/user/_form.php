@@ -12,11 +12,11 @@ use kartik\select2\Select2;
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+    <div class="col-md-3">
+    <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord]) ?>
     
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
     <?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
     
     </div>
@@ -25,24 +25,33 @@ use kartik\select2\Select2;
 
   
     <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-3">
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
     
     </div>
-    <div class="col-md-6">
-    <?php
-        if ($model->isNewRecord) {
-            $model->status = '1';
-        }
-        ?>
-<?= $form->field($model, 'status')->checkbox() ?>
-    
+    <div class="col-md-3">
+    <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true]) ?>
     </div>
 </div>   
     
+     <div class="row">
+    <div class="col-md-3">
+    <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
+    
+    </div>
+    <div class="col-md-3">
+    <?= $form->field($model, 'city')->textInput() ?>
+    
+    </div>
+</div> 
 
     <div class="row">
-    <div class="col-md-6">
+        <div class="col-md-3">
+    <?= $form->field($model, 'country')->textInput() ?>
+    </div>
+         <?php if($model->isNewRecord){?>
+    <div class="col-md-3">
+       
     <label>Use Level</label>
                 <?php
                 echo Select2::widget([
@@ -56,29 +65,23 @@ use kartik\select2\Select2;
                         'allowClear' => true,
                     ],
                 ]);
-                ?>
+              ?>
     </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true]) ?>
-    </div>
-</div>   
-
-
-    <div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'address')->textInput(['maxlength' => true]) ?>
+    <?php  } ?>
     
-    </div>
-    <div class="col-md-6">
-    <?= $form->field($model, 'city')->textInput() ?>
-    
-    </div>
 </div>   
+  
 <div class="row">
-    <div class="col-md-6">
-    <?= $form->field($model, 'country')->textInput() ?>
+    <div class="col-md-3">
+    <?php
+        if ($model->isNewRecord) {
+            $model->status = '1';
+        }
+        ?>
+<?= $form->field($model, 'status')->checkbox() ?>
+    
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
     </div>
 </div>  
 

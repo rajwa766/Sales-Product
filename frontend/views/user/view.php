@@ -17,9 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
    
 
     <div class="row lg-padding">
-        <div class="col-lg-3 ">
+        <div class="col-lg-4 ">
             <div class="profile">
-                <img src="http://localhost:8080/sales-management-system/frontend/web/images/placeholder-profile.png" class="img-circle img-inline add-border" height="250"><br/>
+                <center><img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" class="img-circle img-inline add-border" height="200"></center><br/>
 
                 <div class="username"><strong>@ <?php echo $model->username; ?></strong><br/>
                     Member Since  <?php echo $model->created_at; ?>

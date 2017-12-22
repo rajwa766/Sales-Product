@@ -44,6 +44,7 @@ class UserController extends Controller
         ]);
     }
 
+
     /**
      * Displays a single User model.
      * @param integer $id
@@ -103,6 +104,8 @@ class UserController extends Controller
             ]);
         }
     }
+
+   
 
     /**
      * Deletes an existing User model.

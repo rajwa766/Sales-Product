@@ -224,4 +224,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
+
+    public function getProfile()
+    {
+     $user = User::find()
+    ->where(['id' => Yii::app()->user->id])
+    ->one();
+    }
 }

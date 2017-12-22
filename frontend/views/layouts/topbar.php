@@ -25,7 +25,7 @@
                                         <li class="unread status-available">
                                             <a href="javascript:;">
                                                 <div class="user-img">
-                                                    <img src="data/profile/avatar-1.png" alt="user-image" class="img-circle img-inline">
+                                                    <img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" alt="user-image" class="img-circle img-inline">
                                                 </div>
                                                 <div>
                                                     <span class="name">
@@ -110,7 +110,7 @@
                                         <li class=" status-available">
                                             <a href="javascript:;">
                                                 <div class="user-img">
-                                                    <img src="data/profile/avatar-1.png" alt="user-image" class="img-circle img-inline">
+                                                    <img src="<?= Yii::$app->homeUrl; ?>images/profile.png" alt="user-image" class="img-circle img-inline">
                                                 </div>
                                                 <div>
                                                     <span class="name">
@@ -313,7 +313,7 @@
                
                         <li class="profile">
                             <a href="#" data-toggle="dropdown" class="toggle">
-                                <img src="data/profile/profile.png" alt="user-image" class="img-circle img-inline">
+                                <img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" alt="user-image" class="img-circle img-inline">
                                 <span><?php echo Yii::$app->user->identity->username ?> <i class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu profile animated fadeIn">
@@ -324,7 +324,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#profile">
+                                    <a href="<?= Yii::$app->homeUrl;?>user/view/<?= Yii::$app->user->identity->id?>">
                                         <i class="fa fa-user"></i>
                                         Profile
                                     </a>
