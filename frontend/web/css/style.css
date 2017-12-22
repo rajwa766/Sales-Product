@@ -96,6 +96,38 @@ Mobile Menu Settings - Since 3.1
   General Layout Style
 ------------------------------------------*/
 
+/* code by waqar */
+.user-avator{
+
+    border:1px dotted grey;
+    border-radius:50px;
+}
+.other-details{
+    padding: 50px;
+}
+.add-border{
+    border: 5px double #e1e1e1;
+}
+.user-avator{
+
+    border:1px solid grey;
+    border-radius:50px;
+}
+.user-avator img{
+    height:300px;
+    width:300px;
+}
+.lg-padding{
+    padding:100px;
+}
+.username{
+    padding-top: 5px;
+    text-align: center;
+}
+.profile-details li{
+list-style-type: none;
+font-size: 16px;
+}
 html {
     font-size: 100%;
     height: 100%;
