@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-index">
+<div class="user-index table-responsive">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -26,7 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'username',
-            // 'auth_key',
+             'first_name',
+             'last_name',
             // 'password_hash',
             // 'password_reset_token',
             'email:email',

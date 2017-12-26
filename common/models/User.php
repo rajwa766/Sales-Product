@@ -36,6 +36,8 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     public $password;
+    public $all_level;
+    public $parent_user;
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
 
@@ -68,11 +70,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password','email'], 'string', 'max' => 255],
+            [['username', 'password','email','first_name','last_name'], 'string', 'max' => 255],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             //['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country','all_level','parent_user'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['link'], 'string', 'max' => 450],

@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-lg-7">
             <div class="other-details">
-            <h3><strong>Other Profile Info</strong></h3>
+            <h3><strong><?php echo $model->first_name .'&nbsp;'. $model->last_name; ?></strong></h3>
             <ul class="profile-details">
                 <li><i class="fa fa-envelope"></i>&nbsp <?php echo $model->email; ?></li>
                 <li><i class="fa fa-phone"></i>&nbsp <?php echo $model->phone_no; ?></li>
@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <li><i class="fa fa-home"></i>&nbsp <?php echo $model->city; ?></li>
                 <li><i class="fa fa-flag-o"></i>&nbsp <?php echo $model->country; ?></li>
                 <li><i class="fa fa-map-marker"></i>&nbsp <?php echo $model->address; ?></li>
+                <li><?= Yii::$app->homeUrl; ?>/order/create?id=<?= $model->id ?></li>
             </ul>
         </div>
     </div>

@@ -55,6 +55,11 @@ class UsersLevel extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserProductLevel::className(), ['user_level_id' => 'id']);
     }
+    public static function getalllevel(){
+         $data= UsersLevel::find()->where(['!=', 'max_user', '-1'])->all();
+         $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
+      return $value;
+   }
     public static function getlevel(){
        $parent_id =  Yii::$app->user->identity->user_level_id;
         $data= UsersLevel::find()->where(['=','parent_id',$parent_id])->all();

@@ -41,8 +41,15 @@ class UserSearch extends User
      */
     public function search($params)
     {
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        if(isset($Role['super_admin'])){ 
+            $query = User::find();
+        }else{
+          
         $query = User::find()
                ->where(['parent_id' => Yii::$app->user->identity->id]);
+        }
 
         // add conditions that should always apply here
 

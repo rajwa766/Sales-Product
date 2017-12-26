@@ -1,7 +1,7 @@
 <!-- START TOPBAR -->
         <div class='page-topbar '>
             <div class='logo-area'>
-
+<span class="title_sles">E-Franchise Innovative Co, Ltd<span>
             </div>
             <div class='quick-area'>
                 <div class='pull-left'>
@@ -12,7 +12,7 @@
                             </a>
                         </li>
                         <?php  if (!Yii::$app->user->isGuest) {?>
-                        <li class="message-toggle-wrapper">
+                        <!-- <li class="message-toggle-wrapper">
                             <a href="#" data-toggle="dropdown" class="toggle">
                                 <i class="fa fa-envelope"></i>
                                 <span class="badge badge-primary">7</span>
@@ -170,12 +170,12 @@
                                 </li>
                             </ul>
 
-                        </li>
+                        </li> -->
                         <li class="notify-toggle-wrapper">
-                            <a href="#" data-toggle="dropdown" class="toggle">
+                            <!-- <a href="#" data-toggle="dropdown" class="toggle">
                                 <i class="fa fa-bell"></i>
                                 <span class="badge badge-orange">3</span>
-                            </a>
+                            </a> -->
                             <ul class="dropdown-menu notifications animated fadeIn">
                                 <li class="total">
                                     <span class="small">
@@ -291,13 +291,13 @@
                         </li>
                         <li class="hidden-sm hidden-xs searchform">
                             <div class="input-group">
-                                <span class="input-group-addon input-focus">
+                                <!-- <span class="input-group-addon input-focus">
                                     <i class="fa fa-search"></i>
                                 </span>
                                 <form action="search-page.html" method="post">
                                     <input type="text" class="form-control animated fadeIn" placeholder="Search & Enter">
                                     <input type='submit' value="">
-                                </form>
+                                </form> -->
                             </div>
                         </li>
                         <?php } ?>
@@ -343,14 +343,15 @@
                                 </li>
                             </ul>
                         </li>
-                      <?php } ?>
-                        <li class="chat-toggle-wrapper">
+                                  <!-- <li class="chat-toggle-wrapper">
                             <a href="#" data-toggle="chatbar" class="toggle_chat">
                                 <i class="fa fa-comments"></i>
                                 <span class="badge badge-warning">9</span>
                                 <i class="fa fa-times"></i>
                             </a>
-                        </li>
+                        </li> -->
+                      <?php } ?>
+              
                     </ul>           
                 </div>      
             </div>

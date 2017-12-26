@@ -2,22 +2,24 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\SearchOrder */
+/* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Orders';
+$this->title = Yii::t('app', 'Orders');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Order', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Order'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -29,15 +31,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'shipper',
             'cod',
             'additional_requirements',
-            // 'file',
-            // 'user_id',
-            // 'status',
-            // 'order_request_id',
-            // 'entity_id',
-            // 'entity_type',
-            // 'requested_date',
+            //'file',
+            //'user_id',
+            //'status',
+            //'order_request_id',
+            //'entity_id',
+            //'entity_type',
+            //'requested_date',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php Pjax::end(); ?>
 </div>

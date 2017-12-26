@@ -37,7 +37,37 @@ AppAsset::register($this);
     }
             ?>
             <section id="main-content">
-                 <section class="wrapper main-wrapper"  style="margin-bottom: 50px;">
+                 <section class="wrapper main-wrapper" style=''>
+                 <?php
+    //$user_id = Yii::$app->user->getId();
+   // $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+  //  if(isset($Role['super_admin'])){?>
+     <div class="col-md-12">
+        <div id="manager-menu" class="list-group">
+        <?php
+$controller = $this->context;
+$menus = $controller->module->menus;
+$route = $controller->route;
+foreach ($menus as $i => $menu) {
+    $menus[$i]['active'] = strpos($route, trim($menu['url'][0], '/')) === 0;
+}
+$this->params['nav-items'] = $menus;
+?>
+            <?php
+
+            foreach ($menus as $menu) {
+                $label = Html::tag('i', '', ['class' => 'glyphicon glyphicon-chevron-right pull-right']) .
+                    Html::tag('span', Html::encode($menu['label']), []);
+                $active = $menu['active'] ? ' active' : '';
+                echo Html::a($label, $menu['url'], [
+                    'class' => 'list-group-item' . $active,
+                ]);
+            }
+            ?>
+        </div>
+    </div>
+        <?php // } ?>
+
         <?= $content ?>
  </section>
             </section>
