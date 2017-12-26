@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: sales_system
+-- Host: localhost    Database: sales
 -- ------------------------------------------------------
 -- Server version	5.7.14
 
@@ -41,6 +41,116 @@ CREATE TABLE `account` (
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_assignment`
+--
+
+DROP TABLE IF EXISTS `auth_assignment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_assignment` (
+  `item_name` varchar(64) NOT NULL,
+  `user_id` varchar(64) NOT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`item_name`,`user_id`),
+  CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_assignment`
+--
+
+LOCK TABLES `auth_assignment` WRITE;
+/*!40000 ALTER TABLE `auth_assignment` DISABLE KEYS */;
+INSERT INTO `auth_assignment` VALUES ('general','11',1514022715),('general','12',1514027235),('general','6',1514027334),('seller','13',1514028687),('super_admin','1',1514021944);
+/*!40000 ALTER TABLE `auth_assignment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_item`
+--
+
+DROP TABLE IF EXISTS `auth_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_item` (
+  `name` varchar(64) NOT NULL,
+  `type` int(11) NOT NULL,
+  `description` text,
+  `rule_name` varchar(64) DEFAULT NULL,
+  `data` text,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`),
+  KEY `rule_name` (`rule_name`),
+  KEY `type` (`type`),
+  CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_item`
+--
+
+LOCK TABLES `auth_item` WRITE;
+/*!40000 ALTER TABLE `auth_item` DISABLE KEYS */;
+INSERT INTO `auth_item` VALUES ('/*',2,NULL,NULL,NULL,1514022420,1514022420),('/admin/*',2,NULL,NULL,NULL,1514021828,1514021828),('/admin/assignment/*',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/assignment/assign',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/assignment/index',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/assignment/revoke',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/assignment/view',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/default/*',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/default/index',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/menu/*',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/menu/create',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/menu/delete',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/menu/index',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/menu/update',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/menu/view',2,NULL,NULL,NULL,1514021824,1514021824),('/admin/permission/*',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/assign',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/create',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/delete',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/index',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/remove',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/update',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/permission/view',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/*',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/role/assign',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/create',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/delete',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/index',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/remove',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/update',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/role/view',2,NULL,NULL,NULL,1514021825,1514021825),('/admin/route/*',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/route/assign',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/route/create',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/route/index',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/route/refresh',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/route/remove',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/*',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/create',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/delete',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/index',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/update',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/rule/view',2,NULL,NULL,NULL,1514021826,1514021826),('/admin/user/*',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/activate',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/change-password',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/delete',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/index',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/login',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/logout',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/request-password-reset',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/reset-password',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/signup',2,NULL,NULL,NULL,1514021827,1514021827),('/admin/user/view',2,NULL,NULL,NULL,1514021827,1514021827),('/debug/*',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/*',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/db-explain',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/download-mail',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/index',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/toolbar',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/default/view',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/user/*',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/user/reset-identity',2,NULL,NULL,NULL,1514022418,1514022418),('/debug/user/set-identity',2,NULL,NULL,NULL,1514022418,1514022418),('/gii/*',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/*',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/action',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/diff',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/index',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/preview',2,NULL,NULL,NULL,1514022419,1514022419),('/gii/default/view',2,NULL,NULL,NULL,1514022419,1514022419),('/site/*',2,NULL,NULL,NULL,1514022419,1514022419),('/site/about',2,NULL,NULL,NULL,1514022419,1514022419),('/site/captcha',2,NULL,NULL,NULL,1514022419,1514022419),('/site/contact',2,NULL,NULL,NULL,1514022419,1514022419),('/site/error',2,NULL,NULL,NULL,1514022419,1514022419),('/site/index',2,NULL,NULL,NULL,1514022419,1514022419),('/site/login',2,NULL,NULL,NULL,1514022419,1514022419),('/site/logout',2,NULL,NULL,NULL,1514022419,1514022419),('/site/request-password-reset',2,NULL,NULL,NULL,1514022419,1514022419),('/site/reset-password',2,NULL,NULL,NULL,1514022419,1514022419),('/site/signup',2,NULL,NULL,NULL,1514022419,1514022419),('/user/*',2,NULL,NULL,NULL,1514022420,1514022420),('/user/alllevel',2,NULL,NULL,NULL,1514025121,1514025121),('/user/create',2,NULL,NULL,NULL,1514022420,1514022420),('/user/delete',2,NULL,NULL,NULL,1514022420,1514022420),('/user/index',2,NULL,NULL,NULL,1514022420,1514022420),('/user/update',2,NULL,NULL,NULL,1514022420,1514022420),('/user/view',2,NULL,NULL,NULL,1514022420,1514022420),('general',1,NULL,NULL,NULL,1514021798,1514021798),('seller',1,NULL,NULL,NULL,1514028055,1514028055),('super_admin',1,NULL,NULL,NULL,1514021782,1514021782);
+/*!40000 ALTER TABLE `auth_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_item_child`
+--
+
+DROP TABLE IF EXISTS `auth_item_child`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_item_child` (
+  `parent` varchar(64) NOT NULL,
+  `child` varchar(64) NOT NULL,
+  PRIMARY KEY (`parent`,`child`),
+  KEY `child` (`child`),
+  CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_item_child`
+--
+
+LOCK TABLES `auth_item_child` WRITE;
+/*!40000 ALTER TABLE `auth_item_child` DISABLE KEYS */;
+INSERT INTO `auth_item_child` VALUES ('super_admin','/*'),('super_admin','/admin/*'),('super_admin','/admin/assignment/*'),('super_admin','/admin/assignment/assign'),('super_admin','/admin/assignment/index'),('super_admin','/admin/assignment/revoke'),('super_admin','/admin/assignment/view'),('super_admin','/admin/default/*'),('super_admin','/admin/default/index'),('super_admin','/admin/menu/*'),('super_admin','/admin/menu/create'),('super_admin','/admin/menu/delete'),('super_admin','/admin/menu/index'),('super_admin','/admin/menu/update'),('super_admin','/admin/menu/view'),('super_admin','/admin/permission/*'),('super_admin','/admin/permission/assign'),('super_admin','/admin/permission/create'),('super_admin','/admin/permission/delete'),('super_admin','/admin/permission/index'),('super_admin','/admin/permission/remove'),('super_admin','/admin/permission/update'),('super_admin','/admin/permission/view'),('super_admin','/admin/role/*'),('super_admin','/admin/role/assign'),('super_admin','/admin/role/create'),('super_admin','/admin/role/delete'),('super_admin','/admin/role/index'),('super_admin','/admin/role/remove'),('super_admin','/admin/role/update'),('super_admin','/admin/role/view'),('super_admin','/admin/route/*'),('super_admin','/admin/route/assign'),('super_admin','/admin/route/create'),('super_admin','/admin/route/index'),('super_admin','/admin/route/refresh'),('super_admin','/admin/route/remove'),('super_admin','/admin/rule/*'),('super_admin','/admin/rule/create'),('super_admin','/admin/rule/delete'),('super_admin','/admin/rule/index'),('super_admin','/admin/rule/update'),('super_admin','/admin/rule/view'),('super_admin','/admin/user/*'),('super_admin','/admin/user/activate'),('super_admin','/admin/user/change-password'),('super_admin','/admin/user/delete'),('super_admin','/admin/user/index'),('super_admin','/admin/user/login'),('super_admin','/admin/user/logout'),('super_admin','/admin/user/request-password-reset'),('super_admin','/admin/user/reset-password'),('super_admin','/admin/user/signup'),('super_admin','/admin/user/view'),('seller','/debug/*'),('super_admin','/debug/*'),('super_admin','/debug/default/*'),('super_admin','/debug/default/db-explain'),('super_admin','/debug/default/download-mail'),('super_admin','/debug/default/index'),('super_admin','/debug/default/toolbar'),('super_admin','/debug/default/view'),('super_admin','/debug/user/*'),('super_admin','/debug/user/reset-identity'),('super_admin','/debug/user/set-identity'),('super_admin','/gii/*'),('super_admin','/gii/default/*'),('super_admin','/gii/default/action'),('super_admin','/gii/default/diff'),('super_admin','/gii/default/index'),('super_admin','/gii/default/preview'),('super_admin','/gii/default/view'),('general','/site/*'),('seller','/site/*'),('super_admin','/site/*'),('general','/site/about'),('super_admin','/site/about'),('general','/site/captcha'),('super_admin','/site/captcha'),('general','/site/contact'),('super_admin','/site/contact'),('general','/site/error'),('super_admin','/site/error'),('general','/site/index'),('super_admin','/site/index'),('general','/site/login'),('super_admin','/site/login'),('general','/site/logout'),('super_admin','/site/logout'),('general','/site/request-password-reset'),('super_admin','/site/request-password-reset'),('general','/site/reset-password'),('super_admin','/site/reset-password'),('general','/site/signup'),('super_admin','/site/signup'),('general','/user/*'),('super_admin','/user/*'),('general','/user/alllevel'),('super_admin','/user/alllevel'),('general','/user/create'),('super_admin','/user/create'),('general','/user/delete'),('super_admin','/user/delete'),('general','/user/index'),('super_admin','/user/index'),('general','/user/update'),('super_admin','/user/update'),('general','/user/view'),('super_admin','/user/view');
+/*!40000 ALTER TABLE `auth_item_child` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `auth_rule`
+--
+
+DROP TABLE IF EXISTS `auth_rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auth_rule` (
+  `name` varchar(64) NOT NULL,
+  `data` text,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `auth_rule`
+--
+
+LOCK TABLES `auth_rule` WRITE;
+/*!40000 ALTER TABLE `auth_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auth_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -337,18 +447,24 @@ CREATE TABLE `user` (
   `password_hash` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `status` smallint(6) NOT NULL DEFAULT '10',
+  `status` int(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `link` varchar(450) COLLATE utf8_unicode_ci DEFAULT NULL,
   `updated_at` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `user_level_id` int(11) DEFAULT NULL,
+  `phone_no` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(5000) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `country` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `first_name` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_name` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`),
   KEY `fk_user_user_level1_idx` (`user_level_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,7 +473,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','Uek95ngbqlOBh-jaQ0Gv3SQ9FD4CGFC3','$2y$13$dOgQuJVwIEy7JLEEb.RhhOf2eHwMkzVEgf7vpdS1t0DbuwkI/Zcea',NULL,'admin@admin.com',10,1513230560,NULL,1513230560,NULL,0),(2,NULL,NULL,NULL,NULL,NULL,10,1513678022,NULL,1513678022,NULL,NULL),(3,NULL,'Bnr9mbgWr7nBdN9BtRtdJRxNykqXq8jL',NULL,NULL,NULL,10,1513678350,NULL,1513678350,NULL,NULL),(4,NULL,NULL,NULL,NULL,NULL,10,1513678683,NULL,1513678683,NULL,NULL);
+INSERT INTO `user` VALUES (1,'admin','Uek95ngbqlOBh-jaQ0Gv3SQ9FD4CGFC3','$2y$13$dOgQuJVwIEy7JLEEb.RhhOf2eHwMkzVEgf7vpdS1t0DbuwkI/Zcea',NULL,'admin@admin.com',1,1513230560,'site/odrer/1',1514033004,0,1,'','','0','0','Admin',''),(2,NULL,NULL,NULL,NULL,NULL,1,1513678022,NULL,1513678022,NULL,NULL,'','','0','0',NULL,NULL),(3,NULL,'Bnr9mbgWr7nBdN9BtRtdJRxNykqXq8jL',NULL,NULL,NULL,1,1513678350,NULL,1513678350,NULL,NULL,'','','0','0',NULL,NULL),(4,NULL,NULL,NULL,NULL,NULL,1,1513678683,NULL,1513678683,NULL,NULL,'','','0','0',NULL,NULL),(5,'user','0eGXqA5NW3w4_Wmnu3NoEOpHV7OXrYwp','$2y$13$WvYWGP4VQ7AGnKk1lzLl8.iNA0vvxPKJZD0M2CrjUNwWBQa0VDDjy',NULL,'bas@gmail.com',1,1513765621,NULL,1513765621,NULL,NULL,'','','0','0',NULL,NULL),(6,'sajid','cHVjEJdfuLQrtPbWkwLh6sPFIStW8pve','$2y$13$.RCnYcjTNrE2humyyawfIuhkKWJlCSvZIdOtvybqzC7L5LEVmWZcq',NULL,'john@gmail.com',1,1513871106,NULL,1513953254,1,2,'03008332781','223 E. Concord Street, Orlando','Florida','USA',NULL,NULL),(7,'safi','sF_JuqRNiIAmNvuz39eQWAFx4Y_JvnH6','$2y$13$dFWI5U3kWSR9txuRQSsUTOzTf89FxG8oCgyhHbfbI4Tl8/y19oZo2',NULL,'raj@gmail.com',1,1513871278,NULL,1513871278,1,2,'03008332781','thirty to streek khan poor, bareek road london','','',NULL,NULL),(8,'usman','1WBgxJMAO2xLYW7bWI9yRTnQz2soXipC','$2y$13$jM1folT1M6f2WfY0b3PIhe2JVWa6FmLDeKdoEHbtCPkarFHDka25q',NULL,'usman@gmail.com',1,1513871916,NULL,1513871916,2,4,'','','','',NULL,NULL),(9,'bashir','3c02RedtIOOjO8VtrWFs8yfFUFgnTF9M','$2y$13$e1bww0eaNdXtutyk.40f5u65s5.FsWt4D.mJYGrePabZPki5DrTvi',NULL,'bashir@gmail.com',1,1513937847,NULL,1513937847,1,2,'03008332781','thirty to streek khan poor, bareek road london','islamabad','Pakistan',NULL,NULL),(11,'freed','-Hzl0E11S2v_n4iLYrn-Tc3riWEMWNB6','$2y$13$AFM19pgPRv2uDOzZ1b7IdOyxSBYG0T84MWtQ4w324HZLKl9i0jXzG',NULL,'fareed@gmail.com',1,1514022715,NULL,1514022715,1,2,'03008332781','thirty to streek khan poor, bareek road london','islamabad','Pakistan',NULL,NULL),(12,'Meherbab','nBUFSZoTuoCAzEEVBPpOC9jLtuxOf-w2','$2y$13$vINcyhpBmcProKtL0.8lIOE752Xq9nHeikjic7u9GTlo.UGUOZgvS',NULL,'meherbac@gmail.com',1,1514027235,NULL,1514027235,6,4,'03008332781','thirty to streek khan poor, bareek road london','islamabad','Pakistan',NULL,NULL),(13,'habib','aEEBEZoX_LjdF2EY_wJ06eqA802pymYB','$2y$13$17bV4f8h7ZSVv.WV3JaKpO2BJZNB1wa0D795gES6b6cJj.tg.Wn1C',NULL,'habib@gmail.com',1,1514028686,NULL,1514028686,1,3,'03008332781','thirty to streek khan poor, bareek road london','islamabad','Pakistan',NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,7 +520,7 @@ CREATE TABLE `users_level` (
   `parent_id` int(11) DEFAULT NULL,
   `max_user` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +529,7 @@ CREATE TABLE `users_level` (
 
 LOCK TABLES `users_level` WRITE;
 /*!40000 ALTER TABLE `users_level` DISABLE KEYS */;
-INSERT INTO `users_level` VALUES (1,'MR',NULL,20);
+INSERT INTO `users_level` VALUES (1,'Super Admin',0,1),(2,'Management Team',1,20),(3,'Management Team Seller',1,-1),(4,'Super Vip Team ',2,100),(5,'Super Vip Team Seller',2,-1),(6,'VIP Team',4,1000),(8,'VIP Team Sellers',4,-1),(10,'PRO Level',6,-1),(11,'INTER Level',6,-1),(12,'ADVANCE Level',6,-1),(13,'BEGIN Level',6,-1);
 /*!40000 ALTER TABLE `users_level` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -426,4 +542,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-20 16:15:16
+-- Dump completed on 2017-12-26 12:25:56
