@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\SearchStockIn */
+/* @var $searchModel common\models\StockInSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Stock Ins';
+$this->title = Yii::t('app', 'Stock Ins');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stock-in-index">
@@ -16,8 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Stock In', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Stock In'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -29,8 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'initial_quantity',
             'remaining_quantity',
             'price',
-            // 'product_id',
-            // 'user_id',
+            //'product_id',
+            //'user_id',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

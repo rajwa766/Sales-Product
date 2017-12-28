@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
 /**
  * This is the model class for table "product".
  *
- * @property integer $id
- * @property integer $category_id
+ * @property int $id
+ * @property int $category_id
  * @property string $name
  * @property string $description
  * @property double $price
@@ -49,11 +49,11 @@ class Product extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'category_id' => 'Category ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'price' => 'Price',
+            'id' => Yii::t('app', 'ID'),
+            'category_id' => Yii::t('app', 'Category ID'),
+            'name' => Yii::t('app', 'Name'),
+            'description' => Yii::t('app', 'Description'),
+            'price' => Yii::t('app', 'Price'),
         ];
     }
 

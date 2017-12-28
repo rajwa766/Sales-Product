@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\PaymentDetail;
+use common\models\Customer;
 
 /**
- * SearchPaymentDetail represents the model behind the search form about `app\models\PaymentDetail`.
+ * CustomerSearch represents the model behind the search form of `common\models\Customer`.
  */
-class SearchPaymentDetail extends PaymentDetail
+class CustomerSearch extends Customer
 {
     /**
      * @inheritdoc
@@ -18,7 +18,8 @@ class SearchPaymentDetail extends PaymentDetail
     public function rules()
     {
         return [
-            [['id', 'payment_method'], 'integer'],
+            [['id'], 'integer'],
+            [['name', 'address', 'post_code', 'district', 'province', 'mobile', 'phone', 'email'], 'safe'],
         ];
     }
 
@@ -40,7 +41,7 @@ class SearchPaymentDetail extends PaymentDetail
      */
     public function search($params)
     {
-        $query = PaymentDetail::find();
+        $query = Customer::find();
 
         // add conditions that should always apply here
 
@@ -59,8 +60,16 @@ class SearchPaymentDetail extends PaymentDetail
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'payment_method' => $this->payment_method,
         ]);
+
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'address', $this->address])
+            ->andFilterWhere(['like', 'post_code', $this->post_code])
+            ->andFilterWhere(['like', 'district', $this->district])
+            ->andFilterWhere(['like', 'province', $this->province])
+            ->andFilterWhere(['like', 'mobile', $this->mobile])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'email', $this->email]);
 
         return $dataProvider;
     }

@@ -124,4 +124,134 @@ class OrderController extends Controller
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
+    public function actionParentuser() {
+        $q = Yii::$app->request->get('q');
+      //  $id = Yii::$app->request->get('id');
+        $type = Yii::$app->request->get('type');
+    
+     
+        if(empty($type)){
+            return [];
+        }
+     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     $out = ['results' => ['id' => '', 'text' => '']];
+         if (!is_null($q)) {
+           $query = new \yii\db\Query();
+             $query->select('id as id, username AS text')
+                     ->from('user')
+                     ->where(['like', 'username', $q])
+                     ->andWhere(['=', 'user_level_id', $type])
+                   //  ->andWhere(['like','customer_user_id',$customer_id])
+                    ->limit(20);
+             
+             $command = $query->createCommand();
+             $data = $command->queryAll();
+             // if($data){
+             $out['results'] = array_values($data);
+        }
+        
+        else{
+         $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                ->where(['=', 'user_level_id', $type])
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+        }
+     return $out;
+ }
+
+ public function actionLevel() {
+    $q = Yii::$app->request->get('q');
+  //  $id = Yii::$app->request->get('id');
+    $type = Yii::$app->request->get('type');
+   $typeone = Yii::$app->request->get('typeone');
+ 
+    if(empty($type)){
+        return [];
+    }
+     if(empty($typeone)){
+        return [];
+    }
+ \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+ $out = ['results' => ['id' => '', 'text' => '']];
+     if (!is_null($q)) {
+       $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                 ->where(['like', 'username', $q])
+                 ->andWhere(['=', 'parent_id', $type])
+                   ->andWhere(['=', 'user_level_id', $typeone])
+
+               //  ->andWhere(['like','customer_user_id',$customer_id])
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+    }
+    
+    else{
+     $query = new \yii\db\Query();
+     $query->select('id as id, username AS text')
+             ->from('user')
+            ->where(['=', 'parent_id', $type])
+                ->andWhere(['=', 'user_level_id', $typeone])
+            ->limit(20);
+     
+     $command = $query->createCommand();
+     $data = $command->queryAll();
+     // if($data){
+     $out['results'] = array_values($data);
+    }
+ return $out;
+}
+
+public function actionCustomerLevel() {
+    $q = Yii::$app->request->get('q');
+  //  $id = Yii::$app->request->get('id');
+    $type = Yii::$app->request->get('type');
+
+ 
+    if(empty($type)){
+        return [];
+    }
+ \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+ $out = ['results' => ['id' => '', 'text' => '']];
+     if (!is_null($q)) {
+       $query = new \yii\db\Query();
+         $query->select('id as id, name AS text')
+                 ->from('users_level')
+                 ->where(['like', 'name', $q])
+                 ->andWhere(['=', 'parent_id', $type])
+               //  ->andWhere(['like','customer_user_id',$customer_id])
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+    }
+    
+    else{
+     $query = new \yii\db\Query();
+     $query->select('id as id, name AS text')
+             ->from('users_level')
+            ->where(['=', 'parent_id', $type])
+            ->limit(20);
+     
+     $command = $query->createCommand();
+     $data = $command->queryAll();
+     // if($data){
+     $out['results'] = array_values($data);
+    }
+ return $out;
+}
+
 }

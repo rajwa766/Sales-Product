@@ -26,6 +26,15 @@ use Yii;
  */
 class Order extends \yii\db\ActiveRecord
 {
+    public $order_type;
+    public $all_level;
+    public $parent_user;
+    public $child_user;
+    public $child_level;
+    public $request_user_level;
+    public $request_agent_name;
+    public $rquest_customer;
+
     /**
      * @inheritdoc
      */
@@ -41,8 +50,8 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'order_request_id'], 'required'],
-            [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type'], 'integer'],
-            [['requested_date'], 'safe'],
+            [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer'], 'integer'],
+            [['requested_date','order_type','request_agent_name'], 'safe'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['file'], 'string', 'max' => 250],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

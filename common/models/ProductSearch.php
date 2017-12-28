@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Account;
+use common\models\Product;
 
 /**
- * SearchAccount represents the model behind the search form about `app\models\Account`.
+ * ProductSearch represents the model behind the search form of `common\models\Product`.
  */
-class SearchAccount extends Account
+class ProductSearch extends Product
 {
     /**
      * @inheritdoc
@@ -18,7 +18,9 @@ class SearchAccount extends Account
     public function rules()
     {
         return [
-            [['id', 'order_id', 'payment_detail_id'], 'integer'],
+            [['id', 'category_id'], 'integer'],
+            [['name', 'description'], 'safe'],
+            [['price'], 'number'],
         ];
     }
 
@@ -40,7 +42,7 @@ class SearchAccount extends Account
      */
     public function search($params)
     {
-        $query = Account::find();
+        $query = Product::find();
 
         // add conditions that should always apply here
 
@@ -59,9 +61,12 @@ class SearchAccount extends Account
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'order_id' => $this->order_id,
-            'payment_detail_id' => $this->payment_detail_id,
+            'category_id' => $this->category_id,
+            'price' => $this->price,
         ]);
+
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

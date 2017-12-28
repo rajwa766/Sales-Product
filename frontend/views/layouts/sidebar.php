@@ -84,8 +84,26 @@ use yii\widgets\DetailView;
                             </ul>
                         </li>
                         
-                     
+                     <!-- order -->
+                     <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-address-card-o"></i>
+                                <span class="title">Order</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order">Orders</a>
 
+                                </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/create" >Create Order</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
+                     <!-- order ends -->
 
                     </ul>
 

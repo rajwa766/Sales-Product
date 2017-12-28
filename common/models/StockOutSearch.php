@@ -1,16 +1,16 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Product;
+use common\models\StockOut;
 
 /**
- * SearchProduct represents the model behind the search form about `app\models\Product`.
+ * StockOutSearch represents the model behind the search form of `common\models\StockOut`.
  */
-class SearchProduct extends Product
+class StockOutSearch extends StockOut
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class SearchProduct extends Product
     public function rules()
     {
         return [
-            [['id', 'category_id'], 'integer'],
-            [['name', 'description'], 'safe'],
-            [['price'], 'number'],
+            [['id', 'quantity', 'stock_in_id', 'product_order_id'], 'integer'],
+            [['timestamp'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class SearchProduct extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = StockOut::find();
 
         // add conditions that should always apply here
 
@@ -61,12 +60,11 @@ class SearchProduct extends Product
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'category_id' => $this->category_id,
-            'price' => $this->price,
+            'quantity' => $this->quantity,
+            'timestamp' => $this->timestamp,
+            'stock_in_id' => $this->stock_in_id,
+            'product_order_id' => $this->product_order_id,
         ]);
-
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

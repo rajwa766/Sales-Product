@@ -3,12 +3,14 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\StockOut */
+/* @var $model common\models\StockOut */
 
-$this->title = 'Update Stock Out: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Stock Outs', 'url' => ['index']];
+$this->title = Yii::t('app', 'Update Stock Out: {nameAttribute}', [
+    'nameAttribute' => $model->id,
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Stock Outs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="stock-out-update">
 

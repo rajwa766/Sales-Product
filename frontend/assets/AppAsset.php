@@ -45,7 +45,7 @@ class AppAsset extends AssetBundle
 
     ];
     public $js = [
-        //'js/jquery-1.11.2.min.js',
+        'js/jquery-1.11.2.min.js',
         'js/jquery.easing.min.js',
         'js/bootstrap.min.js',
         'js/pace.min.js',
@@ -57,19 +57,23 @@ class AppAsset extends AssetBundle
         'js/jquery.sparkline.min.js',
         'js/jquery.easypiechart.min.js',
         'js/raphael-min.js',
-        'js/morris.min.js',
+        // 'js/morris.min.js',
         'js/jquery-jvectormap-2.0.1.min.js',
         'js/jquery-jvectormap-world-mill-en.js',
         'js/gauge.min.js',
         'js/icheck.min.js',
-        'js/dashboard.js',
+        // 'js/dashboard.js',
         'js/scripts.js',
         'js/jquery.sparkline.min.js',
         'js/chart-sparkline.js'
+
         
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
+        public $jsOptions = array(
+    'position' => \yii\web\View::POS_HEAD
+);
 }

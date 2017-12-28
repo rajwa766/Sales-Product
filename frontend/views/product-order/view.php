@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\StockIn */
+/* @var $model common\models\ProductOrder */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Stock Ins'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Product Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="stock-in-view">
+<div class="product-order-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,12 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'timestamp',
-            'initial_quantity',
-            'remaining_quantity',
-            'price',
-            'product_id',
-            'user_id',
+            'order_id',
+            'quantity',
+            'order_price',
+            'requested_amount',
+            'requested_price',
         ],
     ]) ?>
 

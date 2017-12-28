@@ -4,10 +4,10 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\StockOut */
+/* @var $model common\models\StockOut */
 
-$this->title = 'Create Stock Out';
-$this->params['breadcrumbs'][] = ['label' => 'Stock Outs', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Stock Out');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Stock Outs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="stock-out-create">

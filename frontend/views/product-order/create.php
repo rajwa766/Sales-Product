@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Account */
+/* @var $model common\models\ProductOrder */
 
-$this->title = 'Create Account';
-$this->params['breadcrumbs'][] = ['label' => 'Accounts', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Product Order');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Product Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="account-create">
+<div class="product-order-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

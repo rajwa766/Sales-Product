@@ -1,19 +1,19 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
 /**
  * This is the model class for table "stock_in".
  *
- * @property integer $id
+ * @property int $id
  * @property string $timestamp
- * @property integer $initial_quantity
- * @property integer $remaining_quantity
+ * @property int $initial_quantity
+ * @property int $remaining_quantity
  * @property double $price
- * @property integer $product_id
- * @property integer $user_id
+ * @property int $product_id
+ * @property int $user_id
  *
  * @property Product $product
  * @property User $user
@@ -50,13 +50,13 @@ class StockIn extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'timestamp' => 'Timestamp',
-            'initial_quantity' => 'Initial Quantity',
-            'remaining_quantity' => 'Remaining Quantity',
-            'price' => 'Price',
-            'product_id' => 'Product ID',
-            'user_id' => 'User ID',
+            'id' => Yii::t('app', 'ID'),
+            'timestamp' => Yii::t('app', 'Timestamp'),
+            'initial_quantity' => Yii::t('app', 'Initial Quantity'),
+            'remaining_quantity' => Yii::t('app', 'Remaining Quantity'),
+            'price' => Yii::t('app', 'Price'),
+            'product_id' => Yii::t('app', 'Product ID'),
+            'user_id' => Yii::t('app', 'User ID'),
         ];
     }
 

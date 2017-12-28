@@ -1,17 +1,17 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
 /**
  * This is the model class for table "stock_out".
  *
- * @property integer $id
- * @property integer $quantity
+ * @property int $id
+ * @property int $quantity
  * @property string $timestamp
- * @property integer $stock_in_id
- * @property integer $product_order_id
+ * @property int $stock_in_id
+ * @property int $product_order_id
  *
  * @property ProductOrder $productOrder
  * @property StockIn $stockIn
@@ -46,11 +46,11 @@ class StockOut extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'quantity' => 'Quantity',
-            'timestamp' => 'Timestamp',
-            'stock_in_id' => 'Stock In ID',
-            'product_order_id' => 'Product Order ID',
+            'id' => Yii::t('app', 'ID'),
+            'quantity' => Yii::t('app', 'Quantity'),
+            'timestamp' => Yii::t('app', 'Timestamp'),
+            'stock_in_id' => Yii::t('app', 'Stock In ID'),
+            'product_order_id' => Yii::t('app', 'Product Order ID'),
         ];
     }
 

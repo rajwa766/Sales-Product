@@ -1,17 +1,17 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
 /**
  * This is the model class for table "product_order".
  *
- * @property integer $id
- * @property integer $order_id
- * @property integer $quantity
+ * @property int $id
+ * @property int $order_id
+ * @property int $quantity
  * @property double $order_price
- * @property integer $requested_amount
+ * @property int $requested_amount
  * @property double $requested_price
  *
  * @property Order $order
@@ -46,12 +46,12 @@ class ProductOrder extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'order_id' => 'Order ID',
-            'quantity' => 'Quantity',
-            'order_price' => 'Order Price',
-            'requested_amount' => 'Requested Amount',
-            'requested_price' => 'Requested Price',
+            'id' => Yii::t('app', 'ID'),
+            'order_id' => Yii::t('app', 'Order ID'),
+            'quantity' => Yii::t('app', 'Quantity'),
+            'order_price' => Yii::t('app', 'Order Price'),
+            'requested_amount' => Yii::t('app', 'Requested Amount'),
+            'requested_price' => Yii::t('app', 'Requested Price'),
         ];
     }
 

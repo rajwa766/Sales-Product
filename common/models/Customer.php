@@ -1,13 +1,13 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 
 /**
  * This is the model class for table "customer".
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $address
  * @property string $post_code
@@ -44,15 +44,15 @@ class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'address' => 'Address',
-            'post_code' => 'Post Code',
-            'district' => 'District',
-            'province' => 'Province',
-            'mobile' => 'Mobile',
-            'phone' => 'Phone',
-            'email' => 'Email',
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
+            'address' => Yii::t('app', 'Address'),
+            'post_code' => Yii::t('app', 'Post Code'),
+            'district' => Yii::t('app', 'District'),
+            'province' => Yii::t('app', 'Province'),
+            'mobile' => Yii::t('app', 'Mobile'),
+            'phone' => Yii::t('app', 'Phone'),
+            'email' => Yii::t('app', 'Email'),
         ];
     }
 }
