@@ -15,9 +15,20 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 <div class="user-update" >
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php
+    $user_id = Yii::$app->user->getId();
+ $Role =   Yii::$app->authManager->getRolesByUser($model->id);
+ if(isset($Role['customer'])){?>
+   <?= $this->render('_form_customer_update', [
+        'model' => $model,
+    ]) ?>
+<?php
+ }else{ ?>
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
+    <?php
+ }
+  
+?>
 </div>

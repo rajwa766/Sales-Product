@@ -104,7 +104,24 @@ use yii\widgets\DetailView;
                             </ul>
                         </li>
                      <!-- order ends -->
+                     <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="title">Customer</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/allcustomer">Customer</a>
 
+                                </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/customer" >Create Customer</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
                     </ul>
 
                 </div>

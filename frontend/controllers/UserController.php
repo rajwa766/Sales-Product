@@ -43,7 +43,18 @@ class UserController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
+    public function actionAllcustomer()
+    {
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+      
+        $dataProvider->query->where(['user_level_id'=>Null]);
+        $dataProvider->query->andwhere(['parent_id'=>Null]);
+        return $this->render('customer_index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Displays a single User model.
@@ -99,7 +110,26 @@ class UserController extends Controller
             ]);
         }
     }
+    public function actionCustomer()
+    {
+        $model = new User();
 
+        if ($model->load(Yii::$app->request->post())) {
+                $auth = \Yii::$app->authManager;
+                $role = $auth->getRole('customer');
+            $model->setPassword($model->password);
+            $model->generateAuthKey();
+            $model->getpassword();
+            if($model->save()){
+                $auth->assign($role, $model->id);
+            return $this->redirect(['view', 'id' => $model->id]);
+    }
+}else{
+    return $this->render('customer_create', [
+        'model' => $model,
+    ]);
+}
+    }
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.

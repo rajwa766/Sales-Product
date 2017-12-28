@@ -28,11 +28,11 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'signup', 'error'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'signup','index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -146,9 +146,13 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
+     
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
+                $auth = \Yii::$app->authManager;
+                $role = $auth->getRole('customer');
+                $auth->assign($role, $user->id);
                 if (Yii::$app->getUser()->login($user)) {
                     return $this->goHome();
                 }
