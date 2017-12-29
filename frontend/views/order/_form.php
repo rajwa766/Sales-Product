@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\models\order;
+use kartik\file\FileInput;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
@@ -17,7 +19,7 @@ use yii\models\order;
 }
 </style>
 <div class="order-form">
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
 <div class="row main-container">
 <div class="row">
@@ -75,6 +77,9 @@ $RoleName= array_keys($Role)[0];
     </div>
     <div class="col-md-8">
        <?php
+       $user_id = Yii::$app->user->getId();
+       $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+       if(isset($Role['super_admin'])){
         echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
           'theme' => Select2::THEME_BOOTSTRAP,
           'options' => ['placeholder' => 'Select a Parent User ...'],
@@ -88,7 +93,13 @@ $RoleName= array_keys($Role)[0];
             ],
         ],
         ])->label(false);
- 
+    }else{
+        echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+            'theme' => Select2::THEME_BOOTSTRAP,
+            'options' => ['placeholder' => 'Select a Parent User ...','value'=>Yii::$app->user->identity->parent_id],
+      
+          ])->label(false); 
+    }
     ?>
     </div>
 </div>
@@ -123,6 +134,9 @@ $RoleName= array_keys($Role)[0];
     </div>
     <div class="col-md-8">
         <?php
+           $user_id = Yii::$app->user->getId();
+           $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+           if(isset($Role['super_admin'])){
         echo $form->field($model, 'child_user')->widget(Select2::classname(), [
           'theme' => Select2::THEME_BOOTSTRAP,
           'options' => ['placeholder' => 'Select a current user Level ...'],
@@ -138,7 +152,13 @@ var typeone = $("#order-child_level").val();
             ],
         ],
         ])->label(false);
- 
+    }else{
+        echo $form->field($model, 'child_user')->widget(Select2::classname(), [
+            'theme' => Select2::THEME_BOOTSTRAP,
+            'options' => ['placeholder' => 'Select a current user Level ...','value'=>Yii::$app->user->identity->id],
+         
+          ])->label(false);  
+    }
     ?>
     </div>
 </div>
@@ -154,6 +174,9 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
       <?php
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        if(isset($Role['super_admin'])){
     echo $form->field($model, 'request_user_level')->widget(Select2::classname(), [
         'data' => common\models\UsersLevel::getalllevel(),
         'theme' => Select2::THEME_BOOTSTRAP,
@@ -166,6 +189,20 @@ var typeone = $("#order-child_level").val();
         ],
 
     ])->label(false);
+    }else{
+        echo $form->field($model, 'request_user_level')->widget(Select2::classname(), [
+           
+            'theme' => Select2::THEME_BOOTSTRAP,
+            'options' => ['placeholder' => 'Select a Level  ...','value'=>Yii::$app->user->identity->user_level_id],
+            //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+        
+            'theme' => Select2::THEME_BOOTSTRAP,
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+    
+        ])->label(false);   
+    }
     ?>
     </div>
 </div>
@@ -175,7 +212,12 @@ var typeone = $("#order-child_level").val();
     Agent Name
     </div>
     <div class="col-md-8">
+
         <?php
+            
+            $user_id = Yii::$app->user->getId();
+         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+         if(isset($Role['super_admin'])){
         echo $form->field($model, 'request_agent_name')->widget(Select2::classname(), [
           'theme' => Select2::THEME_BOOTSTRAP,
           'options' => ['placeholder' => 'Select a agent name ...'],
@@ -183,13 +225,22 @@ var typeone = $("#order-child_level").val();
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/customer-level',
+                'url' => '../order/parentuser',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val(); return {q:params.term,type:type}; }')
+                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-request_user_level").val(); return {q:params.term,type:type}; }')
             ],
         ],
         ])->label(false);
- 
+    }else{
+      
+        
+     
+    echo $form->field($model, 'request_agent_name')->widget(Select2::classname(), [
+      'theme' => Select2::THEME_BOOTSTRAP,
+      'options' => ['placeholder' => 'Select a agent name ...','value'=>Yii::$app->user->identity->id],
+     
+    ])->label(false);
+    }
     ?>
     </div>
 </div>
@@ -208,9 +259,9 @@ var typeone = $("#order-child_level").val();
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => '../order/customer-level',
+                    'url' => '../user/allcustomers',
                     'dataType' => 'json',
-                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val(); return {q:params.term,type:type}; }')
+                    'data' => new \yii\web\JsExpression('function(params) {  return {q:params.term}; }')
                 ],
             ],
             ])->label(false);
@@ -282,12 +333,24 @@ var typeone = $("#order-child_level").val();
 </div>
 
  <div class="row">
-    <div class="col-md-4">
-    Attach file
+ <div class="col-md-4">
+    <!-- Additional file -->
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'file[]')->fileInput(['multiple'=>'multiple'])->label(false) ?>
+    <?php
+// $form->field($model, 'file')->widget(FileInput::classname(), [
+//                     'pluginOptions' => [
+//                         'allowedFileExtensions' => ['jpg', 'gif', 'png', 'bmp','pdf','jpeg'],
+//                         'showUpload' => true,
+//                         'initialPreview' => [
+//                           //  $model->upload_invoice ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->upload_invoice) : null, // checks the models to display the preview
+//                         ],
+//                         'overwriteInitial' => true,
+//                     ],
+//                 ])->label(false);
+//                 ?>
     </div>
+
 </div>
 </div>
 </div>
@@ -300,7 +363,11 @@ var typeone = $("#order-child_level").val();
   Add Package
     </div>
     <div class="col-md-8">
-    <?php
+        <?php
+    $user_id = Yii::$app->user->getId();
+ $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+ if(isset($Role['super_admin'])){
+   
     echo $form->field($model, 'entity_type')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Package  ...'],
@@ -313,12 +380,40 @@ var typeone = $("#order-child_level").val();
             'ajax' => [
                 'url' => '../user-product-level/levelpakages',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-child_level").val();return {q:params.term,type:type}; }')
+                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-child_level").val();
+                    var type_order = $("#order-type").val();
+                    return {q:params.term,type:type,type_order:type_order}; }')
             ],
         ],
 
     ])->label(false);
-    ?>
+
+ }else{
+  
+    echo $form->field($model, 'entity_type')->widget(Select2::classname(), [
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Package  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+    
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+            //'autocomplete' => true,
+            'ajax' => [
+                'url' => '../user-product-level/levelpakages',
+                'dataType' => 'json',
+                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-request_user_level").val();
+                    var type_order = $("#order-type").val();
+                    return {q:params.term,type:type,type_order:type_order}; }')
+            ],
+        ],
+
+    ])->label(false);
+
+ }
+
+ ?>
+ 
 
     </div>
     <div class="col-md-2">
@@ -326,6 +421,8 @@ var typeone = $("#order-child_level").val();
     </div>
 </div>
 <div id="itmes"></div>
+<input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
+
 <div class="row">
     <div class="table-responsive">
       <table class="table">
@@ -347,104 +444,12 @@ var typeone = $("#order-child_level").val();
 </div>
 
 <!-- this is customer section-->
-<div class="row outer-container">
-<div class="col-md-9 order-panel">
-    <h3>Order Detail</h3>
 
-    <div class="row first-row">
-    <div class="col-md-4">
-    Order Ref/No
-    </div>
-    <div class="col-md-8">
-     
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-     
-    </div>
-</div>
+<div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
 
-<div class="row">
-    <div class="col-md-4">
-    Address
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Postal Code
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    District
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-   
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Province
-    </div>
-    <div class="col-md-8">
-  
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-    
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Mobile
-    </div>
-    <div class="col-md-8">
-
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Phone
-    </div>
-    <div class="col-md-8">
-
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Email
-    </div>
-    <div class="col-md-8">
-      
-        <?= $form->field($model, 'user_id')->textInput()->label(false) ?>
-   
-    </div>
-</div>
-
-</div>
-</div>
-</div>
 
 <div class="form-group">
-<?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+<?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
@@ -452,7 +457,16 @@ var typeone = $("#order-child_level").val();
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
-
+    $('.save-button').click(function(e){
+  if(db_items.clients == ''){
+    $('.vehcle_not_found').html('Add Product Order Please');
+    e.preventDefault();
+    return;
+  }else{
+    $('#order-hidden').val(JSON.stringify({order_info: db_items.clients }));
+ 
+  }
+});
 
 
   

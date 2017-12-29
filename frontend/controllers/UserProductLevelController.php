@@ -114,13 +114,44 @@ public function actionLevelpakages(){
     $q = Yii::$app->request->get('q');
     //  $id = Yii::$app->request->get('id');
       $type = Yii::$app->request->get('type');
-  
-   
-      if(empty($type)){
-          return [];
-      }
-   \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-   $out = ['results' => ['id' => '', 'text' => '']];
+      $type_order = Yii::$app->request->get('type_order');
+      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      $out = ['results' => ['id' => '', 'text' => '']];
+      if(empty($type) && $type_order == "Order"){
+         
+        if (!is_null($q)) {
+            $query = new \yii\db\Query();
+              $query->select('id as id, units AS text')
+                      ->from('user_product_level')
+                      ->where(['like', 'units', $q])
+                    //   ->andWhere(['=', 'user_level_id', $type])
+                    //  ->andWhere(['like','customer_user_id',$customer_id])
+                     ->limit(20);
+              
+              $command = $query->createCommand();
+              $data = $command->queryAll();
+              // if($data){
+              $out['results'] = array_values($data);
+         }
+         
+         else{
+          $query = new \yii\db\Query();
+          $query->select('id as id, units AS text')
+                  ->from('user_product_level')
+                //  ->where(['=', 'user_level_id', $type])
+                 ->limit(20);
+          
+          $command = $query->createCommand();
+          $data = $command->queryAll();
+          // if($data){
+          $out['results'] = array_values($data);
+         }
+        }
+  else{
+    
+    if(empty($type)){
+        return [];
+    }
        if (!is_null($q)) {
          $query = new \yii\db\Query();
            $query->select('id as id, units AS text')
@@ -137,6 +168,7 @@ public function actionLevelpakages(){
       }
       
       else{
+        
        $query = new \yii\db\Query();
        $query->select('id as id, units AS text')
                ->from('user_product_level')
@@ -148,6 +180,7 @@ public function actionLevelpakages(){
        // if($data){
        $out['results'] = array_values($data);
       }
+    }
    return $out;
 }
 public function actionGetunits($id){

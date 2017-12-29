@@ -19,7 +19,7 @@ class OrderSearch extends Order
     {
         return [
             [['id', 'user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer'], 'integer'],
-            [['order_ref_no', 'shipper', 'cod', 'additional_requirements', 'file', 'requested_date','order_type','request_agent_name'], 'safe'],
+            [['order_ref_no', 'shipper', 'cod', 'additional_requirements', 'file', 'requested_date','order_type','request_agent_name','created_by'], 'safe'],
         ];
     }
 
@@ -67,13 +67,18 @@ class OrderSearch extends Order
             'entity_type' => $this->entity_type,
             'requested_date' => $this->requested_date,
         ]);
-
+      
         $query->andFilterWhere(['like', 'order_ref_no', $this->order_ref_no])
             ->andFilterWhere(['like', 'shipper', $this->shipper])
             ->andFilterWhere(['like', 'cod', $this->cod])
             ->andFilterWhere(['like', 'additional_requirements', $this->additional_requirements])
             ->andFilterWhere(['like', 'file', $this->file]);
-
+            $user_id = Yii::$app->user->getId();
+            $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+            if(!isset($Role['super_admin'])){
+                $query->andFilterWhere(['=', 'created_by', Yii::$app->user->identity->id]);   
+                
+            }
         return $dataProvider;
     }
 }

@@ -249,7 +249,45 @@ class UserController extends Controller
     }
  return $out;
 }
+public function actionAllcustomers() {
+    $q = Yii::$app->request->get('q');
+  //  $id = Yii::$app->request->get('id');
+    //$type = Yii::$app->request->get('type');
 
+ 
+  
+ \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+ $out = ['results' => ['id' => '', 'text' => '']];
+     if (!is_null($q)) {
+       $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                 ->where(['like', 'username', $q])
+                 ->andWhere(['user_level_id'=>Null])
+                 ->andWhere(['parent_id'=>Null])
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+    }
+    
+    else{
+     $query = new \yii\db\Query();
+     $query->select('id as id, username AS text')
+             ->from('user')
+             ->where(['user_level_id'=>Null])
+             ->andWhere(['parent_id'=>Null])
+            ->limit(20);
+     
+     $command = $query->createCommand();
+     $data = $command->queryAll();
+     // if($data){
+     $out['results'] = array_values($data);
+    }
+ return $out;
+}
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

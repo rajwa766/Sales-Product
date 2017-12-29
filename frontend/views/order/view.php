@@ -43,4 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+<?php
+foreach($model->productOrders as $orders){
+echo $orders->quantity;
+echo $orders->order_price;
+
+}
+
+?>
 </div>

@@ -34,7 +34,7 @@ class ProductOrder extends \yii\db\ActiveRecord
     {
         return [
             [['order_id'], 'required'],
-            [['order_id', 'quantity', 'requested_amount'], 'integer'],
+            [['order_id', 'quantity', 'requested_quantity'], 'integer'],
             [['order_price', 'requested_price'], 'number'],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
@@ -50,7 +50,7 @@ class ProductOrder extends \yii\db\ActiveRecord
             'order_id' => Yii::t('app', 'Order ID'),
             'quantity' => Yii::t('app', 'Quantity'),
             'order_price' => Yii::t('app', 'Order Price'),
-            'requested_amount' => Yii::t('app', 'Requested Amount'),
+            'requested_quantity' => Yii::t('app', 'Requested Quantity'),
             'requested_price' => Yii::t('app', 'Requested Price'),
         ];
     }
@@ -69,5 +69,20 @@ class ProductOrder extends \yii\db\ActiveRecord
     public function getStockOuts()
     {
         return $this->hasMany(StockOut::className(), ['product_order_id' => 'id']);
+    }
+    public static function insert_order($model){
+        $order_data = json_decode($model->product_order_info);
+        foreach ($order_data->order_info as $single_order) {
+            $product_order = new ProductOrder();
+         $product_order->isNewRecord = true;
+         $product_order->id = null;
+         $product_order->order_id = $model->id;
+         $product_order->quantity = $single_order->unit; 
+         $product_order->order_price =$single_order->price; 
+         $product_order->requested_price =$single_order->price; 
+         $product_order->requested_quantity = $single_order->unit; 
+         $product_order->save();
+     
+        }
     }
 }

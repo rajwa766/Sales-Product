@@ -66,7 +66,18 @@ class OrderController extends Controller
     {
         $model = new Order();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+         
+            if($model->order_type == "Order"){
+                $model->user_id = $model->request_agent_name;
+                $model->order_request_id = $model->rquest_customer;  
+            }else{
+                $model->user_id = $model->parent_user;
+                $model->order_request_id = $model->child_user;
+            }
+
+            $model->save();
+            $product_order = \common\models\ProductOrder::insert_order($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
