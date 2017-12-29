@@ -99,10 +99,6 @@ Mobile Menu Settings - Since 3.1
 ------------------------------------------*/
 
 
-
-
-
-
 /* code by waqar */
 
 .user-avator {
@@ -182,7 +178,6 @@ body.boxed .page-topbar {
     width: 90%;
     margin-left: 5% !important;
 }
-
 
 
 /*body *{  vertical-align: top; }*/
@@ -9512,46 +9507,31 @@ border-left: 3px solid transparent;
 
 /* css by Bashir */
 
-.main-container
-{
-    
+
+/* .jsgrid-insert-button,
+.jsgrid-search-mode-button {
+    display: none;
+} */
+
+.jsgrid-insert-row,
+.vehicle-form .jsgrid-filter-row,
+.vehicle-form .jsgrid-edit-button,
+.jsgrid-search-mode-button,
+#invioces .jsgrid-delete-button {
+    display: none !important;
 }
 
-.order-panel
-{
-    border: 1px solid #1fb5ac;
-   padding:0px;
-    border-radius: 7px;
-}
-
-.order-panel .first-row
-{
-    padding-top: 20px;
-}
-
-
-
-
-.order-panel h3
-{
-    background-color: #1fb5ac;
-    color: #fff;
-    font-weight: 500;
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
-}
-.order_detail
-{
+.order-panel {
     border: 1px solid #1fb5ac;
     padding: 0px;
     border-radius: 7px;
 }
 
-.order_detail h3
-{
+.order-panel .first-row {
+    padding-top: 20px;
+}
+
+.order-panel h3 {
     background-color: #1fb5ac;
     color: #fff;
     font-weight: 500;
@@ -9562,29 +9542,40 @@ border-left: 3px solid transparent;
     border-top-left-radius: 7px;
 }
 
-.order_detail .first-row
-{
+.order_detail {
+    border: 1px solid #1fb5ac;
+    padding: 0px;
+    border-radius: 7px;
+}
+
+.order_detail h3 {
+    background-color: #1fb5ac;
+    color: #fff;
+    font-weight: 500;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.order_detail .first-row {
     padding-top: 20px;
 }
- .order_detail .dropdown
- {
-    font-size: 14px;
- }
-.order-form
-{
-  
 
+.order_detail .dropdown {
+    font-size: 14px;
 }
 
-.order-form .row{
-margin-right: 0px;
+.order-form {}
+
+.order-form .row {
+    margin-right: 0px;
     margin-left: 0px;
 }
 
-.order-form .form-group .btn
-{
+.order-form .form-group .btn {
     margin-top: 20px;
-    
     background-color: #1fb5ac;
     color: #fff;
     width: 84px;
@@ -9592,20 +9583,16 @@ margin-right: 0px;
     font-size: 20px;
 }
 
-.customer-detail
-{
-}
+.customer-detail {}
 
-.customer-detail
-{
+.customer-detail {
     border: 1px solid #1fb5ac;
     padding: 0px;
     border-radius: 7px;
     margin-top: 30px;
 }
 
-.customer-detail h3
-{
+.customer-detail h3 {
     background-color: #1fb5ac;
     color: #fff;
     font-weight: 500;
@@ -9616,32 +9603,29 @@ margin-right: 0px;
     border-top-left-radius: 7px;
 }
 
-.customer-detail .first-row
-{
+.customer-detail .first-row {
     padding-top: 20px;
 }
- .customer-detail .input-group .input-group-addon
- {
-    height: 40px;
- }
 
-.top_row
-{
+.customer-detail .input-group .input-group-addon {
+    height: 40px;
+}
+
+.top_row {
     padding-top: 20px;
     margin-bottom: 20px;
     border: 1px solid #1fb5ac;
 }
-.outer-container
-{
-    
+
+.outer-container {
     margin-top: 20px;
 }
 
-#add-button
-{
+#add-button {
     background-color: #1fb5ac;
     color: #ffffff;
 }
+
 
 /*----------------------------------------
   Widget - User Profile Tile
@@ -9918,7 +9902,6 @@ margin-right: 0px;
         display: none;
     }
 }
-
 
 
 /*

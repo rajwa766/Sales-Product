@@ -2,22 +2,24 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\SearchUserProductLevel */
+/* @var $searchModel common\models\UserProductLevelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'User Product Levels';
+$this->title = Yii::t('app', 'User Product Levels');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-product-level-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create User Product Level', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create User Product Level'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -33,4 +35,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php Pjax::end(); ?>
 </div>

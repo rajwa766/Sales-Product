@@ -4,10 +4,10 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserProductLevel */
+/* @var $model common\models\UserProductLevel */
 
-$this->title = 'Create User Product Level';
-$this->params['breadcrumbs'][] = ['label' => 'User Product Levels', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create User Product Level');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User Product Levels'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-product-level-create">

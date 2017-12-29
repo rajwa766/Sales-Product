@@ -34,7 +34,7 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['category_id'], 'required'],
+            // [['category_id'], 'required'],
             [['category_id'], 'integer'],
             [['description'], 'string'],
             [['price'], 'number'],
@@ -88,4 +88,11 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserProductLevel::className(), ['product_id' => 'id']);
     }
+    public static function getallproduct(){
+        $data= Product::find()->all();
+       
+        $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
+
+     return $value;
+  }
 }

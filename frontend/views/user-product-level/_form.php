@@ -2,9 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserProductLevel */
+/* @var $model common\models\UserProductLevel */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -12,16 +13,39 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'product_id')->textInput() ?>
+    <?php
+            echo $form->field($model, 'product_id')->widget(Select2::classname(), [
+                'data' => common\models\Product::getallproduct(),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select Product  ...'],
+                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'pluginOptions' => [
+                'allowClear' => true,
+                ],
+
+            ]);
+            ?>
 
     <?= $form->field($model, 'units')->textInput() ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
+    <?php
+            echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
+                'data' => common\models\UsersLevel::getalllevel_with_seller(),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select Level  ...'],
+                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'pluginOptions' => [
+                'allowClear' => true,
+                ],
 
-    <?= $form->field($model, 'user_level_id')->textInput() ?>
+            ]);
+            ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

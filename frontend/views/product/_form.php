@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
@@ -11,8 +12,19 @@ use yii\widgets\ActiveForm;
 <div class="product-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?php
+            // echo $form->field($model, 'category_id')->widget(Select2::classname(), [
+            //     'data' => common\models\Category::getallcategory(),
+            //     'theme' => Select2::THEME_BOOTSTRAP,
+            //     'options' => ['placeholder' => 'Select Category  ...'],
+            //     //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+            //     'theme' => Select2::THEME_BOOTSTRAP,
+            //     'pluginOptions' => [
+            //     'allowClear' => true,
+            //     ],
 
-    <?= $form->field($model, 'category_id')->textInput() ?>
+            // ]);
+            ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

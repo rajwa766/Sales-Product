@@ -225,7 +225,7 @@ var typeone = $("#order-child_level").val();
 </div>
 </div>
 <div class="row">
-<div class="col-md-9 order_panel">
+<div class="col-md-9 order-panel">
     <h3>Order Detail</h3>
     <div class="row first-row">
     <div class="col-md-4">
@@ -297,20 +297,35 @@ var typeone = $("#order-child_level").val();
     <h3>Order Items</h3>
     <div class="row first-row">
     <div class="col-md-2">
-    Item
+  Add Package
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'entity_type')->dropdownList([
-        1 => 'bey dey',
-       ]
-   
- )->label(false) ?>
+    <?php
+    echo $form->field($model, 'entity_type')->widget(Select2::classname(), [
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Package  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+    
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+            //'autocomplete' => true,
+            'ajax' => [
+                'url' => '../user-product-level/levelpakages',
+                'dataType' => 'json',
+                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-child_level").val();return {q:params.term,type:type}; }')
+            ],
+        ],
+
+    ])->label(false);
+    ?>
+
     </div>
     <div class="col-md-2">
         <button class=" btn btn-brand-primary add-button" id="add-button" type="button"><span class="loading-next-btn"></span>add item</button>
     </div>
 </div>
-
+<div id="itmes"></div>
 <div class="row">
     <div class="table-responsive">
       <table class="table">
@@ -325,13 +340,14 @@ var typeone = $("#order-child_level").val();
             </thead>
       </table>
     </div>
+    <div id="items_all"></div>
 </div>        
 </div>
 
 </div>
 
 <!-- this is customer section-->
-<div class="row">
+<div class="row outer-container">
 <div class="col-md-9 order-panel">
     <h3>Order Detail</h3>
 
@@ -436,6 +452,50 @@ var typeone = $("#order-child_level").val();
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
+
+
+
+  
+$("#items_all").jsGrid({
+//height: "70%",
+        width: "100%",
+        filtering: true,
+        editing: true,
+        inserting: true,
+        sorting: true,
+//paging: true,
+        autoload: true,
+//pageSize: 15,
+//pageButtonCount: 5,
+        controller: db_items,
+        fields: [
+           // {name: "item_number", title: "Item Number", id: "item_number", width: "auto", type: "hidden"},
+            {name: "unit", title: "Units", type: "text",  width: "auto"},
+            {name: "price", title: "Price", type: "text",  width: "auto"},
+            {name: "total_price", title: "Total Price", type: "text",  width: "auto"},
+           //{ name: "Married", title: "Marié", type: "checkbox", sorting: false },
+            {type: "control"}
+        ]
+    });
+     $('.jsgrid-insert-mode-button').click();
+     $('#add-button').on('click', function () {
+
+        $.post("../user-product-level/getunits?id=" + $('#order-entity_type').val(), function (data) {
+          if(data){
+        var json = $.parseJSON(data);
+      db_items.clients.push({
+                           unit: json.unit,
+                           price: json.price,
+                           total_price: parseFloat(json.unit)  * parseFloat(json.price) ,
+                       });
+                       console.log(db_items.clients);
+            $("#items_all").jsGrid("loadData");
+            $("#items_all").refresh();
+        }else{
+            $(".noinvoice").html("<h5 class='text-align:center'>There is no  vehicle or invoice has been created</h5>");
+        }
+        });
+    });
     TypeChange();
     var role="<?php echo array_keys($Role)[0];?>";
     if(role=='super_admin')
@@ -469,4 +529,5 @@ function TypeChange()
     }
 
 }
+
 </script>

@@ -42,7 +42,11 @@ class Category extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
         ];
     }
-
+    public static function getallcategory(){
+        $data= Category::find()->all();
+        $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
+     return $value;
+  }
     /**
      * @return \yii\db\ActiveQuery
      */

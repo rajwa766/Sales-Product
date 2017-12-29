@@ -60,6 +60,11 @@ class UsersLevel extends \yii\db\ActiveRecord
          $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
       return $value;
    }
+   public static function getalllevel_with_seller(){
+    $data= UsersLevel::find()->all();
+    $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
+ return $value;
+}
     public static function getlevel(){
        $parent_id =  Yii::$app->user->identity->user_level_id;
         $data= UsersLevel::find()->where(['=','parent_id',$parent_id])->all();
