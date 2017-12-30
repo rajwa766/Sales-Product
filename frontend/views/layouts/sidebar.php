@@ -87,7 +87,7 @@ use yii\widgets\DetailView;
                      <!-- order -->
                      <li class=""> 
                             <a href="javascript:;">
-                                <i class="fa fa-address-card-o"></i>
+                            <i class="fa fa-suitcase"></i>
                                 <span class="title">Order</span>
                                 <span class="arrow "></span>
                             </a>

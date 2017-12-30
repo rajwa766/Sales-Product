@@ -44,10 +44,26 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 <?php
-foreach($model->productOrders as $orders){
-echo $orders->quantity;
-echo $orders->order_price;
+foreach($model->productOrders as $orders){ ?>
 
+<table class="table table-striped table-bordered detail-view">
+<tbody>
+<tr>
+<td>Order Quantity</td>
+<td><?php 
+echo $orders->quantity;
+?></td>
+</tr>
+<tr>
+<th>Order Price</td>
+<td><?php 
+echo $orders->order_price;
+?></td>
+</tr>
+
+</tbody>
+</table>
+<?php
 }
 
 ?>
