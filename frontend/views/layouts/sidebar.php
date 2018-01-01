@@ -67,7 +67,7 @@ use yii\widgets\DetailView;
                         <!-- end profile -->
                         <li class=""> 
                             <a href="javascript:;">
-                                <i class="fa fa-suitcase"></i>
+                                <i class="fa fa-users"></i>
                                 <span class="title">User</span>
                                 <span class="arrow "></span>
                             </a>
@@ -87,7 +87,7 @@ use yii\widgets\DetailView;
                      <!-- order -->
                      <li class=""> 
                             <a href="javascript:;">
-                            <i class="fa fa-suitcase"></i>
+                                <i class="fa fa-pencil-square-o"></i>
                                 <span class="title">Order</span>
                                 <span class="arrow "></span>
                             </a>
@@ -106,7 +106,7 @@ use yii\widgets\DetailView;
                      <!-- order ends -->
                      <li class=""> 
                             <a href="javascript:;">
-                                <i class="fa fa-suitcase"></i>
+                                <i class="fa fa-users"></i>
                                 <span class="title">Customer</span>
                                 <span class="arrow "></span>
                             </a>
