@@ -79,6 +79,9 @@ class OrderController extends Controller
             $model->save();
             $product_order = \common\models\ProductOrder::insert_order($model);
             return $this->redirect(['view', 'id' => $model->id]);
+
+            $product_order = \common\models\ShippingAddress::insert_shipping_address($model);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [

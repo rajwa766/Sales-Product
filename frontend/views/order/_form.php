@@ -256,6 +256,7 @@ var typeone = $("#order-child_level").val();
               'theme' => Select2::THEME_BOOTSTRAP,
               'options' => ['placeholder' => 'Select a customer name ...'],
               'pluginOptions' => [
+                'id' => 'customer-name',
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
@@ -264,6 +265,7 @@ var typeone = $("#order-child_level").val();
                     'data' => new \yii\web\JsExpression('function(params) {  return {q:params.term}; }')
                 ],
             ],
+            
             ])->label(false);
      
         ?>
@@ -444,7 +446,108 @@ var typeone = $("#order-child_level").val();
 </div>
 
 <!-- this is customer section-->
+<?= $form->field($model, 'customer_id')->textInput(['readonly' => 'true','id' => 'hold-customer'])->label(false) ?>
 
+<div class="row outer-container shipping-address">
+<div class="col-md-9 order-panel">
+    <h3>Shipping Address</h3>
+
+    <div class="row first-row">
+    
+    <div class="col-md-4">
+    Email
+    </div>
+    <div class="col-md-8">
+   
+        <?= $form->field($model, 'email')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->email])->label(false) ?>
+     
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Mobile
+    </div>
+    <div class="col-md-8">
+
+        <?= $form->field($model, 'mobile_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->mobile_no])->label(false) ?>
+     
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Phone
+    </div>
+    <div class="col-md-8">
+
+        <?= $form->field($model, 'phone_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->phone_no])->label(false) ?>
+     
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    District
+    </div>
+    <div class="col-md-8">
+   
+        <?= $form->field($model, 'district')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->district])->label(false) ?>
+   
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Province
+    </div>
+    <div class="col-md-8">
+  
+        <?= $form->field($model, 'province')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->province])->label(false) ?>
+    
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Postal Code
+    </div>
+    <div class="col-md-8">
+   
+        <?= $form->field($model, 'postal_code')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->postal_code])->label(false) ?>
+     
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Address
+    </div>
+    <div class="col-md-8">
+      
+        
+         <?= $form->field($model, 'address')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->id])->label(false) ?>
+   
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+    Country
+    </div>
+    <div class="col-md-8">
+      
+        
+         <?= $form->field($model, 'country')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->country])->label(false) ?>
+   
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<!-- customer section ends here-->
 <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
 
 
@@ -457,6 +560,10 @@ var typeone = $("#order-child_level").val();
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
+
+    var value = $('#customer-name option:selected').text();
+    $('#hold-customer').val(value);
+
     $('.save-button').click(function(e){
   if(db_items.clients == ''){
     $('.vehcle_not_found').html('Add Product Order Please');
@@ -535,11 +642,13 @@ function TypeChange()
     {
          jQuery(".order-setting").hide();
          jQuery(".request-setting").show();
+         jQuery(".shipping-address").hide();
     }
     else
     {
         jQuery(".request-setting").hide();
         jQuery(".order-setting").show();
+        jQuery(".shipping-address").show();
     }
 
 }

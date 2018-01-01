@@ -73,7 +73,7 @@ class ProductOrder extends \yii\db\ActiveRecord
     public static function insert_order($model){
         $order_data = json_decode($model->product_order_info);
         foreach ($order_data->order_info as $single_order) {
-            $product_order = new ProductOrder();
+         $product_order = new ProductOrder();
          $product_order->isNewRecord = true;
          $product_order->id = null;
          $product_order->order_id = $model->id;
