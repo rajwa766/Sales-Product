@@ -629,7 +629,7 @@ $("#items_all").jsGrid({
             $("#items_all").jsGrid("loadData");
             $("#items_all").refresh();
         }else{
-            $(".noinvoice").html("<h5 class='text-align:center'>There is no  vehicle or invoice has been created</h5>");
+            $(".noinvoice").html("<h5 class='text-align:center'>There is no item</h5>");
         }
         });
     });
