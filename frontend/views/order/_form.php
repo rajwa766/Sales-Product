@@ -459,7 +459,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'email')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->email])->label(false) ?>
+        <?= $form->field($model, 'email')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -470,7 +470,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'mobile_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->mobile_no])->label(false) ?>
+        <?= $form->field($model, 'mobile_no')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -481,7 +481,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'phone_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->phone_no])->label(false) ?>
+        <?= $form->field($model, 'phone_no')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -492,7 +492,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'district')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->district])->label(false) ?>
+        <?= $form->field($model, 'district')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -503,7 +503,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
   
-        <?= $form->field($model, 'province')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->province])->label(false) ?>
+        <?= $form->field($model, 'province')->textInput()->label(false) ?>
     
     </div>
 </div>
@@ -514,7 +514,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'postal_code')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->postal_code])->label(false) ?>
+        <?= $form->field($model, 'postal_code')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -526,7 +526,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
       
         
-         <?= $form->field($model, 'address')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->id])->label(false) ?>
+         <?= $form->field($model, 'address')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -538,7 +538,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
       
         
-         <?= $form->field($model, 'country')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->country])->label(false) ?>
+         <?= $form->field($model, 'country')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -613,7 +613,7 @@ $("#items_all").jsGrid({
             $("#items_all").jsGrid("loadData");
             $("#items_all").refresh();
         }else{
-            $(".noinvoice").html("<h5 class='text-align:center'>There is no  vehicle or invoice has been created</h5>");
+            $(".noinvoice").html("<h5 class='text-align:center'>There is no item</h5>");
         }
         });
     });
