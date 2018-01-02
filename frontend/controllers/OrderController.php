@@ -37,13 +37,28 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        if(!isset($Role['super_admin'])){
+            $dataProvider->query->andwhere(['created_by'=>Yii::$app->user->identity->id]);
+            
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
-
+    public function actionPending()
+    {
+        $searchModel = new OrderSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andwhere(['order_request_id'=>Yii::$app->user->identity->id]);
+        $dataProvider->query->andwhere(['o.status'=>'0']);
+        return $this->render('pending', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
     /**
      * Displays a single Order model.
      * @param integer $id
@@ -69,18 +84,22 @@ class OrderController extends Controller
         if ($model->load(Yii::$app->request->post())) {
          
             if($model->order_type == "Order"){
-                $model->user_id = $model->request_agent_name;
-                $model->order_request_id = $model->rquest_customer;  
+                $model->order_request_id = $model->request_agent_name;
+                $model->user_id = $model->rquest_customer;  
             }else{
-                $model->user_id = $model->parent_user;
-                $model->order_request_id = $model->child_user;
+                $model->order_request_id = $model->parent_user;
+                $model->user_id = $model->child_user;
             }
 
-            $model->save();
-            $product_order = \common\models\ProductOrder::insert_order($model);
-            return $this->redirect(['view', 'id' => $model->id]);
-
-            $product_order = \common\models\ShippingAddress::insert_shipping_address($model);
+            if($model->save()){
+                $product_order = \common\models\ProductOrder::insert_order($model);
+              
+                if($product_order){
+                    $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
+                
+                }
+             
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

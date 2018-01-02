@@ -8,6 +8,7 @@ use common\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -76,7 +77,7 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-
+     
         if ($model->load(Yii::$app->request->post())) {
             $current_level_id =  \common\models\UsersLevel::findOne($model->user_level_id);
             if($model->parent_user){
@@ -95,6 +96,7 @@ class UserController extends Controller
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
+   
             if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user){
                 return $this->redirect(['more_user', 'id' => $model->id]);  
             }else{
@@ -120,9 +122,14 @@ class UserController extends Controller
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
+          
             if($model->save()){
                 $auth->assign($role, $model->id);
             return $this->redirect(['view', 'id' => $model->id]);
+    }else{
+        return $this->render('customer_create', [
+            'model' => $model,
+        ]);  
     }
 }else{
     return $this->render('customer_create', [
@@ -148,7 +155,12 @@ class UserController extends Controller
             ]);
         }
     }
- 
+    public function actionGetuseraddress($id)
+    {
+     $user_detail = User::findOne(['id'=>$id]);
+     return Json::encode($user_detail, $asArray = true);
+   
+    }
     public function actionAlllevel($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];

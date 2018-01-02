@@ -446,7 +446,6 @@ var typeone = $("#order-child_level").val();
 </div>
 
 <!-- this is customer section-->
-<?= $form->field($model, 'customer_id')->textInput(['readonly' => 'true','id' => 'hold-customer'])->label(false) ?>
 
 <div class="row outer-container shipping-address">
 <div class="col-md-9 order-panel">
@@ -459,7 +458,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'email')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->email])->label(false) ?>
+        <?= $form->field($model, 'email')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -470,7 +469,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'mobile_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->mobile_no])->label(false) ?>
+        <?= $form->field($model, 'mobile_no')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -481,7 +480,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'phone_no')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->phone_no])->label(false) ?>
+        <?= $form->field($model, 'phone_no')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -492,7 +491,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'district')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->district])->label(false) ?>
+        <?= $form->field($model, 'district')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -503,7 +502,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
   
-        <?= $form->field($model, 'province')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->province])->label(false) ?>
+        <?= $form->field($model, 'province')->textInput()->label(false) ?>
     
     </div>
 </div>
@@ -514,7 +513,7 @@ var typeone = $("#order-child_level").val();
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'postal_code')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->postal_code])->label(false) ?>
+        <?= $form->field($model, 'postal_code')->textInput()->label(false) ?>
      
     </div>
 </div>
@@ -526,7 +525,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
       
         
-         <?= $form->field($model, 'address')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->id])->label(false) ?>
+         <?= $form->field($model, 'address')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -538,7 +537,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
       
         
-         <?= $form->field($model, 'country')->textInput(['readonly' => 'true','value' => Yii::$app->user->identity->country])->label(false) ?>
+         <?= $form->field($model, 'country')->textInput()->label(false) ?>
    
     </div>
 </div>
@@ -561,8 +560,25 @@ var typeone = $("#order-child_level").val();
 <script type="text/javascript">
 jQuery(document).ready(function() {
 
-    var value = $('#customer-name option:selected').text();
-    $('#hold-customer').val(value);
+    $('#order-rquest_customer,#order-child_user').on('change', function () {
+        $.post("../user/getuseraddress?id=" + $(this).val(), function (data) {
+    
+     var json = $.parseJSON(data);
+
+     $('#order-email').val(json.email);
+     $('#order-mobile_no').val(json.mobile_no);
+     $('#order-phone_no').val(json.phone_no);
+     $('#order-district').val(json.district);
+     $('#order-province').val(json.province);
+     $('#order-postal_code').val(json.postal_code);
+     $('#order-address').val(json.address);
+     $('#order-country').val(json.country);
+     
+     
+        });
+    });
+
+   
 
     $('.save-button').click(function(e){
   if(db_items.clients == ''){
@@ -642,7 +658,7 @@ function TypeChange()
     {
          jQuery(".order-setting").hide();
          jQuery(".request-setting").show();
-         jQuery(".shipping-address").hide();
+        //  jQuery(".shipping-address").hide();
     }
     else
     {

@@ -41,8 +41,8 @@ class OrderSearch extends Order
      */
     public function search($params)
     {
-        $query = Order::find();
-
+        $query = Order::find()->alias('o');
+        $query->joinWith(['user as u']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -73,12 +73,7 @@ class OrderSearch extends Order
             ->andFilterWhere(['like', 'cod', $this->cod])
             ->andFilterWhere(['like', 'additional_requirements', $this->additional_requirements])
             ->andFilterWhere(['like', 'file', $this->file]);
-            $user_id = Yii::$app->user->getId();
-            $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-            if(!isset($Role['super_admin'])){
-                $query->andFilterWhere(['=', 'created_by', Yii::$app->user->identity->id]);   
-                
-            }
+         
         return $dataProvider;
     }
 }

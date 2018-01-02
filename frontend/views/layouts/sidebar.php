@@ -103,6 +103,22 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="title">Order Pending</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending">Orders</a>
+
+                                </li>
+                              
+                                
+                                
+                            </ul>
+                        </li>
                      <!-- order ends -->
                      <li class=""> 
                             <a href="javascript:;">

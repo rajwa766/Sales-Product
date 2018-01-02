@@ -69,22 +69,20 @@ class ShippingAddress extends \yii\db\ActiveRecord
     }
 
      public static function insert_shipping_address($model){
-        $order_data = json_decode($model->product_order_info);
-        foreach ($order_data->order_info as $single_order) {
-         $product_order = new ProductOrder();
-         $product_order->isNewRecord = true;
-         $product_order->id = null;
-         $product_order->order_id = $model->id;
-         $product_order->email = $single_order->email; 
-         $product_order->phone_no =$single_order->phone_no; 
-         $product_order->mobile_no =$single_order->mobile_no; 
-         $product_order->postal_code = $single_order->postal_code; 
-         $product_order->district =$single_order->district; 
-         $product_order->province =$single_order->province; 
-         $product_order->country = $single_order->country;
-         $product_order->save();
+         $shipping_address = new ShippingAddress();
+         $shipping_address->isNewRecord = true;
+         $shipping_address->id = null;
+         $shipping_address->order_id = $model->id;
+         $shipping_address->email = $model->email; 
+         $shipping_address->phone_no =$model->phone_no; 
+         $shipping_address->mobile_no =$model->mobile_no; 
+         $shipping_address->postal_code = $model->postal_code; 
+         $shipping_address->district =$model->district; 
+         $shipping_address->province =$model->province; 
+         $shipping_address->country = $model->country;
+        return $shipping_address->save();
      
-        }
+        
     }
 
 }

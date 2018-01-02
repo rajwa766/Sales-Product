@@ -134,4 +134,16 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ProductOrder::className(), ['order_id' => 'id']);
     }
+    public function productorder($id)
+    {
+        $i =1;
+        $product_order_data ="";
+        $order = \common\models\ProductOrder::find()->where(['=','order_id',$id])->all();
+      
+        foreach($order as $p_order){
+            $product_order_data.=  '<div class="vehicle_grid"> '.$i.'&nbsp;&nbsp;Quantity'.$p_order->quantity.'&nbsp;&nbsp;Price/Unit#'.$p_order->order_price.'<br></div>';  
+        $i++;
+    }
+    return $product_order_data;
+}
 }
