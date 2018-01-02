@@ -52,8 +52,7 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andwhere(['order_request_id'=>Yii::$app->user->identity->id]);
-        $dataProvider->query->andwhere(['o.status'=>'0']);
+        $dataProvider->query->where(['order_request_id'=>Yii::$app->user->identity->id]);
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -128,6 +127,10 @@ class OrderController extends Controller
         ]);
     }
 
+    public function actionAvi($id)
+    {
+        echo "this is avi method";
+    }
     /**
      * Deletes an existing Order model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
