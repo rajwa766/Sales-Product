@@ -14,7 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);
+     ?>
+
 
  
     <?= GridView::widget([
@@ -40,13 +42,24 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'productOrders.order_price',
             'additional_requirements',
             [
+                'header' => 'Action',
+                'format' => 'html',
+                'value' => function($model) { return $model->status == 0 ? '<a class="' . $model->id . '">Approve</a>': '<a href="index" class="' . $model->id . '">Complete</a>';},
+            ],
+
+            [
+
                 'header' => 'Approve',
-                'format' => 'raw',
-             
+
+                'format' => 'html',
+
                 'value' => function($model) {
+
+
       
              return "<div class='payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
     
+
                 }
             ],
             [
@@ -71,7 +84,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
     <?php Pjax::end(); ?>
-</div>
+
+
 <script>
 
         $("body").delegate(".payment_button_general_approve a", "click", function () {
@@ -95,3 +109,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
         });
     </script>
+
