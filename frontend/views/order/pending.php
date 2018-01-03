@@ -41,11 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'productOrders.quantity',
             // 'productOrders.order_price',
             'additional_requirements',
-            [
-                'header' => 'Action',
-                'format' => 'html',
-                'value' => function($model) { return $model->status == 0 ? '<a class="' . $model->id . '">Approve</a>': '<a href="index" class="' . $model->id . '">Complete</a>';},
-            ],
 
             [
 
@@ -84,21 +79,3 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::end(); ?>
 
 </div>
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-   jQuery(this).click(function(){
- 
-   $.ajax({
-   type: "post",
-   url: "index",
-   cache: false,    
-   data:'search='+$(this).class(),
-   
-   
-  
-  });
-  
-
-   });
- });
-</script>
