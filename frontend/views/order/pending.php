@@ -41,11 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'additional_requirements',
             [
                 'header' => 'Approve',
-                'format' => 'html',
+                'format' => 'raw',
              
                 'value' => function($model) {
       
-             return "<div class='payment_button_general_approve' ><a class='" . $model->id . "' >Approve</a></div>";
+             return "<div class='payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
     
                 }
             ],
@@ -72,3 +72,26 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
+<script>
+
+        $("body").delegate(".payment_button_general_approve a", "click", function () {
+       var id =    $(this).attr('class');
+       var user_id =    $(this).attr('user_id');
+       var order_request_id =    $(this).attr('ref_id');
+       
+            $.ajax({
+                type: "POST",
+            
+                data:  {id:id, user_id:user_id,order_request_id: order_request_id },
+               // data: "id="+id+"status+"+status,
+                url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
+                success: function (test) {
+                    // $('.modal-body').html(test);
+                },
+                error: function (exception) {
+                    alert(exception);
+                }
+            });
+
+        });
+    </script>

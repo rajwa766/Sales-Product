@@ -361,9 +361,14 @@ var typeone = $("#order-child_level").val();
  <div class="col-md-9 order-panel">
     <h3>Order Items</h3>
     <div class="row first-row">
+    <?php 
+    echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false);
+  
+    ?>
     <div class="col-md-2">
   Add Package
     </div>
+  
     <div class="col-md-8">
         <?php
     $user_id = Yii::$app->user->getId();

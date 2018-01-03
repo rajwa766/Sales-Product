@@ -8,6 +8,8 @@ use common\models\StockInSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\db\Query;
+
 
 /**
  * StockInController implements the CRUD actions for StockIn model.
@@ -74,7 +76,74 @@ class StockInController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionApprove()
+    {
+        $data = Yii::$app->request->post();
+        $order_id = $data['id'];
+        $user_id = $data['id'];
+        $order_request_id = $data['order_request_id'];
+        $stock_available = true;
+        $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
+        $transaction_failed=false;
+        $failed_transaction_msg='Stock not available';
 
+        $transaction = Yii::$app->db->beginTransaction();
+        try 
+        {
+        foreach($total_order_quantity as $single_order){
+           
+            if($transaction_failed)
+            {
+                break;
+            }
+            while($single_order['quantity']>0){
+                $stockin_quantity = \common\models\StockIn::avilaible_quantity($single_order['product_id'],$order_request_id);
+                if($stockin_quantity != null){
+    //  subtract the quantiy 
+                $single_order['quantity'] = $single_order['quantity'] - $stockin_quantity['remaining_quantity'];
+                // insert stock out 
+            
+            //    update stock in
+              
+                   if($single_order['quantity']> 0){
+                   \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
+                   \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
+                   }else{
+                    \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
+                    $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
+                        var_dump($stock_out_quantity);
+                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
+                    
+                   }
+                // insert stock in
+                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
+                
+                
+                }else{
+                    $transaction_failed=true;
+                    
+                    break;
+                }
+                
+                    }
+                   
+    }
+ 
+       
+    }catch (Exception $e) 
+    {
+        $transaction_failed=true;
+      
+    }
+   if($transaction_failed)
+   {
+    $transaction->rollBack();
+   }
+   else
+   {
+    $transaction->commit();     
+   }
+    }
     /**
      * Updates an existing StockIn model.
      * If update is successful, the browser will be redirected to the 'view' page.

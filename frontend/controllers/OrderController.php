@@ -94,11 +94,9 @@ class OrderController extends Controller
             if($model->save()){
                 $product_order = \common\models\ProductOrder::insert_order($model);
               
-                if($product_order){
+               
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
-                
-                }
-             
+               
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }

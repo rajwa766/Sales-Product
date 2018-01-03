@@ -1,7 +1,7 @@
 <?php
 
 namespace common\models;
-
+use yii\db\Query;
 use Yii;
 
 /**
@@ -34,7 +34,7 @@ class ProductOrder extends \yii\db\ActiveRecord
     {
         return [
             [['order_id'], 'required'],
-            [['order_id', 'quantity', 'requested_quantity'], 'integer'],
+            [['order_id','product_id', 'quantity', 'requested_quantity'], 'integer'],
             [['order_price', 'requested_price'], 'number'],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
@@ -77,12 +77,21 @@ class ProductOrder extends \yii\db\ActiveRecord
          $product_order->isNewRecord = true;
          $product_order->id = null;
          $product_order->order_id = $model->id;
+         $product_order->product_id = $model->product_id;
          $product_order->quantity = $single_order->unit; 
          $product_order->order_price =$single_order->price; 
          $product_order->requested_price =$single_order->price; 
          $product_order->requested_quantity = $single_order->unit; 
-       return   $product_order->save();
+       $product_order->save();
      
         }
+    }
+    public static function order_quantity($order_id){
+        return $order_quantity = (new Query())
+        ->select('*')
+        ->from('product_order')   
+        ->where("order_id = '$order_id'")
+        ->all();
+    
     }
 }

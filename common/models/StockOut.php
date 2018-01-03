@@ -69,4 +69,17 @@ class StockOut extends \yii\db\ActiveRecord
     {
         return $this->hasOne(StockIn::className(), ['id' => 'stock_in_id']);
     }
+    public static function insert_quantity($product_order_id,$stock_in_id,$quantity){
+       
+         $stockOut = new StockOut();
+         $stockOut->isNewRecord = true;
+         $stockOut->id = null;
+         $stockOut->product_order_id = $product_order_id;
+         $stockOut->stock_in_id = $stock_in_id;
+         $stockOut->quantity = $quantity;
+         
+     return  $stockOut->save();
+     
+        
+    }
 }
