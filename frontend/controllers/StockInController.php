@@ -168,12 +168,15 @@ class StockInController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionGetunits($id){
-        $one_unit = StockIn::find()->where(['id'=>$id])->one();
-     
-        $detai_item['unit']=$one_unit->remaining_quantity;
-        $detai_item['price']=$one_unit->price;
-        return json_encode($detai_item);
+    public function actionGetunits($id,$user_id){
+        $order_quantity = (new Query())
+        ->select('SUM(remaining_quantity) as remaning_stock')
+        ->from('stock_in')   
+        ->where("user_id = '$user_id'")
+        ->andWhere("product_id = '$id'")
+        ->groupby(['product_id'])
+        ->one();
+     return $order_quantity['remaning_stock'];
     }
     public function actionAllstock(){
         $q = Yii::$app->request->get('q');

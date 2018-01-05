@@ -102,8 +102,8 @@ $this->params['breadcrumbs'][] = $this->title;
                // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
                 success: function (test) {
-                    alert(test);
-                    // $('.modal-body').html(test);
+                    $(this).parent().removeClass('payment_button_general_approve');
+                    $(this).text('Approved');
                 },
                 error: function (exception) {
                     alert(exception);

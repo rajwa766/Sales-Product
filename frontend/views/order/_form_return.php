@@ -362,70 +362,40 @@ var typeone = $("#order-child_level").val();
     <h3>Order Items</h3>
     <div class="row first-row">
     <?php 
-    echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false);
     echo $form->field($model, 'status')->hiddenInput(['value'=> '3'])->label(false);
     
     ?>
+  <div class="col-md-2">Select Product
+  </div>
+    <div class="col-md-10">
+    <?php
+    echo $form->field($model, 'product_id')->widget(Select2::classname(), [
+        'data' => common\models\StockIn::getallproduct(),
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select all Product  ...'],
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
+
+    ])->label(false);
+    ?>
+    </div>
+    <div class="col-md-2">Total Stock
+    
+    </div>
+    <div class="col-md-10" style="margin-bottom: 10px;">
+    <input type="text" id="order-orde" readonly="true" class="form-control" name="Order[total_stock]" maxlength="45">
+    </div>
     <div class="col-md-2">
   Add Package
     </div>
   
     <div class="col-md-8">
         <?php
-    $user_id = Yii::$app->user->getId();
- $Role =   Yii::$app->authManager->getRolesByUser($user_id);
- if(isset($Role['super_admin'])){
-   
-    echo $form->field($model, 'entity_type')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Stock in  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-    
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../stock-in/allstock',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { 
-                    if($("#order-type").val() == "Order"){
-                        var type = $("#order-rquest_customer").val();
-                    }else{
-                         var type = $("#order-child_user").val();
-                }
-                    var type_order = $("#order-product_id").val();
-                    return {q:params.term,type:type,type_order:type_order}; }')
-            ],
-        ],
+echo $form->field($model, 'entity_type')->textInput(['maxlength' => true])->label(false);
+   ?> 
 
-    ])->label(false);
-
- }else{
-  
-    echo $form->field($model, 'entity_type')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Package  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-    
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../stock-in/allstock',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-request_user_level").val();
-                    var type_order = $("#order-product_id").val();
-                    return {q:params.term,type:type,type_order:type_order}; }')
-            ],
-        ],
-
-    ])->label(false);
-
- }
-
- ?>
  
 
     </div>
@@ -437,19 +407,7 @@ var typeone = $("#order-child_level").val();
 <input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
 
 <div class="row">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-              <tr>
-                <th>item number</th>
-                <th>sokochan code</th>
-                <th>item</th>
-                <th>quantity</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-      </table>
-    </div>
+   
     <div id="items_all"></div>
 </div>        
 </div>
@@ -458,103 +416,7 @@ var typeone = $("#order-child_level").val();
 
 <!-- this is customer section-->
 
-<div class="row outer-container shipping-address">
-<div class="col-md-9 order-panel">
-    <h3>Shipping Address</h3>
 
-    <div class="row first-row">
-    
-    <div class="col-md-4">
-    Email
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'email')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Mobile
-    </div>
-    <div class="col-md-8">
-
-        <?= $form->field($model, 'mobile_no')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Phone
-    </div>
-    <div class="col-md-8">
-
-        <?= $form->field($model, 'phone_no')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    District
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'district')->textInput()->label(false) ?>
-   
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Province
-    </div>
-    <div class="col-md-8">
-  
-        <?= $form->field($model, 'province')->textInput()->label(false) ?>
-    
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Postal Code
-    </div>
-    <div class="col-md-8">
-   
-        <?= $form->field($model, 'postal_code')->textInput()->label(false) ?>
-     
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Address
-    </div>
-    <div class="col-md-8">
-      
-        
-         <?= $form->field($model, 'address')->textInput()->label(false) ?>
-   
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-    Country
-    </div>
-    <div class="col-md-8">
-      
-        
-         <?= $form->field($model, 'country')->textInput()->label(false) ?>
-   
-    </div>
-</div>
-
-</div>
-</div>
 
 
 <!-- customer section ends here-->
@@ -570,26 +432,12 @@ var typeone = $("#order-child_level").val();
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
-
-    $('#order-rquest_customer,#order-child_user').on('change', function () {
-        $.post("../user/getuseraddress?id=" + $(this).val(), function (data) {
-    
-     var json = $.parseJSON(data);
-
-     $('#order-email').val(json.email);
-     $('#order-mobile_no').val(json.mobile_no);
-     $('#order-phone_no').val(json.phone_no);
-     $('#order-district').val(json.district);
-     $('#order-province').val(json.province);
-     $('#order-postal_code').val(json.postal_code);
-     $('#order-address').val(json.address);
-     $('#order-country').val(json.country);
-     
-     
+    $('#order-product_id').on('change', function () {
+        $.post("../stock-in/getunits?id=" + $(this).val()+"&user_id="+$('#order-child_user').val(), function (data) {
+    $('#order-orde').val(data);
         });
     });
-
-   
+  
 
     $('.save-button').click(function(e){
   if(db_items.clients == ''){
@@ -601,6 +449,8 @@ jQuery(document).ready(function() {
  
   }
 });
+
+  
 
 
   
@@ -618,32 +468,29 @@ $("#items_all").jsGrid({
         controller: db_items,
         fields: [
            // {name: "item_number", title: "Item Number", id: "item_number", width: "auto", type: "hidden"},
-            {name: "unit", title: "Units", type: "text",  width: "auto"},
+            {name: "unit", title: "Quantity", type: "text",  width: "auto"},
             {name: "price", title: "Price", type: "text",  width: "auto"},
-            {name: "total_price", title: "Total Price", type: "text",  width: "auto"},
+            {name: "total_price", title: "Total Price", type: "hidden",  width: "auto"},
            //{ name: "Married", title: "Marié", type: "checkbox", sorting: false },
             {type: "control"}
         ]
     });
      $('.jsgrid-insert-mode-button').click();
-     $('#add-button').on('click', function () {
-
-        $.post("../stock-in/getunits?id=" + $('#order-entity_type').val(), function (data) {
-          if(data){
-        var json = $.parseJSON(data);
+   
+    $('#add-button').on('click', function () {
+          if($('#order-entity_type').val()){
+        
       db_items.clients.push({
-                           unit: json.unit,
-                           price: json.price,
-                           total_price: parseFloat(json.unit)  * parseFloat(json.price) ,
+                           unit: $('#order-entity_type').val(),
+                           price: 0,
+                           total_price: 0,
                        });
                        console.log(db_items.clients);
             $("#items_all").jsGrid("loadData");
             // $("#items_all").refresh();
-        }else{
-            $(".noinvoice").html("<h5 class='text-align:center'>There is no item</h5>");
         }
         });
-    });
+
     TypeChange();
     var role="<?php echo array_keys($Role)[0];?>";
     if(role=='super_admin')

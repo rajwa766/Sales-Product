@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 'value' => function($model) {
                     if($model->status == '0'){
-             return "<div class='approve payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
+             return "<div class='payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
                     }else{
              return "<div class='payment_button_general_approved' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approved</a></div>";
              

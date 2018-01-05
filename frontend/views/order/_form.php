@@ -431,19 +431,7 @@ var typeone = $("#order-child_level").val();
 <input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
 
 <div class="row">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-              <tr>
-                <th>item number</th>
-                <th>sokochan code</th>
-                <th>item</th>
-                <th>quantity</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-      </table>
-    </div>
+  
     <div id="items_all"></div>
 </div>        
 </div>
