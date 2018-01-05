@@ -127,7 +127,11 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-
+public static function update_status($id){
+    return    Yii::$app->db->createCommand()
+    ->update('order', ['status' =>'1' ], 'id =' . $id)
+    ->execute();
+}
     /**
      * @return \yii\db\ActiveQuery
      */

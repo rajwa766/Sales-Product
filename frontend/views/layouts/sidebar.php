@@ -103,6 +103,25 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
+                                <!-- order -->
+                     <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="title">Order Return</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return">Orders</a>
+
+                                </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/createreturn" >Create Order</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
                         <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-pencil-square-o"></i>
@@ -119,6 +138,39 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="title">Order Approved</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Orders</a>
+
+                                </li>
+                              
+                                
+                                
+                            </ul>
+                        </li>
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="title">Order Cancel</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Orders</a>
+
+                                </li>
+                              
+                                
+                                
+                            </ul>
+                        </li>
+              
                      <!-- order ends -->
                      <li class=""> 
                             <a href="javascript:;">

@@ -39,7 +39,6 @@ class StockInController extends Controller
     {
         $searchModel = new StockInSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -80,12 +79,13 @@ class StockInController extends Controller
     {
         $data = Yii::$app->request->post();
         $order_id = $data['id'];
-        $user_id = $data['id'];
+        $user_id = $data['user_id'];
         $order_request_id = $data['order_request_id'];
         $stock_available = true;
         $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
         $transaction_failed=false;
-        $failed_transaction_msg='Stock not available';
+     
+        
 
         $transaction = Yii::$app->db->beginTransaction();
         try 
@@ -108,15 +108,17 @@ class StockInController extends Controller
                    if($single_order['quantity']> 0){
                    \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
+                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
+                 
                    }else{
                     \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
                     $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
-                        var_dump($stock_out_quantity);
+                       
                     \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
-                    
+                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],$stock_out_quantity,$user_id);
+                 
                    }
                 // insert stock in
-                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
                 
                 
                 }else{
@@ -138,10 +140,13 @@ class StockInController extends Controller
    if($transaction_failed)
    {
     $transaction->rollBack();
+    echo false;
    }
    else
    {
-    $transaction->commit();     
+    $transaction->commit();    
+    \common\models\Order::update_status($order_id);
+    echo true;
    }
     }
     /**
@@ -163,7 +168,58 @@ class StockInController extends Controller
             'model' => $model,
         ]);
     }
-
+    public function actionGetunits($id){
+        $one_unit = StockIn::find()->where(['id'=>$id])->one();
+     
+        $detai_item['unit']=$one_unit->remaining_quantity;
+        $detai_item['price']=$one_unit->price;
+        return json_encode($detai_item);
+    }
+    public function actionAllstock(){
+        $q = Yii::$app->request->get('q');
+        //  $id = Yii::$app->request->get('id');
+          $type = Yii::$app->request->get('type');
+          $type_order = Yii::$app->request->get('type_order');
+          \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+          $out = ['results' => ['id' => '', 'text' => '']];
+     
+             
+            if (!is_null($q)) {
+                $query = new \yii\db\Query();
+                  $query->select('stock_in.id as id, stock_in.remaining_quantity AS text')
+                          ->from('stock_in')
+                          ->join('join product on stock_in.product_id=product.id', [])
+                          ->where(['like', 'product.name', $q])
+                          ->andWhere(['=', 'stock_in.user_id', $type])
+                      ->andWhere(['=','stock_in.product_id',$type_order])
+                         ->limit(20);
+                  
+                  $command = $query->createCommand();
+                  $data = $command->queryAll();
+                  // if($data){
+                  $out['results'] = array_values($data);
+             }
+             
+             else{
+              $query = new \yii\db\Query();
+              $query->select('stock_in.id as id, stock_in.remaining_quantity AS text')
+              ->from('stock_in')
+              ->join('join product on stock_in.product_id=product.id', [])
+             // ->where(['like', 'product.name', $q])
+              ->andWhere(['=', 'stock_in.user_id', $type])
+          ->andWhere(['=','stock_in.product_id',$type_order])
+             ->limit(20);
+              
+              $command = $query->createCommand();
+              $data = $command->queryAll();
+              // if($data){
+              $out['results'] = array_values($data);
+             }
+            
+  
+     
+       return $out;
+    }
     /**
      * Deletes an existing StockIn model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

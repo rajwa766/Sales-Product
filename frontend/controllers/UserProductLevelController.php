@@ -185,6 +185,7 @@ public function actionLevelpakages(){
 }
 public function actionGetunits($id){
     $one_unit = UserProductLevel::find()->where(['id'=>$id])->one();
+ 
     $detai_item['unit']=$one_unit->units;
     $detai_item['price']=$one_unit->price;
     return json_encode($detai_item);

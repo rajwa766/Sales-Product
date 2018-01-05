@@ -1,7 +1,7 @@
 <?php
 
 namespace common\models;
-
+use yii\db\Expression;
 use Yii;
 
 /**
@@ -26,6 +26,8 @@ class StockOut extends \yii\db\ActiveRecord
         return 'stock_out';
     }
 
+
+    
     /**
      * @inheritdoc
      */
@@ -75,6 +77,7 @@ class StockOut extends \yii\db\ActiveRecord
          $stockOut->isNewRecord = true;
          $stockOut->id = null;
          $stockOut->product_order_id = $product_order_id;
+         $stockOut->timestamp = new Expression('NOW()');
          $stockOut->stock_in_id = $stock_in_id;
          $stockOut->quantity = $quantity;
          

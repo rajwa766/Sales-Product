@@ -2,7 +2,7 @@
 
 namespace common\models;
 use yii\db\Query;
-
+use yii\db\Expression;
 use Yii;
 
 /**
@@ -90,10 +90,12 @@ class StockIn extends \yii\db\ActiveRecord
           $stockIn->id = null;
           $stockIn->initial_quantity = $quantity;
           $stockIn->remaining_quantity = $quantity;
+          $stockIn->timestamp = new Expression('NOW()');
           $stockIn->price = $price;
           $stockIn->product_id = $product_id;
           $stockIn->user_id = $user_id;
       return  $stockIn->save();
+      
      }
      public static function update_quantity($id,$amount){
      return    Yii::$app->db->createCommand()
