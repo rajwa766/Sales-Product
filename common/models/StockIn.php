@@ -111,4 +111,13 @@ class StockIn extends \yii\db\ActiveRecord
         ->one();
        
     }
+
+    public function stockInReport($user_id)
+    {
+
+    return  $model = User::find()
+    ->where(['user_id' => $user_id])
+    
+    ->all();
+    }
 }

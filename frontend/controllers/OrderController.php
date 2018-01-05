@@ -8,6 +8,8 @@ use common\models\OrderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\db\Query;
+use common\models\StockIn;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -123,11 +125,6 @@ class OrderController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    public function actionAvi($id)
-    {
-        echo "this is avi method";
     }
     /**
      * Deletes an existing Order model.
@@ -286,6 +283,101 @@ public function actionCustomerLevel() {
      $out['results'] = array_values($data);
     }
  return $out;
+}
+
+public function actionGetReports()
+{
+     $model = new Order(); 
+           return $this->render('report', [
+            'model' => $model,
+       
+            
+        ]);
+}
+
+
+public function actionAjaxreport(){
+
+         $inventoryArr=array();
+         $fromDate = Yii::$app->request->post('from_date');
+    
+         $toDate = Yii::$app->request->post('to_date');
+         $userId = Yii::$app->user->getId();
+         $stock_in_hand=0;
+         $userame = Yii::$app->user->identity->username;
+
+                $stock_in  = (new Query()) 
+                               ->select('*')
+                               ->from('stock_in')
+                               ->innerJoin('product', 'product.id = stock_in.product_id')
+                               ->where(['=','stock_in.user_id',$userId]);
+                               if(!empty($fromDate))
+                                    $stock_in->andWhere(['>=','DATE(stock_in.timestamp)',$fromDate]);
+                                if(!empty($toDate))
+                                    $stock_in->andWhere(['<=','DATE(stock_in.timestamp)',$toDate]);
+                $stock_in=$stock_in->all();
+        
+                $stock_out  = (new Query()) 
+                              ->select('*,stock_out.timestamp as stock_out_date')
+                               ->from('stock_out')
+                               ->innerJoin('stock_in', 'stock_out.stock_in_id = stock_in.id')
+                               ->innerJoin('product', 'product.id = stock_in.product_id')
+                               ->where(['=','stock_in.user_id',$userId]);
+                              if(!empty($fromDate))
+                                    $stock_out->andWhere(['>=','DATE(stock_out.timestamp)',$fromDate]);
+                              if(!empty($toDate))
+                                    $stock_out->andWhere(['<=','DATE(stock_out.timestamp)',$toDate]);
+                $stock_out= $stock_out->all();
+               
+                foreach ($stock_in as $stock) {
+                   $inventory=new \common\models\helpers\reports\InventoryReport();
+                   $inventory->user=$userame;
+                   $inventory->date=$stock['timestamp'];
+                   $inventory->quantity=$stock['initial_quantity'];
+                   $inventory->type='Stock In';
+                   $inventory->product=$stock['name'];
+                   $inventoryArr[]=$inventory;
+
+                }
+                 foreach ($stock_out as $stock) {
+                   $inventory=new \common\models\helpers\reports\InventoryReport();
+                   $inventory->user=$userame;
+                   $inventory->date=$stock['stock_out_date'];
+                   $inventory->quantity=$stock['quantity'];
+                   $inventory->type='Stock Out';
+                   $inventory->product=$stock['name'];
+                   $inventoryArr[]=$inventory;
+
+                }
+                usort($inventoryArr, function($a, $b) {
+                    return strtotime($a['date']) - strtotime($b['date']);
+                });
+                if(!empty($fromDate))
+                {
+                        $result=(new Query()) 
+                               ->select('SUM(initial_quantity) as initial_quantity,sum(remaining_quantity) as remaining_quantity')
+                               ->from('stock_in')
+                               ->where(['=','stock_in.user_id',$userId])
+                               ->andWhere(['<','DATE(stock_in.timestamp)',$fromDate])->one();
+                               try
+                               {
+                                  $stock_in_hand=  $result['initial_quantity'] -$result['remaining_quantity'];
+                               }
+                               catch(Exception $e)
+                               {
+
+                               }
+           
+                }
+               
+
+            return $this->renderAjax('report_view', [
+                'stock_in_hand' => $stock_in_hand,
+                'inventoryArr' => $inventoryArr,
+                
+            ]);
+                            
+       
 }
 
 }

@@ -31,6 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'order_ref_no',
             'shipper',
             'cod',
+            'order_request_id',
+            'user_id',
             [
                 'label' => 'Quantity and Price',
                 'format' => 'raw',
@@ -38,20 +40,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->productorder($model->id);
                 },
             ],
+
+
             // 'productOrders.quantity',
             // 'productOrders.order_price',
             'additional_requirements',
-            [
+            /*[
                 'header' => 'Action',
                 'format' => 'html',
                 'value' => function($model) { return $model->status == 0 ? '<a class="' . $model->id . '">Approve</a>': '<a href="index" class="' . $model->id . '">Complete</a>';},
-            ],
+            ],*/
 
             [
 
                 'header' => 'Approve',
 
-                'format' => 'html',
+                'format' => 'raw',
 
                 'value' => function($model) {
 
@@ -92,11 +96,11 @@ $this->params['breadcrumbs'][] = $this->title;
        var id =    $(this).attr('class');
        var user_id =    $(this).attr('user_id');
        var order_request_id =    $(this).attr('ref_id');
-       
+
             $.ajax({
                 type: "POST",
             
-                data:  {id:id, user_id:user_id,order_request_id: order_request_id },
+                data:  {'id':id, 'user_id':user_id,'order_request_id': order_request_id },
                // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
                 success: function (test) {

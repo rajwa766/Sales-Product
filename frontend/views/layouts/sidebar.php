@@ -108,6 +108,7 @@ use yii\widgets\DetailView;
                                 <i class="fa fa-pencil-square-o"></i>
                                 <span class="title">Order Pending</span>
                                 <span class="arrow "></span>
+                                <span class="label label-orange">4</span>
                             </a>
                             <ul class="sub-menu" >
                                 <li>
@@ -138,6 +139,23 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
+
+                        <!-- reports starts here -->
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-flag-checkered"></i>
+                                <span class="title">Report</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/get-reports">Report</a>
+
+                                </li>
+                                 
+                            </ul>
+                        </li>
+                        <!-- reports ends here -->
                     </ul>
 
                 </div>
