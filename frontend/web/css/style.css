@@ -261,6 +261,7 @@ body.boxed .page-topbar {
 
 .page-title h1 {
     font-size: 30px;
+    background-color: transparent;
     font-weight: 400;
     padding: 0;
     text-transform: uppercase;
@@ -9541,8 +9542,45 @@ border-left: 3px solid transparent;
     display: none;
 } */
 
+.report-view {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.report-view .table.table-bordered {
+    background-color: #fff;
+}
+
+.report-view .table.table-bordered thead tr th {
+    background-color: #1fb5ac;
+    color: #fff;
+}
+
+.filter h1,
+.report-view h2,
+h1,
+.user-form h1,
+.user-create h1,
+.user-index h1,
+.order-create h1,
+.other-details strong {
+    background-color: #1fb5ac;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-size: 22px;
+    padding: 10px;
+    font-family: Oswald, Helvetica, Arial, sans-serif;
+}
+
+.order-views {
+    border: 1px solid #1fb5ac !important;
+}
+
 .payment_button_general_approve,
-.payment_button_general_pending {
+.payment_button_general_pending,
+.payment_button_general_cancel {
     border: 1px solid #1fb5ac !important;
     padding: 5px !important;
     border-radius: 7px !important;
@@ -9563,16 +9601,6 @@ border-left: 3px solid transparent;
     border-radius: 7px;
 }
 
-.user-form h1,
-.user-create h1,
-.user-index h1,
-.order-create h1,
-.other-details strong {
-    text-transform: uppercase;
-    color: #1fb5ac;
-    font-weight: 400;
-}
-
 .btn.btn-success {
     background-color: #1fb5ac;
 }
@@ -9581,10 +9609,6 @@ border-left: 3px solid transparent;
     border: 1px solid #1fb5ac !important;
     padding: 5px !important;
     border-radius: 7px !important;
-}
-
-.order-index h1 {
-    color: #1fb5ac;
 }
 
 .order-panel {

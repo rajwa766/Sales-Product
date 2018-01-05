@@ -75,6 +75,15 @@ class StockInController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionCancel()
+    {
+        $data = Yii::$app->request->post();
+        $order_id = $data['id'];
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>'2'], 'id =' . $order_id)
+        ->execute();
+        return true;
+    }
     public function actionApprove()
     {
         $data = Yii::$app->request->post();

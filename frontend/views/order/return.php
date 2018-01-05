@@ -65,10 +65,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
              
                 'value' => function($model) {
-      if($model->status == '0'){
-        return "<div class='payment_button_general_pending' ><a class='" . $model->id . "' >Cancel</a></div>";
+      if($model->status == '3'){
+        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
       }else{
-        return "<div class='payment_button_general_pending' ><a class='" . $model->id . "' >Completed</a></div>";
+        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Completed</a></div>";
         
       }
     
@@ -89,15 +89,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <script>
-
+        $("body").delegate(".payment_button_general_cancel a", "click", function () {
+       var id =    $(this).attr('class');
+            $.ajax({
+                type: "POST",
+                context: this,
+                data:  {id:id},
+               // data: "id="+id+"status+"+status,
+                url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/cancel'); ?>",
+                success: function (test) {
+                   $(this).parent().removeClass('payment_button_general_cancel');
+                   $(this).text('Cancled');
+                   
+                },
+                error: function (exception) {
+                    alert(exception);
+                }
+            });
+        });
         $("body").delegate(".payment_button_general_approve a", "click", function () {
        var id =    $(this).attr('class');
        var user_id =    $(this).attr('user_id');
        var order_request_id =    $(this).attr('ref_id');
        
             $.ajax({
+                context: this,
                 type: "POST",
-            
                 data:  {id:id, user_id:user_id,order_request_id: order_request_id },
                // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",

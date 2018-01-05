@@ -99,77 +99,31 @@ use yii\widgets\DetailView;
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/create" >Create Order</a>
                                 </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return">Return Orders
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
                                 
+                                </a>
+
+                                </li>
+                                <li>
                                 
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending">Pending Orders
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'0'])->count(); ?></span>
+                                </a>
+
+                                </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Approved Orders
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'1'])->count(); ?></span>
+                                
+                                </a>
+
+                                </li>
                             </ul>
                         </li>
                                 <!-- order -->
-                     <li class=""> 
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil-square-o"></i>
-                                <span class="title">Order Return</span>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu" >
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return">Orders</a>
-
-                                </li>
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/createreturn" >Create Order</a>
-                                </li>
-                                
-                                
-                            </ul>
-                        </li>
-                        <li class=""> 
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil-square-o"></i>
-                                <span class="title">Order Pending</span>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu" >
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending">Orders</a>
-
-                                </li>
-                              
-                                
-                                
-                            </ul>
-                        </li>
-                        <li class=""> 
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil-square-o"></i>
-                                <span class="title">Order Approved</span>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu" >
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Orders</a>
-
-                                </li>
-                              
-                                
-                                
-                            </ul>
-                        </li>
-                        <li class=""> 
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil-square-o"></i>
-                                <span class="title">Order Cancel</span>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu" >
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Orders</a>
-
-                                </li>
-                              
-                                
-                                
-                            </ul>
-                        </li>
+            
               
                      <!-- order ends -->
                      <li class=""> 
@@ -190,6 +144,23 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
+
+                        <!-- reports starts here -->
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-flag-checkered"></i>
+                                <span class="title">Report</span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/get-reports">Report</a>
+
+                                </li>
+                                 
+                            </ul>
+                        </li>
+                        <!-- reports ends here -->
                     </ul>
 
                 </div>
