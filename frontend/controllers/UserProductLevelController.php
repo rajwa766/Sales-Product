@@ -189,6 +189,20 @@ public function actionGetunits($id){
     $detai_item['price']=$one_unit->price;
     return json_encode($detai_item);
 }
+public function actionGetunitsprice($id,$user_level,$product_id){
+    $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->andWhere(['<=','units',$id])->one();
+  if($one_unit){
+    $detai_item['price']=$one_unit->price;
+  
+    return json_encode($detai_item);
+  }else{
+    $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->min('units');
+  
+    $detai_item['units']=$one_unit;
+    return json_encode($detai_item);
+  }
+   
+}
     /**
      * Finds the UserProductLevel model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

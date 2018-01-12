@@ -14,7 +14,7 @@ use yii\widgets\DetailView;
 
                         <div class="profile-image col-md-4 col-sm-4 col-xs-4">
                             <a href="ui-profile.html">
-                                <img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" class="img-responsive img-circle">
+                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive img-circle">
                             </a>
                         </div>
 
@@ -42,14 +42,14 @@ use yii\widgets\DetailView;
                         <li class="open"> 
                             <a href="<?= Yii::$app->homeUrl;?>site/index">
                                 <i class="fa fa-dashboard"></i>
-                                <span class="title">Dashboard</span>
+                                <span class="title"><?= Yii::t('app','Dashboard'); ?></span>
                             </a>
                         </li>
                         <!-- profile -->
                         <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-user"></i>
-                                <span class="title">Profile</span>
+                                <span class="title"><?= Yii::t('app','Profile'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
@@ -65,10 +65,16 @@ use yii\widgets\DetailView;
                             </ul>
                         </li>
                         <!-- end profile -->
+                        <?php  
+                         $user_id = Yii::$app->user->getId();
+                         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+ if(!isset($Role['customer'])){
+    
+                        ?>
                         <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-users"></i>
-                                <span class="title">User</span>
+                                <span class="title"><?= Yii::t('app','User'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
@@ -83,12 +89,12 @@ use yii\widgets\DetailView;
                                 
                             </ul>
                         </li>
-                        
+ <?php  }  ?>
                      <!-- order -->
                      <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-pencil-square-o"></i>
-                                <span class="title">Order</span>
+                                <span class="title"><?= Yii::t('app','Order'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
@@ -96,9 +102,11 @@ use yii\widgets\DetailView;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order">Orders</a>
 
                                 </li>
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/create" >Create Order</a>
-                                </li>
+                             
+                                <?php
+
+ if(!isset($Role['customer'])){
+                                ?>
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/return">Return Orders
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
@@ -106,6 +114,20 @@ use yii\widgets\DetailView;
                                 </a>
 
                                 </li>
+                                <?php
+                                if(isset($Role['super_admin'])){ ?>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer">Transfer Request
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->count(); ?></span>
+                                </a>
+                                </li>
+                                <?php }else{ ?>
+                                    <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer">Transfer Request
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->andWhere(['user_id'=>Yii::$app->user->identity->id])->count(); ?></span>
+                                </a>
+                                </li>
+                                <?php } ?>
                                 <li>
                                 
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending">Pending Orders
@@ -120,26 +142,26 @@ use yii\widgets\DetailView;
                                 </a>
 
                                 </li>
+ <?php }?>
                             </ul>
                         </li>
                                 <!-- order -->
             
               
                      <!-- order ends -->
+              <?php       if(!isset($Role['customer'])){ ?>
                      <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-users"></i>
-                                <span class="title">Customer</span>
+                                <span class="title"><?= Yii::t('app','Stock'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/allcustomer">Customer</a>
+                                    <a class="" href="<?php Yii::$app->homeUrl; ?>stock-in"><?= Yii::t('app','Stock'); ?></a>
 
                                 </li>
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/customer" >Create Customer</a>
-                                </li>
+                            
                                 
                                 
                             </ul>
@@ -149,17 +171,21 @@ use yii\widgets\DetailView;
                         <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-flag-checkered"></i>
-                                <span class="title">Report</span>
+                                <span class="title"><?= Yii::t('app','Report'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/get-reports">Report</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/inventory-reports">INVENTORY</a>
 
                                 </li>
-                                 
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/status-reports">Order</a>
+
+                                </li>
                             </ul>
                         </li>
+                     <?php } ?>
                         <!-- reports ends here -->
                     </ul>
 

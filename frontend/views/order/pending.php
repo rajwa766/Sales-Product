@@ -25,12 +25,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'user.first_name',
-            'user.last_name',
+            [
+                'label' => 'Transfer from',
+                'attribute' => 'order_request_id',
+                'value' => function($model) {
+                    return $model->username($model->order_request_id);
+                },
+            ],
+            [
+                'label' => 'Transfer to',
+                'attribute' => 'user_id',
+                'value' => function($model) {
+                    return $model->username($model->user_id);
+                },
+            ],
             'order_ref_no',
-            'shipper',
-            'cod',
+            //'shipper',
+            //'cod',
+            
             [
                 'label' => 'Quantity and Price',
                 'format' => 'raw',

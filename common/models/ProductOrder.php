@@ -86,6 +86,38 @@ class ProductOrder extends \yii\db\ActiveRecord
      
         }
     }
+    public static function insert_user_order_exel($model,$order){
+       
+      
+         $product_order = new ProductOrder();
+         $product_order->isNewRecord = true;
+         $product_order->id = null;
+         $product_order->order_id = $order->id;
+         $product_order->product_id = '1';
+         $product_order->quantity = $order->entity_type; 
+         $product_order->order_price =$model->price; 
+         $product_order->requested_price =$model->price; 
+         $product_order->requested_quantity = $order->entity_type; 
+       $product_order->save();
+     
+        
+    }
+    public static function insert_user_order($model,$order){
+        $order_data = json_decode($model->product_order_info);
+        foreach ($order_data->order_info as $single_order) {
+         $product_order = new ProductOrder();
+         $product_order->isNewRecord = true;
+         $product_order->id = null;
+         $product_order->order_id = $order->id;
+         $product_order->product_id = '1';
+         $product_order->quantity = $single_order->unit; 
+         $product_order->order_price =$single_order->price; 
+         $product_order->requested_price =$single_order->price; 
+         $product_order->requested_quantity = $single_order->unit; 
+       $product_order->save();
+     
+        }
+    }
     public static function order_quantity($order_id){
         return $order_quantity = (new Query())
         ->select('*')

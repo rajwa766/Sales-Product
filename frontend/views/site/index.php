@@ -21,8 +21,8 @@
                                         <div class="r4_counter db_box">
                                             <i class='pull-left fa fa-thumbs-up icon-md icon-rounded icon-primary'></i>
                                             <div class="stats">
-                                                <h4><strong>45%</strong></h4>
-                                                <span>New Orders</span>
+                                                <h4><strong><?= $all_status['current_level'] ?></strong></h4>
+                                                <span>User Level</span>
                                             </div>
                                         </div>
                                     </div>
@@ -30,8 +30,8 @@
                                         <div class="r4_counter db_box">
                                             <i class='pull-left fa fa-shopping-cart icon-md icon-rounded icon-orange'></i>
                                             <div class="stats">
-                                                <h4><strong>243</strong></h4>
-                                                <span>New Products</span>
+                                                <h4><strong><?= $all_status['current_user'] ?></strong></h4>
+                                                <span>Total User</span>
                                             </div>
                                         </div>
                                     </div>
@@ -39,8 +39,8 @@
                                         <div class="r4_counter db_box">
                                             <i class='pull-left fa fa-dollar icon-md icon-rounded icon-purple'></i>
                                             <div class="stats">
-                                                <h4><strong>$3424</strong></h4>
-                                                <span>Profit Today</span>
+                                                <h4><strong><?= $all_status['user_remning'] ?></strong></h4>
+                                                <span>Remaning User</span>
                                             </div>
                                         </div>
                                     </div>
@@ -48,12 +48,50 @@
                                         <div class="r4_counter db_box">
                                             <i class='pull-left fa fa-users icon-md icon-rounded icon-warning'></i>
                                             <div class="stats">
-                                                <h4><strong>1433</strong></h4>
-                                                <span>New Users</span>
+                                                <h4><strong><?= $all_status['current_stock'] ?></strong></h4>
+                                                <span>Current Stock</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div> <!-- End .row -->    
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-thumbs-up icon-md icon-rounded icon-primary'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['current_profit'] ?></strong></h4>
+                                                <span>PROFIT</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-shopping-cart icon-md icon-rounded icon-orange'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['total_order'] ?></strong></h4>
+                                                <span>Total Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-dollar icon-md icon-rounded icon-purple'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['pending_order'] ?></strong></h4>
+                                                <span>Pending Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-users icon-md icon-rounded icon-warning'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['approved_order'] ?></strong></h4>
+                                                <span>Approved Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .row -->   
                                 <div class="row">
 
                                     <div class="col-md-3 col-sm-5 col-xs-12">

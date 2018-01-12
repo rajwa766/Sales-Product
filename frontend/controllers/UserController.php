@@ -64,10 +64,146 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $user_id = Yii::$app->user->getId();
+        $all_status = \common\models\Order::all_status_dashboard($user_id);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'all_status' => $all_status,
         ]);
     }
+   
+
+ public function actionImport() {
+        $model = new \common\models\Upload();
+        $data = "";
+        // $this->view->model = $model;
+        if ($model->load(Yii::$app->request->post())) {
+
+            $image = \yii\web\UploadedFile::getInstance($model, 'file');
+            $data = \common\components\Excel::import($image->tempName, ['setFirstRecordAsKeys' => true]);
+     
+        $array_MR=array();
+        $array_SuperVIP=array();
+        $array_VIP=array();
+ 
+            foreach ($data as $entry) {
+                try {
+                  
+                    if($entry['Level']!="อื่นๆ")
+                    {
+                       
+                        $user_model = new User();
+                        $user_model->isNewRecord = true;
+                        $user_model->id = NULL;
+                        $user_model->username = '' . $entry['User'];
+                        $user_model->email = '' . $entry['Email'];
+                        $user_model->phone_no = '' . $entry['Phone'];
+                        $user_model->address = '' . $entry['Address'];
+                        $user_model->province = '' . $entry['Province'];
+                        $user_model->first_name = '' . $entry['Name'];
+                        $user_model->password = '' . $entry['Password'];
+                        
+                        $user_model->setPassword($user_model->password);
+                        $user_model->generateAuthKey();
+                        if (strpos($entry['Level'], 'MR') !== false) {
+                            $user_model->parent_id = Yii::$app->user->identity->id;
+                            $user_model->user_level_id = '2';
+                            $user_model->entity_type =  '5000';
+                            $user_model->price =  '390';
+                            
+                        }
+                        elseif(strpos($entry['Level'], 'Super VIP') !== false) {
+                            $parent_ID= $array_MR[array_rand($array_MR)];
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = '4';
+                            $user_model->entity_type =  '1000';
+                            $user_model->price =  '440';
+                            
+                            
+                            
+                        }
+                        elseif(strpos($entry['Level'], 'VIP') !== false) {
+                            $parent_ID= $array_SuperVIP[array_rand($array_SuperVIP)];
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = '6';
+                            $user_model->entity_type =  '500';
+                            $user_model->price =  '480';
+                            
+                        }
+                        elseif(strpos($entry['Level'], 'Advance') !== false) {
+                            $parent_ID= $array_VIP[array_rand($array_VIP)];
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = '12';
+                            $user_model->entity_type =  '50';
+                            $user_model->price =  '590';
+                            
+                        }
+                        elseif(strpos($entry['Level'], 'Begin') !== false) {
+                            $parent_ID= $array_VIP[array_rand($array_VIP)];
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = '13';
+                            $user_model->entity_type =  '10';
+                            $user_model->price =  '630';
+                            
+                        }
+                        elseif(strpos($entry['Level'], 'Inter') !== false) {
+                            $parent_ID= $array_VIP[array_rand($array_VIP)];
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = '11';
+                            $user_model->entity_type =  '100';
+                            $user_model->price =  '550';
+                            
+                        }
+                     
+                       $user_model->save();
+                        if (strpos($entry['Level'], 'MR') !== false) {
+                            $array_MR[]=$user_model->id;
+                        }
+                        elseif(strpos($entry['Level'], 'Super VIP') !== false) {
+                            $array_SuperVIP[]=$user_model->id;
+                        }
+                        elseif(strpos($entry['Level'], 'VIP') !== false) {
+                            $array_VIP[]=$user_model->id;
+                        }
+                         $order = \common\models\Order::insert_order($user_model);
+                        
+                         if($order->id)
+                         {
+                             
+                             $product_order = \common\models\ProductOrder::insert_user_order_exel($user_model,$order);
+                             $shipping_address = \common\models\ShippingAddress::insert_shipping_address_excel($user_model);
+                             $stock_in = \common\models\StockIn::approve($order->id,$user_model->id,$user_model->parent_id);
+                             
+                             
+                         }
+                         $auth = \Yii::$app->authManager;
+                         $role = $auth->getRole('general'); 
+                         $auth->assign($role, $user_model->id);
+                }
+                } catch (\Exception $e) {
+                  
+                    continue;
+                }
+            }
+        }
+        return $this->render('user_upload', [
+            'model' => $model,
+        ]);
+        // $searchModel = new ChartOfAccountsSearch();
+        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // if (Yii::$app->request->isAjax) {
+        //     return $this->renderAjax('index', [
+        //                 'searchModel' => $searchModel,
+        //                 'dataProvider' => $dataProvider,
+        //     ]);
+        // } else {
+        //     return $this->render('index', [
+        //                 'searchModel' => $searchModel,
+        //                 'dataProvider' => $dataProvider,
+        //     ]);
+        // }
+    }
+                
 
     /**
      * Creates a new User model.
@@ -79,6 +215,7 @@ class UserController extends Controller
         $model = new User();
      
         if ($model->load(Yii::$app->request->post())) {
+          
             $current_level_id =  \common\models\UsersLevel::findOne($model->user_level_id);
             if($model->parent_user){
                 $model->parent_id = $model->parent_user;  
@@ -101,7 +238,18 @@ class UserController extends Controller
                 return $this->redirect(['more_user', 'id' => $model->id]);  
             }else{
             if($model->save()){
+                $order = \common\models\Order::insert_order($model);
                
+                if($order->id)
+                {
+                    
+                    $product_order = \common\models\ProductOrder::insert_user_order($model,$order);
+                    $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
+                    $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);
+                    
+                    
+                }
+                
                 $auth->assign($role, $model->id);
             }
             return $this->redirect(['view', 'id' => $model->id]);

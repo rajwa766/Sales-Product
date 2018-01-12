@@ -12,6 +12,10 @@ use kartik\time\TimePicker;
 {
     display:none;
 }
+.row{
+    margin-left: 0px;
+    margin-right: 0px;
+}
 </style>
     <?php
     $form = ActiveForm::begin(['id' => 'form-order-report','enableClientValidation' => true, 'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],
@@ -21,7 +25,7 @@ use kartik\time\TimePicker;
      ?>
    		
    		<div class="filter">
-           <h1>Order Report</h1>
+           <h1>Inventory Report</h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
@@ -33,10 +37,10 @@ use kartik\time\TimePicker;
                     'name' => 'from_date',
                     'id' => 'form-date',
 				    'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                    'value' => date('Y-m-d'),
+                    'value' => date('Y-m-d', strtotime('-7 days')),
 				    'pluginOptions' => [
 				        'autoclose'=>true,
-				        'format' => 'yyyy-M-dd'
+				        'format' => 'yyyy-mm-dd'
 				    ]
 			          ]);
 					?>
@@ -53,36 +57,69 @@ use kartik\time\TimePicker;
                     'name' => 'to_date',
                     'id' => 'to_date',
 				    'type' => DatePicker::TYPE_COMPONENT_APPEND,
-                    'value' => date('Y-m-d', strtotime('-7 days')),
+                    'value' => date('Y-m-d'),
 				    'pluginOptions' => [
 				        'autoclose'=>true,
-				        'format' => 'dd-M-yyyy'
+				        'format' => 'yyyy-mm-dd'
 				    ]
 			          ]);
 					?>
 				</div>
 			</div>
 		</div>
-
-		<div class="row" style="padding-top: 20px;">
+        <?php
+    $user_id = Yii::$app->user->getId();
+    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+    if(isset($Role['super_admin'])){
+    ?>
+        <div class="row" style="padding-top: 20px;">
 			<div class="col-md-6">
-        <div class="col-md-4">
-        Order Type
-        </div>
-        <div class="col-md-8">
-        <?= $form->field($model, 'order_type')->dropdownList([
-        	'' => 'select ...',
-             'Order' => 'Order',
-             'Request' => 'Request',
-             'transfer' => 'Transfer',
-             'transfer_back' => 'Transfer Back'
-           ]
+				<div class="col-md-4">
+                User Levels
+				</div>
+				<div class="col-md-8">
+                <?php
+    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
+        'data' => common\models\UsersLevel::getalllevel(),
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Level  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+    
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
 
-          
-     )->label(false)
-     ?>
-        </div>
-        </div>
+    ])->label(false);
+    ?>
+				</div>
+			</div>
+
+			  <div class="col-md-6">
+				<div class="col-md-4">
+                All User
+				</div>
+				<div class="col-md-8">
+					<?php
+				 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'options' => ['placeholder' => 'Select a  User ...'],
+                    'pluginOptions' => [
+                      'allowClear' => true,
+                      //'autocomplete' => true,
+                      'ajax' => [
+                          'url' => '../order/parentuser',
+                          'dataType' => 'json',
+                          'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
+                      ],
+                  ],
+                  ])->label(false);
+					?>
+				</div>
+			</div>
+		</div>
+                <?php } ?>
+		<div class="row" style="padding-top: 20px;">
 
         <div class="col-md-6">
         	<div class="col-md-3">
@@ -101,14 +138,13 @@ use kartik\time\TimePicker;
 
 $("body").delegate("#form-order-report .submit_button", "click", function (e) {
     e.preventDefault();
-var from_date =    $('#form-date').val();
-var to_date =   $('#form-date').val();
-// var type =    $('#').val();
-
+	var from_date =    $('#form-date').val();
+	var to_date =   $('#to_date').val();
+    var user_id =   $('#order-parent_user').val();
     $.ajax({
         type: "POST",
     
-        data:  {'from_date':from_date, 'to_date':to_date },
+        data:  {'from_date':from_date, 'to_date':to_date,'user_id':user_id },
        // data: "id="+id+"status+"+status,
         url: "<?php echo Yii::$app->getUrlManager()->createUrl('order/ajaxreport'); ?>",
         success: function (test) {

@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\models\order;
 use kartik\file\FileInput;
-
+use yii\db\Query;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
@@ -363,32 +363,36 @@ var typeone = $("#order-child_level").val();
     <div class="row first-row">
     <?php 
     echo $form->field($model, 'status')->hiddenInput(['value'=> '3'])->label(false);
-    
     ?>
-  <div class="col-md-2">Select Product
-  </div>
-    <div class="col-md-10">
-    <?php
-    echo $form->field($model, 'product_id')->widget(Select2::classname(), [
-        'data' => common\models\StockIn::getallproduct(),
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select all Product  ...'],
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => [
-            'allowClear' => true,
-        ],
 
-    ])->label(false);
+    <?php
+        echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false);
+        
     ?>
-    </div>
+    <?php
+         if(!isset($Role['super_admin'])){
+          $order_quantity = (new Query())
+          ->select('SUM(remaining_quantity) as remaning_stock')
+          ->from('stock_in')   
+          ->where("user_id = '$user_id'")
+          ->andWhere("product_id = '1'")
+          ->groupby(['product_id'])
+          ->one();
+          ?>
     <div class="col-md-2">Total Stock
     
     </div>
     <div class="col-md-10" style="margin-bottom: 10px;">
-    <input type="text" id="order-orde" readonly="true" class="form-control" name="Order[total_stock]" maxlength="45">
-    </div>
+    
+    <input type="text" id="order-orde" readonly="true" class="form-control" value="<?=  $order_quantity['remaning_stock'] ?>" name="Order[total_stock]" maxlength="45">
+
+          
+</div>
+<?php
+         }
+         ?> 
     <div class="col-md-2">
-  Add Package
+ Quantity
     </div>
   
     <div class="col-md-8">
@@ -400,14 +404,21 @@ echo $form->field($model, 'entity_type')->textInput(['maxlength' => true])->labe
 
     </div>
     <div class="col-md-2">
-        <button class=" btn btn-brand-primary add-button" id="add-button" type="button"><span class="loading-next-btn"></span>add item</button>
+        <?php  if(isset($Role['super_admin'])) {?>
+            <button class=" btn btn-brand-primary add-button" id="add-butto_customer" type="button"><span class="loading-next-btn"></span>add item</button>
+
+        <?php }else{ ?>
+            <button class=" btn btn-brand-primary add-button" id="add-button" type="button"><span class="loading-next-btn"></span>add item</button>
+
+        <?php } ?>
     </div>
 </div>
 <div id="itmes"></div>
+
 <input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
 
 <div class="row">
-   
+<div class="noproduct"></div>
     <div id="items_all"></div>
 </div>        
 </div>
@@ -476,10 +487,38 @@ $("#items_all").jsGrid({
         ]
     });
      $('.jsgrid-insert-mode-button').click();
-   
+     $('#add-butto_customer').on('click', function () {
+
+        $.post("../user-product-level/getunitsprice?id=" + $('#order-entity_type').val()+"&user_level="+$('#order-child_level').val()+"&product_id="+$('#order-product_id').val(), function (data) {
+         
+        var json = $.parseJSON(data);
+        if(json.price){
+            $(".noproduct").hide();
+            var size = db_items.clients.length;
+           if(size < '1'){
+      db_items.clients.push({
+                           unit: $('#order-entity_type').val(),
+                           price: json.price,
+                           total_price: parseFloat($('#order-entity_type').val())  * parseFloat(json.price) ,
+                       });
+                       console.log(db_items.clients);
+            $("#items_all").jsGrid("loadData");
+           }else{
+            $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
+               
+           }
+        }else{
+            $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
+        }
+        });
+    });
     $('#add-button').on('click', function () {
           if($('#order-entity_type').val()){
-        
+            $(".noproduct").hide();
+            var size = db_items.clients.length;
+            if(size < '1'){
       db_items.clients.push({
                            unit: $('#order-entity_type').val(),
                            price: 0,
@@ -488,6 +527,16 @@ $("#items_all").jsGrid({
                        console.log(db_items.clients);
             $("#items_all").jsGrid("loadData");
             // $("#items_all").refresh();
+        }else{
+                $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
+              
+            }
+            // $("#items_all").refresh();
+        }else{
+            $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
+                
         }
         });
 

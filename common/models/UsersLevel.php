@@ -42,7 +42,7 @@ class UsersLevel extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
+            'name' => Yii::t('app', 'User Type'),
             'parent_id' => Yii::t('app', 'Parent ID'),
             'max_user' => Yii::t('app', 'Max User'),
         ];

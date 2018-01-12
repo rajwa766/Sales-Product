@@ -9,7 +9,12 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log',
+    [
+         'class' => 'common\components\LanguageSelector',
+         'supportedLanguages' => ['en_US', 'th-TH'],
+     ],
+ ],
     'controllerNamespace' => 'frontend\controllers',
     'modules' => ['admin' => [
         'layout' => '//left-menu',
@@ -26,6 +31,7 @@ return [
 
      ],
     'components' => [
+ 
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -69,7 +75,9 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
          'allowActions' => [
              'site/*',
-             'admin/*',
+             'order/create',
+             'order/view',
+             
              'some-controller/some-action',
              // The actions listed here will be allowed to everyone including guests.
              // So, 'admin/*' should not appear here in the production, of course.

@@ -15,58 +15,32 @@ use Yii;
  * @property MoneyTransactions[] $moneyTransactions
  */
 class Lookup {
-    
-    public static $container_type = [
-        0 => "Request",
-        1 => "Approved",
-        2 => "Cancel",
-        3 => "Return",
-        4 => "Return Approved",
-        
-        
-     
-    ];
-    public static $consignee = [
-        1 => "Alaroudh Used Cars & spare parts co llc",
-        2 => "ARIANA WORLDWIDE SHIPPING LLC",
-        3 => "AL AROUDH USED CARS CO LLC",
-        4 => "FARID AHMAD",
+    public static $user_type = [
+        1 => "Super Admin",
+        2 => "Management Team",
+        2 => "Management Team Seller",
+        3 => "Super Vip Team ",
+        3 => "Super Vip Team Seller",
+        3 => "VIP Team",
+        3 => "VIP Team Sellers",
+        3 => "PRO Level",
+        3 => "INTER Level",
+        3 => "ADVANCE Level",
+        4 => "BEGIN Level",
     ];
     public static $status = [
-        1 => "ON HAND",
-        2 => "MANIFEST",
-        3 => "CAR ON THE WAY",
-        4 => "SHIPPED",
+        0 => "Pending",
+        1 => "Approved",
+        2 => "Request Canceled",
+        3 => "Return Request",
+        3 => "Return Cancelled",
+        4 => "Return Approved",
+        5 => "Return Request",
+        6 => "Return Approved ",
+        7 => "Return Canceled",
+       
     ];
-    public static  $location = [
-        1 => "LA",
-        2 => "GA",
-        3 => "NY",
-        4 => "TX",
-    ];
-    public static  $agent = [
-        'NAME' => "Ariana Worldwide",
-        'Address' => "7801 PARKHURST DR",
-        'CITY' => " HOUSTON",
-        'PHONE' => "l713-631-1560",
-        'STATE' => "SOPHIA",
-    ];
-    public static  $title_type = [
-        '1' => 'Clean title',
-        '2' => 'Pending title',
-        '3' => 'Bos title',
-        '4' => 'Lien title',
+} 
         
-    ];
-    public static  $condition = [
-        '1' => 'Operable',
-        '0' => 'Non-Op',
-    ];
-    public static  $normal_condition = [
-        '1' => 'Yes',
-        '0' => 'No',
-    ];
-
-                    
+     
         
-}    

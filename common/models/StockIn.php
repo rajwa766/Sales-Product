@@ -76,6 +76,75 @@ class StockIn extends \yii\db\ActiveRecord
     {
         return $this->hasMany(StockOut::className(), ['stock_in_id' => 'id']);
     }
+    public static function approve($order_id,$user_id,$order_request_id )
+    {
+        $data = Yii::$app->request->post();
+       
+        $stock_available = true;
+        $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
+        $transaction_failed=false;
+       $transaction = Yii::$app->db->beginTransaction();
+        try 
+        {
+        foreach($total_order_quantity as $single_order){
+           
+            if($transaction_failed)
+            {
+                break;
+            }
+            while($single_order['quantity']>0){
+                $stockin_quantity = \common\models\StockIn::avilaible_quantity($single_order['product_id'],$order_request_id);
+                if($stockin_quantity != null){
+    //  subtract the quantiy 
+                $single_order['quantity'] = $single_order['quantity'] - $stockin_quantity['remaining_quantity'];
+                // insert stock out 
+            
+            //    update stock in
+              
+                   if($single_order['quantity']> 0){
+                   \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
+                   \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
+                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
+                 
+                   }else{
+                    \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
+                    $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
+                       
+                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
+                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],$stock_out_quantity,$user_id);
+                 
+                   }
+                // insert stock in
+                
+                
+                }else{
+                    $transaction_failed=true;
+                    
+                    break;
+                }
+                
+                    }
+                   
+    }
+ 
+       
+    }catch (Exception $e) 
+    {
+        $transaction_failed=true;
+      
+    }
+   if($transaction_failed)
+   {
+    $transaction->rollBack();
+    echo false;
+   }
+   else
+   {
+    $transaction->commit();    
+    \common\models\Order::update_status($order_id);
+    echo true;
+   }
+    }
     public static function insert_quantity($product_id,$price,$quantity,$user_id){
           $stockIn = new StockIn();
           $stockIn->isNewRecord = true;

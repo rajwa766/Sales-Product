@@ -55,8 +55,8 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id'=>Yii::$app->user->identity->id]);
-        $dataProvider->query->where(['o.status'=>'0']);
-        
+        $dataProvider->query->andWhere(['o.status'=>'0']);
+       
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -67,7 +67,7 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id'=>Yii::$app->user->identity->id]);
-        $dataProvider->query->where(['o.status'=>'2']);
+        $dataProvider->query->andWhere(['o.status'=>'2']);
         
         return $this->render('pending', [
             'searchModel' => $searchModel,
@@ -79,9 +79,39 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id'=>Yii::$app->user->identity->id]);
-        $dataProvider->query->where(['o.status'=>'1']);
-        
+        $dataProvider->query->andWhere(['o.status'=>'1']);
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+if(isset($Role['super_admin'])){
+    $view = 'pending';
+}else{
+    $view = 'index';
+    
+}
         return $this->render('pending', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionTransfer()
+    {
+        $searchModel = new OrderSearch();
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       $dataProvider->query->andFilterWhere(['or',
+        ['o.status'=>'5'],
+        ['o.status'=>'6']]);
+        if(isset($Role['super_admin'])){
+            $view = 'transfer';
+        }else{
+       $dataProvider->query->andFilterWhere(['or',
+        ['order_request_id'=>Yii::$app->user->identity->id],
+        ['user_id'=>Yii::$app->user->identity->id]]);
+            $view = 'customer_transfer';
+        }
+      
+        return $this->render($view, [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -91,7 +121,7 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id'=>Yii::$app->user->identity->id]);
-        $dataProvider->query->where(['o.status'=>'3']);
+        $dataProvider->query->andWhere(['o.status'=>'3']);
         
         return $this->render('return', [
             'searchModel' => $searchModel,
@@ -121,10 +151,24 @@ class OrderController extends Controller
         $model = new Order();
 
         if ($model->load(Yii::$app->request->post())) {
-      
+    
             if($model->order_type == "Order"){
                 $model->order_request_id = $model->request_agent_name;
-                $model->user_id = $model->rquest_customer;  
+                $model->user_id = $model->rquest_customer;
+                $check_user_already_exist = \common\models\User::find()
+                ->where( [ 'email' => $model->email ] )
+                ->one();
+                if($check_user_already_exist){
+                    $model->user_id = $check_user_already_exist->id;
+                }else{
+                    $customer_user = \common\models\User::insert_user($model);
+                    $auth = \Yii::$app->authManager;
+                    $role = $auth->getRole('customer'); 
+                    $auth->assign($role, $customer_user->id);
+                    $model->user_id = $customer_user->id;
+                    
+                }
+              
             }else{
                 $model->order_request_id = $model->parent_user;
                 $model->user_id = $model->child_user;
@@ -164,6 +208,24 @@ class OrderController extends Controller
         }
 
         return $this->render('create_return', [
+            'model' => $model,
+        ]);
+    }
+    public function actionCreatetransfer()
+    {
+        $model = new Order();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->order_request_id = $model->parent_user;
+                $model->user_id = $model->child_user;
+                $model->status = '5';
+            if($model->save()){
+                $product_order = \common\models\ProductOrder::insert_order($model);
+          }
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create_transfer', [
             'model' => $model,
         ]);
     }
@@ -345,7 +407,7 @@ public function actionCustomerLevel() {
  return $out;
 }
 
-public function actionGetReports()
+public function actionInventoryReports()
 {
      $model = new Order(); 
            return $this->render('report', [
@@ -354,15 +416,53 @@ public function actionGetReports()
             
         ]);
 }
-
-
+public function actionStatusReports()
+{
+     $model = new Order(); 
+           return $this->render('status_report', [
+            'model' => $model,
+       
+            
+        ]);
+}
+public function actionStatusreport(){
+      $model = new Order(); 
+    $fromDate = Yii::$app->request->post('from_date');
+         $toDate = Yii::$app->request->post('to_date');
+         $userId = Yii::$app->request->post('user_id');
+         $status = Yii::$app->request->post('status');
+        
+         if(!$userId){
+            $userId = Yii::$app->user->getId();
+         }
+         $order  = (new Query()) 
+         ->select('*')
+          ->from('order')
+          ->where(['=','user_id',$userId]);
+         if(!empty($fromDate))
+               $order->andWhere(['>=','DATE(created_at)',$fromDate]);
+         if(!empty($toDate))
+               $order->andWhere(['<=','DATE(created_at)',$toDate]);
+               if(!empty($status))
+               $order->andWhere(['=','status',$status]);
+$order= $order->all();
+return $this->renderAjax('status_report_view', [
+    'order' => $order,
+    'model' => $model,
+    
+]);
+}
 public function actionAjaxreport(){
 
          $inventoryArr=array();
          $fromDate = Yii::$app->request->post('from_date');
     
          $toDate = Yii::$app->request->post('to_date');
-         $userId = Yii::$app->user->getId();
+         $userId = Yii::$app->request->post('user_id');
+      
+         if(!$userId){
+            $userId = Yii::$app->user->getId();
+         }
          $stock_in_hand=0;
          $userame = Yii::$app->user->identity->username;
 

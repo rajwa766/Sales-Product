@@ -9711,9 +9711,18 @@ h1,
     margin-top: 20px;
 }
 
-#add-button {
+#add-button,
+#add-butto_customer {
     background-color: #1fb5ac;
     color: #ffffff;
+}
+
+.data-toggle {
+    cursor: pointer;
+}
+
+.save-button {
+    margin-top: 10px !important;
 }
 
 

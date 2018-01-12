@@ -1,4 +1,5 @@
 <!-- START TOPBAR -->
+<?php use yii\helpers\Url;?>
         <div class='page-topbar '>
             <div class='logo-area'>
 <span class="title_sles">E-Franchise Innovative Co, Ltd<span>
@@ -304,16 +305,27 @@
                     </ul>
                 </div>      
                 <div class='pull-right'>
+  
+  
                     <ul class="info-menu right-links list-inline list-unstyled">
                     <?php  if (Yii::$app->user->isGuest) {?>
                        
                       <li><a data-method="POST" href="<?= Yii::$app->request->baseUrl;?>/site/login">Login</a></li>
                       <?php }else{?>
-                       
-               
+                        <li class="">
+								<a class="data-toggle" data-toggle="dropdown">
+                                <span> language <i class="fa fa-angle-down"></i></span>
+	 							   <p class="hidden-lg hidden-md">Profile</p>
+		 						</a>
+		 							<ul class="dropdown-menu">
+									<li><a  href="<?php echo Yii::$app->request->baseUrl;?>/site/language?language=en-US">English</a></li>
+									<li><a href="<?php echo Yii::$app->request->baseUrl; ?>/site/language?language=th-TH">Thiland</a></li>
+								</ul>
+							</li>
+                            <?php // Yii::t('app','Tranfer from');?>
                         <li class="profile">
                             <a href="#" data-toggle="dropdown" class="toggle">
-                                <img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" alt="user-image" class="img-circle img-inline">
+                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" alt="user-image" class="img-circle img-inline">
                                 <span><?php echo Yii::$app->user->identity->username ?> <i class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu profile animated fadeIn">

@@ -10,22 +10,36 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<style>
+body
+{
+	background-image:url('../images/login.jpg');
+	background-repeat:no-repeat;
+	background-size:cover;
+}
+.white-text
+{
+	color:white;
+	text-color:white;
+}
+</style>
+<div class="col-md-12">
+<div class="col-md-8">
+    <h2 class="white-text"><?= Html::encode($this->title) ?></h2>
 
-    <p>Please fill out the following fields to login:</p>
+    <p class="white-text">Please fill out the following fields to login:</p>
 
   
-        <div class="col-lg-5">
+        <div class="">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('username',['class'=>'white-text']) ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password')->passwordInput()->label('password',['class'=>'white-text']) ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <?= $form->field($model, 'rememberMe')->checkbox()->label('remember me',['class'=>'white-text']) ?>
 
-                <div style="color:#999;margin:1em 0">
+                <div style="color:#fff;margin:1em 0">
                     If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
                 </div>
 
@@ -38,4 +52,5 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         
     </div>
+</div>
 </div>

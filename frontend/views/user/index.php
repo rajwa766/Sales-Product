@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            // 'id',
             'username',
              'first_name',
              'last_name',
@@ -36,11 +36,18 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'link',
             // 'updated_at',
             // 'parent_id',
-            // 'user_level_id',
-            'phone_no',
+            [
+                'label' => 'Parent User',
+                'attribute' => 'parent_id',
+                'value' => function($model) {
+                    return $model->username($model->parent_id);
+                },
+            ],
+            'userLevel.name',
+            //'phone_no',
             // 'address',
-            'city',
-            'country',
+        // 'city',
+            //'country',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

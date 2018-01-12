@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use yii\helpers\Url;
+use yii\widgets\Breadcrumbs;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
@@ -10,45 +11,52 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-view">
 
-    
+                    <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                        <div class="page-title">
 
-   
-<div class="container">
-    <div class="row">
-        
-        <div class="col-md-7">
-            <div class="other-details">
-            <h3><strong><?php echo $model->first_name .'&nbsp;'. $model->last_name; ?></strong></h3>
-            <ul class="profile_detail">
-                <li><i class="fa fa-envelope"></i><?php echo $model->email; ?></li>
-                <li><i class="fa fa-phone"></i> <?php echo $model->phone_no; ?></li>
-                <li><i class="fa fa-globe"></i> <?php echo $model->link; ?></li>
-                <li><i class="fa fa-level-up"></i> <?php echo $model->user_level_id; ?></li>
-                <li><i class="fa fa-home"></i> <?php echo $model->city; ?></li>
-                <li><i class="fa fa-flag-o"></i> <?php echo $model->country; ?></li>
-                <li><i class="fa fa-map-marker"></i> <?php echo $model->address; ?></li>
-                <li><i class="fa fa-external-link" aria-hidden="true"></i><?= Yii::$app->homeUrl; ?>/order/create?id=<?= $model->id ?></li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-5">
+                            <div class="pull-left">
+                                <h1 class="title">User Profile</h1>                            </div>
 
-            <div class="profile2">
-                <center><img src="<?= Yii::$app->homeUrl; ?>images/avatar-1.png" class="img-circle img-inline add-border" height="200"></center><br/>
+                            <div class="pull-right hidden-xs">
+                            <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
+                              
+                            </div>
+                
 
-                <div class="username"><strong>@ <?php echo $model->username; ?></strong><br/>
-                    Member Since  <?php echo $model->created_at; ?>
-                </div>
-            </div>
-      
-    </div>
-</div>
-</div>
-   <div class="row">
-    <div class="col-md-7 col-btn">
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                    <div class="col-lg-12">
+                        <section class="box nobox">
+                            <div class="content-body">    <div class="row">
+                                    <div class="col-md-3 col-sm-4 col-xs-12">
+                                        <div class="uprofile-image">
+                                            <img src="../images/profile.jpg" class="img-responsive">
+                                        </div>
+                                        <div class="uprofile-name">
+                                            <h3>
+                                                <a href="#"><?= $model->first_name.''.$model->last_name; ?></a>
+                                                <!-- Available statuses: online, idle, busy, away and offline -->
+                                                <span class="uprofile-status online"></span>
+                                            </h3>
+                                            <p class="uprofile-title"><?= $model->userLevel->name; ?></p>
+                                        </div>
+                                        <div class="uprofile-info">
+                                            <ul class="list-unstyled">
+                                            <li><i class="fa fa-envelope"></i><?php echo $model->email; ?></li>
+                                                <li><i class='fa fa-home'></i><?php echo $model->address; ?></li>
+                                                <li><i class='fa fa-user'></i><?= $model->city.''.$model->country; ?></li>
+                                                <li><i class="fa fa-external-link" aria-hidden="true"></i><a target="_blank" href="<?= Yii::$app->getUrlManager()->getBaseUrl(); ?>/order/create?id=<?= $model->id ?>"> Generate Customer Link </a></li>
+                                                <li><i class='fa fa-suitcase'></i><?php echo $model->phone_no; ?></li>
+                                            </ul>
+                                        </div>
+                                        <div class="uprofile-buttons">
+                                        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -56,6 +64,111 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
-    </div>
-</div>
-</div>
+                                        </div>
+                                        <div class=" uprofile-social">
+
+                                            <a href="#" class="btn btn-primary btn-md facebook"><i class="fa fa-facebook icon-xs"></i></a>
+                                            <a href="#" class="btn btn-primary btn-md twitter"><i class="fa fa-twitter icon-xs"></i></a>
+                                            <a href="#" class="btn btn-primary btn-md google-plus"><i class="fa fa-google-plus icon-xs"></i></a>
+                                            <a href="#" class="btn btn-primary btn-md dribbble"><i class="fa fa-dribbble icon-xs"></i></a>
+
+                                        </div> 
+
+                                    </div>
+                                    <div class="col-md-9 col-sm-8 col-xs-12">
+                                    <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-thumbs-up icon-md icon-rounded icon-primary'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['current_level'] ?></strong></h4>
+                                                <span>User Level</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-shopping-cart icon-md icon-rounded icon-orange'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['current_user'] ?></strong></h4>
+                                                <span>Total User</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-dollar icon-md icon-rounded icon-purple'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['user_remning'] ?></strong></h4>
+                                                <span>Remaning User</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-users icon-md icon-rounded icon-warning'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['current_stock'] ?></strong></h4>
+                                                <span>Current Stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .row -->  
+                                    <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-thumbs-up icon-md icon-rounded icon-primary'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['current_profit'] ?></strong></h4>
+                                                <span>PROFIT</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-shopping-cart icon-md icon-rounded icon-orange'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['total_order'] ?></strong></h4>
+                                                <span>Total Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-dollar icon-md icon-rounded icon-purple'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['pending_order'] ?></strong></h4>
+                                                <span>Pending Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="r4_counter db_box">
+                                            <i class='pull-left fa fa-users icon-md icon-rounded icon-warning'></i>
+                                            <div class="stats">
+                                                <h4><strong><?= $all_status['approved_order'] ?></strong></h4>
+                                                <span>Approved Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .row --> 
+                                                </div>	
+                                                <div class="clearfix"></div>						
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </section></div>
+

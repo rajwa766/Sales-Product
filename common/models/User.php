@@ -38,6 +38,10 @@ class User extends ActiveRecord implements IdentityInterface
     public $password;
     public $all_level;
     public $parent_user;
+    public $stock_in;
+    public $entity_type;
+    public $product_order_info;
+    public $price;
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
 
@@ -70,11 +74,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+          
             [['username', 'password','email','first_name','last_name'], 'string', 'max' => 255],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             //['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country','all_level','parent_user'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country','all_level','parent_user','stock_in','entity_type','product_order_info','price'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['link'], 'string', 'max' => 450],
@@ -233,4 +238,35 @@ class User extends ActiveRecord implements IdentityInterface
     ->where(['id' => Yii::app()->user->id])
     ->one();
     }
+    public static function insert_user($model){
+        $user = new User();
+        $user->isNewRecord = true;
+        $user->id = null;
+        $user->setPassword($model->email);
+        $user->generateAuthKey();
+        $user->username = $model->email;
+        $user->email = $model->email;
+        $user->phone_no = $model->phone_no;
+        $user->mobile_no = $model->mobile_no;
+        $user->mobile_no = $model->mobile_no;
+        $user->address = $model->address;
+        $user->postal_code = $model->postal_code;
+        $user->district = $model->district;
+        $user->province = $model->province;
+        $user->country = $model->country;
+      if($user->save()){
+        return $user;
+      }
+   }
+   public function username($id)
+   {
+        $users= \common\models\User::find()->where(['id'=>$id])->one();
+       return $users['username'];
+       
+   }
+
+   public function getUserLevel()
+   {
+       return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);
+   }
 }

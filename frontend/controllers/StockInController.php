@@ -67,7 +67,12 @@ class StockInController extends Controller
     {
         $model = new StockIn();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->remaining_quantity = $model->initial_quantity;
+            $model->user_id = Yii::$app->user->identity->id;
+            $model->product_id = '1';
+           
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -79,9 +84,22 @@ class StockInController extends Controller
     {
         $data = Yii::$app->request->post();
         $order_id = $data['id'];
+        $order_detail = \common\models\Order::find()->where(['id'=>$order_id])->one();
+      
+       if($order_detail->status == '5'){
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>'7'], 'id =' . $order_id)
+        ->execute();
+       }elseif($order_detail->status == '3'){
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>'8'], 'id =' . $order_id)
+        ->execute();
+    }else{
         Yii::$app->db->createCommand()
         ->update('order', ['status' =>'2'], 'id =' . $order_id)
         ->execute();
+       }
+      
         return true;
     }
     public function actionApprove()
@@ -93,10 +111,8 @@ class StockInController extends Controller
         $stock_available = true;
         $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
         $transaction_failed=false;
-     
-        
-
-        $transaction = Yii::$app->db->beginTransaction();
+       $transaction = Yii::$app->db->beginTransaction();
+   
         try 
         {
         foreach($total_order_quantity as $single_order){
@@ -153,8 +169,18 @@ class StockInController extends Controller
    }
    else
    {
-    $transaction->commit();    
-    \common\models\Order::update_status($order_id);
+    $transaction->commit();  
+    $order_detail = \common\models\Order::find()->where(['id'=>$order_id])->one();
+    if($order_detail->status == '5'){
+        \common\models\Order::update_transfer_status($order_id);
+        
+    }elseif($order_detail->status == '3'){
+        \common\models\Order::update_return_status($order_id);
+        
+    }else{
+        \common\models\Order::update_status($order_id);
+        
+    }
     echo true;
    }
     }
