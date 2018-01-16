@@ -148,7 +148,6 @@ class StockInController extends Controller
                 
                 }else{
                     $transaction_failed=true;
-                    
                     break;
                 }
                 

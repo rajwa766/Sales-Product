@@ -49,6 +49,8 @@ class Order extends \yii\db\ActiveRecord
     public $email;
     // stored value
     public $customer_id;
+    public $single_price;
+    public $total_price;
     public $product_id;
    
    
@@ -84,7 +86,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['user_id', 'order_request_id'], 'required'],
             [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer','customer_id'], 'integer'],
-            [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id'], 'safe'],
+            [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id','total_price','single_price'],'safe'],
             
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['file'], 'string', 'max' => 250],
@@ -108,7 +110,7 @@ class Order extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'order_request_id' => Yii::t('app', 'Order Request ID'),
             'entity_id' => Yii::t('app', 'Entity ID'),
-            'entity_type' => Yii::t('app', 'Entity Type'),
+            'entity_type' => Yii::t('app', 'Quantity'),
             'requested_date' => Yii::t('app', 'Requested Date'),
         ];
     }

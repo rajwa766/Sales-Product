@@ -378,6 +378,10 @@ var typeone = $("#order-child_level").val();
 </div>
     </div>
          <?php }?>   
+
+      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['maxlength' => true]); ?></div>
     <div class="col-md-2">
   Quantity
     </div>
@@ -410,7 +414,6 @@ var typeone = $("#order-child_level").val();
 } ?>
     </div>
 </div>
-<div id="itmes"></div>
 <input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
 
 <div class="row">
@@ -595,7 +598,7 @@ $("#items_all").jsGrid({
         ]
     });
      $('.jsgrid-insert-mode-button').click();
-     $('#add-butto_customer').on('click', function () {
+     $('#order-entity_type').on('blur', function () {
           if($('#order-entity_type').val()){
             $(".noproduct").hide();
             var size = db_items.clients.length;
