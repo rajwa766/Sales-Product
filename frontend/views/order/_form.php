@@ -23,9 +23,12 @@ use yii\db\Query;
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
 <div class="row main-container">
+
+    <img src="<?= Yii::$app->homeUrl; ?>images/beydey1.jpg" class="img-responsive img-circle">
+    <p class="text-center">Bey Dey</p>
 <?php  if (!Yii::$app->user->isGuest) {?>
-<div class="row">
-<div class="col-md-9 order-setting-panel top_row">
+
+<div class="order-setting-panel top_row">
     <div class="row">
         <div class="col-md-4">
         Type
@@ -262,7 +265,7 @@ var typeone = $("#order-child_level").val();
 </div>
 <?php } ?>
 <div class="row">
-<div class="col-md-9 order-panel">
+<div class="order-panel">
     <h3>Order Detail</h3>
     <div class="row first-row">
     <div class="col-md-4">
@@ -342,7 +345,7 @@ var typeone = $("#order-child_level").val();
 </div>
 <!-- this is order items section -->
 <div class="row outer-container">
- <div class="col-md-9 order-panel">
+ <div class="order-panel">
     <h3>Order Items</h3>
     <div class="row first-row">
     <?php 
@@ -400,7 +403,7 @@ var typeone = $("#order-child_level").val();
 <!-- this is customer section-->
 
 <div class="row outer-container shipping-address">
-<div class="col-md-9 order-panel">
+<div class="order-panel">
     <h3>Shipping Address</h3>
 
     <div class="row first-row email_row">

@@ -6247,7 +6247,8 @@ code {
     margin-top: 60px;
     display: inline-block;
     width: 100%;
-    padding: 15px 0 0 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .page-sidebar.collapseit {
@@ -9545,6 +9546,14 @@ border-left: 3px solid transparent;
     display: none;
 } */
 
+.main-container .img-responsive
+{
+    width: 200px;
+    height:200px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+}
+
 .report-view {
     margin-right: 10px;
     margin-left: 10px;
@@ -9728,7 +9737,34 @@ h1,
     margin-top: 10px !important;
 }
 
+.footer
+{
+   padding:10px;
+   color: #ffffff;
+    background-color: #1fb5ac;
+    text-align: center;
+   width: 100%;
+}
 
+.view-product
+{
+    padding:20px;
+ 
+}
+
+.view-product ul
+{
+    text-align: left;
+    list-style: none;
+}
+.view-product ul li
+{
+    line-height: 30px;
+}
+.view-product .imge-responsive
+{
+    box-shadow: 1px 1px 1px 1px #c2c2c2;
+}
 /*----------------------------------------
   Widget - User Profile Tile
 ------------------------------------------*/

@@ -27,11 +27,19 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
+<?php  if (!Yii::$app->user->isGuest) {?>
     <?php $this->beginContent('@app/views/layouts/topbar.php'); ?>
-            <?php $this->endContent(); ?>
-
+            <?php $this->endContent();
+}else{ ?>
+ <style>
+                #main-content{
+                        margin-left: 0px;
+                }
+                </style>
+                <?php } ?>
     <div class="page-container row-fluid">
     <?php  if (!Yii::$app->user->isGuest) {?>
+       
    <?php $this->beginContent('@app/views/layouts/sidebar.php'); ?>
             <?php $this->endContent(); 
     }
@@ -43,10 +51,13 @@ AppAsset::register($this);
             </section>
                <?php $this->beginContent('@app/views/layouts/rightside.php'); ?>
             <?php $this->endContent(); ?>
-
+           
+            
     </div>
+    
 </div>
-
+<?php $this->beginContent('@app/views/layouts/footer.php'); ?>
+            <?php $this->endContent(); ?>
 <?php $this->endBody() ?>
 </body>
 </html>

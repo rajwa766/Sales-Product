@@ -2,7 +2,7 @@
 <?php use yii\helpers\Url;?>
         <div class='page-topbar '>
             <div class='logo-area'>
-<span class="title_sles">E-Franchise Innovative Co, Ltd<span>
+
             </div>
             <div class='quick-area'>
                 <div class='pull-left'>
