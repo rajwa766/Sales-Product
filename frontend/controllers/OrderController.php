@@ -175,8 +175,8 @@ if(isset($Role['super_admin'])){
             }
 
             if($model->save()){
-                $product_order = \common\models\ProductOrder::insert_order($model);
-              
+                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
+          
                
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
                
@@ -200,9 +200,8 @@ if(isset($Role['super_admin'])){
                 $model->order_request_id = $model->parent_user;
                 $model->user_id = $model->child_user;
             }
-
             if($model->save()){
-                $product_order = \common\models\ProductOrder::insert_order($model);
+                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
           }
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -220,7 +219,7 @@ if(isset($Role['super_admin'])){
                 $model->user_id = $model->child_user;
                 $model->status = '5';
             if($model->save()){
-                $product_order = \common\models\ProductOrder::insert_order($model);
+                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
           }
             return $this->redirect(['view', 'id' => $model->id]);
         }

@@ -242,8 +242,7 @@ class UserController extends Controller
                
                 if($order->id)
                 {
-                    
-                    $product_order = \common\models\ProductOrder::insert_user_order($model,$order);
+                    $product_order = \common\models\ProductOrder::insert_user_order_js($model,$order);
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
                     $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);
                     

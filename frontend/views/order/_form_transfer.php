@@ -240,49 +240,29 @@ $RoleName= array_keys($Role)[0];
           
 </div>
 <?php
-         }
-         ?>
-    <div class="col-md-2">
- Quantity
+         }else{ ?>
+      <div class="col-md-2">Total Stock
+    
     </div>
+    <div class="col-md-10" style="margin-bottom: 10px;">
   
-    <div class="col-md-8">
-        <?php
-echo $form->field($model, 'entity_type')->textInput(['maxlength' => true])->label(false);
-   ?> 
+    <input type="text" id="order-orde" readonly="true" class="form-control" value="" name="Order[total_stock]" maxlength="45">
 
- 
-
-    </div>
-    <div class="col-md-2">
-        <?php  if(isset($Role['super_admin'])) {?>
-            <button class=" btn btn-brand-primary add-button" id="add-butto_customer" type="button"><span class="loading-next-btn"></span>add item</button>
-
-        <?php }else{ ?>
-            <button class=" btn btn-brand-primary add-button" id="add-button" type="button"><span class="loading-next-btn"></span>add item</button>
-
-        <?php } ?>
-    </div>
+          
 </div>
-<div id="itmes"></div>
-
-<input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
-
-<div class="row">
-<div class="noproduct"></div>
-    <div id="items_all"></div>
-</div>        
+    <?php     }
+         ?>
+          <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
+      <div class="noproduct"></div>
 </div>
-
+         </div>
 </div>
-
 <!-- this is customer section-->
 
-
-
-
 <!-- customer section ends here-->
-<div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
+
 
 
 <div class="form-group">
@@ -294,102 +274,33 @@ echo $form->field($model, 'entity_type')->textInput(['maxlength' => true])->labe
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
-    $('#order-product_id').on('change', function () {
-        $.post("../stock-in/getunits?id=" + $(this).val()+"&user_id="+$('#order-parent_user').val(), function (data) {
+
+    $('#order-parent_user').on('change', function () {
+     
+        var product_id = '1';
+        $.post("../stock-in/getunits?id="+product_id+"&user_id="+$(this).val(), function (data) {
     $('#order-orde').val(data);
         });
     });
-  
 
-    $('.save-button').click(function(e){
-  if(db_items.clients == ''){
-    $('.vehcle_not_found').html('Add Product Order Please');
-    e.preventDefault();
-    return;
-  }else{
-    $('#order-hidden').val(JSON.stringify({order_info: db_items.clients }));
- 
-  }
-});
-
-  
-
-
-  
-$("#items_all").jsGrid({
-//height: "70%",
-        width: "100%",
-        filtering: true,
-        editing: true,
-        inserting: true,
-        sorting: true,
-//paging: true,
-        autoload: true,
-//pageSize: 15,
-//pageButtonCount: 5,
-        controller: db_items,
-        fields: [
-           // {name: "item_number", title: "Item Number", id: "item_number", width: "auto", type: "hidden"},
-            {name: "unit", title: "Quantity", type: "text",  width: "auto"},
-            {name: "price", title: "Price", type: "text",  width: "auto"},
-            {name: "total_price", title: "Total Price", type: "hidden",  width: "auto"},
-           //{ name: "Married", title: "Marié", type: "checkbox", sorting: false },
-            {type: "control"}
-        ]
-    });
-     $('.jsgrid-insert-mode-button').click();
-     $('#add-butto_customer').on('click', function () {
-
-        $.post("../user-product-level/getunitsprice?id=" + $('#order-entity_type').val()+"&user_level="+$('#order-all_level').val()+"&product_id="+$('#order-product_id').val(), function (data) {
-         
-        var json = $.parseJSON(data);
-        if(json.price){
-            $(".noproduct").hide();
-            var size = db_items.clients.length;
-           if(size < '1'){
-      db_items.clients.push({
-                           unit: $('#order-entity_type').val(),
-                           price: json.price,
-                           total_price: parseFloat($('#order-entity_type').val())  * parseFloat(json.price) ,
-                       });
-                       console.log(db_items.clients);
-            $("#items_all").jsGrid("loadData");
-           }else{
-            $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
-               
-           }
-        }else{
-            $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
-        }
-        });
-    });
-    $('#add-button').on('click', function () {
-          if($('#order-entity_type').val()){
-            $(".noproduct").hide();
-            var size = db_items.clients.length;
-            if(size < '1'){
-      db_items.clients.push({
-                           unit: $('#order-entity_type').val(),
-                           price: 0,
-                           total_price: 0,
-                       });
-                       console.log(db_items.clients);
-            $("#items_all").jsGrid("loadData");
-            // $("#items_all").refresh();
-        }else{
-                $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
-              
-            }
-            // $("#items_all").refresh();
+$('#order-entity_type').on('blur', function () {
+    if (parseInt($('#order-orde').val()) >= parseInt($('#order-entity_type').val())){
+    if($('#order-entity_type').val()){
+            $(".noproduct").hide();   
+                       $('#order-single_price').val('760');
+                       $('#order-total_price').val($('#order-entity_type').val() * 760);
+          
         }else{
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
-                
-        }
-        });
+        }   
+    }else{
+        $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
+        
+    }
+    });
+
     });
 
 </script>

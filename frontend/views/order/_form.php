@@ -128,7 +128,7 @@ $RoleName= array_keys($Role)[0];
     }else{
         echo $form->field($model, 'child_level')->widget(Select2::classname(), [
             'theme' => Select2::THEME_BOOTSTRAP,
-            'options' => ['placeholder' => 'Select a Parent User ...','value'=>Yii::$app->user->identity->id],
+            'options' => ['placeholder' => 'Select a Parent User ...','value'=>Yii::$app->user->identity->user_level_id],
       
           ])->label(false);  
     }
@@ -380,46 +380,19 @@ var typeone = $("#order-child_level").val();
          <?php }?>   
 
       <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['maxlength' => true]); ?></div>
-    <div class="col-md-2">
-  Quantity
-    </div>
-  
-    <div class="col-md-8">
-             <?php
-    echo $form->field($model, 'entity_type')->textInput(['maxlength' => true])->label(false);
-                ?> 
-        <?php
-                
- 
-
- ?>
- 
-
-    </div>
-    <div class="col-md-2"> <?php if(!Yii::$app->user->isGuest){ ?>
-    <button class=" btn btn-brand-primary add-button" id="add-button" type="button"><span class="loading-next-btn"></span>add item</button>
-        <button class=" btn btn-brand-primary add-button" id="add-butto_customer" type="button"><span class="loading-next-btn"></span>add item</button>
-    <?php }else{ 
-    
-        ?>
-    <button class=" btn btn-brand-primary add-button" id="add-butto_customer_before_login" type="button"><span class="loading-next-btn"></span>add item</button>
-
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
+      <div class="noproduct"></div>
+ <?php if(Yii::$app->user->isGuest){ ?>
     <?php 
     echo $form->field($model, 'request_agent_name')->hiddenInput(['value'=> $_GET['id']])->label(false);
     echo $form->field($model, 'order_type')->hiddenInput(['value'=> 'Order'])->label(false);
-    echo $form->field($model, 'order_type')->hiddenInput(['value'=> 'Order'])->label(false);
     
 } ?>
-    </div>
-</div>
-<input type="hidden" id="order-hidden" class="form-control" name="Order[product_order_info]" maxlength="45"  aria-invalid="true">
+    
 
-<div class="row">
-  <div class="noproduct"></div>
-    <div id="items_all"></div>
-</div>        
+      
+</div>
 </div>
 
 </div>
@@ -430,8 +403,7 @@ var typeone = $("#order-child_level").val();
 <div class="col-md-9 order-panel">
     <h3>Shipping Address</h3>
 
-    <div class="row first-row">
-    
+    <div class="row first-row email_row">
     <div class="col-md-4">
     Email
     </div>
@@ -442,7 +414,7 @@ var typeone = $("#order-child_level").val();
     </div>
 </div>
 
-<div class="row">
+<div class="row first-row">
     <div class="col-md-4">
     Mobile
     </div>
@@ -560,116 +532,45 @@ jQuery(document).ready(function() {
      
         });
     });
-
-   
-
-    $('.save-button').click(function(e){
-  if(db_items.clients == ''){
-    $('.vehcle_not_found').html('Add Product Order Please');
-    e.preventDefault();
-    return;
-  }else{
-    $('#order-hidden').val(JSON.stringify({order_info: db_items.clients }));
- 
-  }
-});
-
-
-  
-$("#items_all").jsGrid({
-//height: "70%",
-        width: "100%",
-        filtering: true,
-        editing: true,
-        inserting: true,
-        sorting: true,
-//paging: true,
-        autoload: true,
-//pageSize: 15,
-//pageButtonCount: 5,
-        controller: db_items,
-        fields: [
-           // {name: "item_number", title: "Item Number", id: "item_number", width: "auto", type: "hidden"},
-            {name: "unit", title: "Units", type: "text",  width: "auto"},
-            {name: "price", title: "Price", type: "text",  width: "auto"},
-            {name: "total_price", title: "Total Price", type: "text",  width: "auto"},
-           //{ name: "Married", title: "Marié", type: "checkbox", sorting: false },
-            {type: "control"}
-        ]
-    });
-     $('.jsgrid-insert-mode-button').click();
+       //this code is to hidden the grid and show for order and request if user login
      $('#order-entity_type').on('blur', function () {
-          if($('#order-entity_type').val()){
-            $(".noproduct").hide();
-            var size = db_items.clients.length;
-            if(size < '1'){
-      db_items.clients.push({
-                           unit: $('#order-entity_type').val(),
-                           price: 760,
-                           total_price: $('#order-entity_type').val() * 760,
-                       });
-                       console.log(db_items.clients);
-            $("#items_all").jsGrid("loadData");
-            }else{
-                $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
-              
-            }
-            // $("#items_all").refresh();
-        }else{
-            $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
-                
-        }
-        });
-        $('#add-butto_customer_before_login').on('click', function () {
-
-        
-            $(".noproduct").hide();
-            var size = db_items.clients.length;
-           if(size < '1'){
-      db_items.clients.push({
-                           unit: $('#order-entity_type').val(),
-                           price: '780',
-                           total_price: parseFloat($('#order-entity_type').val())  * '780' ,
-                       });
-                       console.log(db_items.clients);
-            $("#items_all").jsGrid("loadData");
-           }else{
-            $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
-               
-           }
-      
-        
-    });
-     $('#add-button').on('click', function () {
-
+     
+       if($('#order-type').val() == 'Request'){
+         
         $.post("../user-product-level/getunitsprice?id=" + $('#order-entity_type').val()+"&user_level="+$('#order-child_level').val()+"&product_id="+$('#order-product_id').val(), function (data) {
          
         var json = $.parseJSON(data);
         if(json.price){
-            $(".noproduct").hide();
-            var size = db_items.clients.length;
-           if(size < '1'){
-      db_items.clients.push({
-                           unit: $('#order-entity_type').val(),
-                           price: json.price,
-                           total_price: parseFloat($('#order-entity_type').val())  * parseFloat(json.price) ,
-                       });
-                       console.log(db_items.clients);
-            $("#items_all").jsGrid("loadData");
-           }else{
-            $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You can Only add one order</h5>");
-               
-           }
+                       $(".noproduct").hide();
+                       $('#order-single_price').val(json.price);
+                       $('#order-total_price').val(parseFloat($('#order-entity_type').val())  * parseFloat(json.price));
         }else{
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
         }
         });
-    });
+      }else{
+        if (parseInt($('#order-orde').val()) >= parseInt($('#order-entity_type').val())){
+      if($('#order-entity_type').val()){
+            $(".noproduct").hide();
+    
+                       $('#order-single_price').val('760');
+                       $('#order-total_price').val($('#order-entity_type').val() * 760);
+          
+        }else{
+            $(".noproduct").show();
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
+        }
+       }else{
+        $(".noproduct").show();
+     $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
+
+       }
+      
+        }
+        });
+
+
     <?php if(!Yii::$app->user->isGuest){ ?>
     TypeChange();
     var role="<?php echo array_keys($Role)[0];?>";
@@ -699,7 +600,7 @@ function TypeChange()
         jQuery(".stock_field").hide();
         jQuery("#add-butto_customer").hide();
         jQuery("#add-button").show();
-        jQuery("#order-email").hide();
+        jQuery(".email_row").hide();
     }
     else
     {
@@ -709,6 +610,7 @@ function TypeChange()
         jQuery(".stock_field").show();
         jQuery("#add-butto_customer").show();
         jQuery("#add-button").hide();
+        jQuery(".email_row").hide();
     }
 
 }

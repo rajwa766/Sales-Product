@@ -84,7 +84,8 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'order_request_id'], 'required'],
+            [['user_id', 'order_request_id','entity_type'], 'required'],
+            [['user_id', 'order_request_id','entity_type'], 'required'],
             [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer','customer_id'], 'integer'],
             [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id','total_price','single_price'],'safe'],
             
@@ -112,6 +113,8 @@ class Order extends \yii\db\ActiveRecord
             'entity_id' => Yii::t('app', 'Entity ID'),
             'entity_type' => Yii::t('app', 'Quantity'),
             'requested_date' => Yii::t('app', 'Requested Date'),
+            'total_price' => Yii::t('app', 'Requested Date'),
+            'single_price' => Yii::t('app', 'Requested Date'),
         ];
     }
 

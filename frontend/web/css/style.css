@@ -1636,8 +1636,11 @@ textarea,
     border-right: 0px;
 }
 
+/******hidden portion*******/
 
-*/
+.order-panel {
+    margin-top: 13px;
+}
 
 .input-group .dropdown-menu {
     border-color: #f5f5f5;

@@ -191,6 +191,7 @@ public function actionGetunits($id){
 }
 public function actionGetunitsprice($id,$user_level,$product_id){
     $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->andWhere(['<=','units',$id])->one();
+
   if($one_unit){
     $detai_item['price']=$one_unit->price;
   
