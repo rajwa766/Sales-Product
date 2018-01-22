@@ -162,6 +162,7 @@ if(isset($Role['super_admin'])){
                     $model->user_id = $check_user_already_exist->id;
                 }else{
                     $customer_user = \common\models\User::insert_user($model);
+                    $model->scenario = Order::SCENARIO_ORDER;
                     $auth = \Yii::$app->authManager;
                     $role = $auth->getRole('customer'); 
                     $auth->assign($role, $customer_user->id);
@@ -170,6 +171,7 @@ if(isset($Role['super_admin'])){
                 }
               
             }else{
+                $model->scenario = Order::SCENARIO_REQUEST;
                 $model->order_request_id = $model->parent_user;
                 $model->user_id = $model->child_user;
             }
@@ -317,7 +319,48 @@ if(isset($Role['super_admin'])){
         }
      return $out;
  }
+ public function actionParentuseradmin() {
+    $q = Yii::$app->request->get('q');
+  //  $id = Yii::$app->request->get('id');
+    $type = Yii::$app->request->get('type');
+    $parent = Yii::$app->request->get('parent');
 
+ 
+    if(empty($type)){
+        return [];
+    }
+ \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+ $out = ['results' => ['id' => '', 'text' => '']];
+     if (!is_null($q)) {
+       $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                 ->where(['like', 'username', $q])
+                 ->andWhere(['=', 'user_level_id', $type])
+                 ->andWhere(['=', 'parent_id', $parent])
+               //  ->andWhere(['like','customer_user_id',$customer_id])
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+    }
+    
+    else{
+     $query = new \yii\db\Query();
+     $query->select('id as id, username AS text')
+             ->from('user')
+            ->where(['=', 'user_level_id', $type])
+            ->andWhere(['=', 'parent_id', $parent])
+            ->limit(20);
+     $command = $query->createCommand();
+     $data = $command->queryAll();
+     // if($data){
+     $out['results'] = array_values($data);
+    }
+ return $out;
+}
  public function actionLevel() {
     $q = Yii::$app->request->get('q');
   //  $id = Yii::$app->request->get('id');

@@ -95,7 +95,7 @@ $RoleName= array_keys($Role)[0];
     </div>
 <?php
  }else{
-    echo $form->field($model, 'parent_user')->hiddenInput(['value'=> Yii::$app->user->identity->id])->label(false);
+    echo $form->field($model, 'parent_user')->hiddenInput(['value'=> Yii::$app->user->identity->parent_id])->label(false);
 }  
 ?>
 
@@ -106,6 +106,24 @@ $RoleName= array_keys($Role)[0];
     </div>
     <div class="col-md-8">
         <?php
+         if(isset($Role['super_admin'])){
+            echo $form->field($model, 'child_user')->widget(Select2::classname(), [ 
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select a child user Level ...'],
+                'pluginOptions' => [
+                  'allowClear' => true,
+                  //'autocomplete' => true,
+                  'ajax' => [
+                      'url' => '../order/parentuseradmin',
+                      'dataType' => 'json',
+                      'data' => new \yii\web\JsExpression('function(params) { 
+                          var parent = $("#parent_sected_user").val();
+                          var type = $("#order-all_level").val();
+                          return {q:params.term,type:type,parent:parent}; }')
+                  ],
+              ],
+              ])->label(false); 
+         }else{
         echo $form->field($model, 'child_user')->widget(Select2::classname(), [ 
           'theme' => Select2::THEME_BOOTSTRAP,
           'options' => ['placeholder' => 'Select a child user Level ...'],
@@ -113,12 +131,16 @@ $RoleName= array_keys($Role)[0];
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/parentuser',
+                'url' => '../order/parentuseradmin',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
+                'data' => new \yii\web\JsExpression('function(params) { 
+                    var parent = $("#order-parent_user").val();
+                    var type = $("#order-all_level").val();
+                    return {q:params.term,type:type,parent:parent}; }')
             ],
         ],
         ])->label(false);
+    }
  
     ?>
     </div>
@@ -156,12 +178,7 @@ $RoleName= array_keys($Role)[0];
     <div class="col-md-8">
     <?= $form->field($model, 'shipper')->radioList([
                 1 => 'EMS', 
-                2 => 'Register',
-                3 => 'Alpha', 
-                4 => 'Lazada',
-                5 => 'WH Pick up', 
-                6 => 'KerryND',
-                7 => 'Kerry2D (UPC)', 
+             
                 8 => 'Kerry BKK SAME DAY',
             ])->label(false); ?>
     </div>
@@ -245,13 +262,16 @@ $RoleName= array_keys($Role)[0];
     
     </div>
     <div class="col-md-10" style="margin-bottom: 10px;">
-  
     <input type="text" id="order-orde" readonly="true" class="form-control" value="" name="Order[total_stock]" maxlength="45">
+
+  
 
           
 </div>
     <?php     }
          ?>
+    <input type="hidden" id="parent_sected_user" readonly="true" class="form-control" value="" name="Order[total_stock]" maxlength="45">
+         
           <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
@@ -276,10 +296,13 @@ $RoleName= array_keys($Role)[0];
 jQuery(document).ready(function() {
 
     $('#order-parent_user').on('change', function () {
-     
         var product_id = '1';
         $.post("../stock-in/getunits?id="+product_id+"&user_id="+$(this).val(), function (data) {
     $('#order-orde').val(data);
+        });
+        $.post("../user/getparentid?id="+$(this).val(), function (id_parent) {
+            $("#order-child_user").select2('val', 'All');
+    $('#parent_sected_user').val(id_parent);
         });
     });
 
@@ -297,6 +320,7 @@ $('#order-entity_type').on('blur', function () {
     }else{
         $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
+            $('#order-entity_type').val('');
         
     }
     });

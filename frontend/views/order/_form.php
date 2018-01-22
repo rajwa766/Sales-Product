@@ -25,29 +25,46 @@ use yii\db\Query;
 <div class="row main-container">
 <?php  if (!Yii::$app->user->isGuest) {?>
 <div class="row">
+
 <div class="col-md-9 order-setting-panel top_row">
+
+<?php
+    $user_id = Yii::$app->user->getId();
+    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+$Role =   Yii::$app->authManager->getRolesByUser($user_id);
+$RoleName= array_keys($Role)[0];
+if(isset($Role['super_admin'])){
+        ?>
     <div class="row">
         <div class="col-md-4">
         Type
         </div>
         <div class="col-md-8">
         <?= $form->field($model, 'order_type')->dropdownList([
-             'Order' => 'Order',
-            'Request' => 'Request',
+             'Order' => 'Ships to Customer',
+            'Request' => 'Order for Agent',
            ],
            ['id' => 'order-type']
        
      )->label(false) ?>
         </div>
     </div>
-
- <?php
-    $user_id = Yii::$app->user->getId();
-    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-$Role =   Yii::$app->authManager->getRolesByUser($user_id);
-$RoleName= array_keys($Role)[0];
-        ?>
-
+        <?php }else{?>
+            <div class="row">
+        <div class="col-md-4">
+        Type
+        </div>
+        <div class="col-md-8">
+        <?= $form->field($model, 'order_type')->dropdownList([
+             'Order' => 'Ships to Customer',
+            'Request' => 'Request from Parent',
+           ],
+           ['id' => 'order-type']
+       
+     )->label(false) ?>
+        </div>
+    </div>
+        <?php }?>
 <!-- order starts from here-->
 <div class="request-setting">
     <div class="admin">
@@ -289,13 +306,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
     <?= $form->field($model, 'shipper')->radioList([
                 1 => 'EMS', 
-                2 => 'Register',
-                3 => 'Alpha', 
-                4 => 'Lazada',
-                5 => 'WH Pick up', 
-                6 => 'KerryND',
-                7 => 'Kerry2D (UPC)', 
-                8 => 'Kerry BKK SAME DAY',
+              
             ])->label(false); ?>
     </div>
 </div>
@@ -547,6 +558,7 @@ jQuery(document).ready(function() {
         }else{
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
+            $('#order-entity_type').val('');
         }
         });
       }else{
@@ -564,6 +576,7 @@ jQuery(document).ready(function() {
        }else{
         $(".noproduct").show();
      $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
+     $('#order-entity_type').val('');
 
        }
       
@@ -586,15 +599,18 @@ jQuery(document).ready(function() {
          $('.order-setting-panel').show();
     }
     jQuery('#order-type').on('change', function() {
-
+     
         TypeChange();
     });
-});
+
 function TypeChange()
 {
-    var value = $('#order-type option:selected').text();
+    
+    var value = $('#order-type option:selected').val();
+   
     if(value == "Request")
     {
+      
          jQuery(".order-setting").hide();
          jQuery(".request-setting").show();
         jQuery(".stock_field").hide();
@@ -610,10 +626,11 @@ function TypeChange()
         jQuery(".stock_field").show();
         jQuery("#add-butto_customer").show();
         jQuery("#add-button").hide();
-        jQuery(".email_row").hide();
+        jQuery(".email_row").show();
     }
 
 }
+});
 <?php }else{?>
 });
 <?php } ?>

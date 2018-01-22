@@ -658,7 +658,7 @@ a:focus {
     padding: 0 30px;
     overflow: hidden;
     max-height: 300px;
-    height: 300px;
+    height: 80px;
 }
 
 .page-topbar li .dropdown-menu li li {

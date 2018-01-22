@@ -94,7 +94,7 @@ $RoleName= array_keys($Role)[0];
         ],
         ])->label(false);
         ?>
-<input id="not_admin" name="admin" value="1">
+<input id="not_admin" name="admin" value="1" type="hidden">
 
         <?php
     }else{
@@ -103,7 +103,7 @@ $RoleName= array_keys($Role)[0];
             'options' => ['placeholder' => 'Select a Parent User ...','value'=>Yii::$app->user->identity->parent_id],
       
           ])->label(false); ?>
-<input id="not_admin" name="admin" value="0">
+<input id="not_admin" name="admin" value="0" type="hidden">
           <?php
       
     }
@@ -312,13 +312,7 @@ var typeone = $("#order-child_level").val();
     <div class="col-md-8">
     <?= $form->field($model, 'shipper')->radioList([
                 1 => 'EMS', 
-                2 => 'Register',
-                3 => 'Alpha', 
-                4 => 'Lazada',
-                5 => 'WH Pick up', 
-                6 => 'KerryND',
-                7 => 'Kerry2D (UPC)', 
-                8 => 'Kerry BKK SAME DAY',
+          
             ])->label(false); ?>
     </div>
 </div>
@@ -449,6 +443,7 @@ if($('#not_admin').val() == '1'){
         }else{
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
+            $('#order-entity_type').val('');
         }
         });
 }else{
@@ -468,7 +463,7 @@ if($('#not_admin').val() == '1'){
 }else{
     $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
-        
+            $('#order-entity_type').val('');
 }
 }
     });

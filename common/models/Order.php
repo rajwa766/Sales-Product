@@ -52,7 +52,8 @@ class Order extends \yii\db\ActiveRecord
     public $single_price;
     public $total_price;
     public $product_id;
-   
+    const SCENARIO_ORDER = 'order';
+    const SCENARIO_REQUEST = 'request';
    
    
 
@@ -78,6 +79,17 @@ class Order extends \yii\db\ActiveRecord
             ],
         ];
     }
+
+    public function scenarios()
+    {
+        
+            $scenarios = parent::scenarios();
+            $scenarios[self::SCENARIO_ORDER] = ['email','request_user_level', 'request_agent_name'];
+            $scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level','child_user'];
+            return $scenarios;
+           
+        
+    }
     /**
      * @inheritdoc
      */
@@ -86,6 +98,10 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['user_id', 'order_request_id','entity_type'], 'required'],
             [['user_id', 'order_request_id','entity_type'], 'required'],
+
+            [['all_level', 'parent_user', 'child_level','child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
+             [['email','request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
+
             [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer','customer_id'], 'integer'],
             [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id','total_price','single_price'],'safe'],
             
@@ -154,9 +170,10 @@ public static function CurrentLevel($user_id)
 public static function CurrentStock($user_id)
 {
    $current_stock =  (new Query())
-    ->select('SUM(initial_quantity) -  SUM(remaining_quantity) as current_stock')
+    ->select('SUM(remaining_quantity) as current_stock')
     ->from('stock_in')
     ->where(['=','user_id',$user_id])
+    ->groupby(['product_id'])
     ->one();
     return $current_stock['current_stock'];
 }

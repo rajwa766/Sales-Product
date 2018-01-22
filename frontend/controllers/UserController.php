@@ -210,6 +210,10 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+    public function actionGetparentid($id){
+$parent_id = User::findOne(['id'=>$id]);
+return $parent_id->parent_id;
+    }
     public function actionCreate()
     {
         $model = new User();
@@ -229,13 +233,14 @@ class UserController extends Controller
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('general'); 
             }
+  
             $total_user_current_level = User::find()->where(['=','parent_id',$model->parent_id])->count();
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
    
-            if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user){
-                return $this->redirect(['more_user', 'id' => $model->id]);  
+            if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user && $model->company_user != '1'){
+                return $this->render(['more_user', 'model' => $model]);  
             }else{
             if($model->save()){
                 $order = \common\models\Order::insert_order($model);
@@ -332,7 +337,7 @@ class UserController extends Controller
         $q = Yii::$app->request->get('q');
       //  $id = Yii::$app->request->get('id');
         $type = Yii::$app->request->get('type');
-    
+        $company_user = Yii::$app->request->get('company_user');
      
         if(empty($type)){
             return [];
@@ -344,9 +349,13 @@ class UserController extends Controller
              $query->select('id as id, username AS text')
                      ->from('user')
                      ->where(['like', 'username', $q])
-                     ->andWhere(['=', 'user_level_id', $type])
+                     ->andWhere(['=', 'user_level_id', $type]);
+                     if($type != '1'){
+                        $query->andWhere(['=', 'company_user', $company_user]);
+                     }
+                     
                    //  ->andWhere(['like','customer_user_id',$customer_id])
-                    ->limit(20);
+                   $query->limit(20);
              
              $command = $query->createCommand();
              $data = $command->queryAll();
@@ -358,8 +367,13 @@ class UserController extends Controller
          $query = new \yii\db\Query();
          $query->select('id as id, username AS text')
                  ->from('user')
-                ->where(['=', 'user_level_id', $type])
-                ->limit(20);
+                ->where(['=', 'user_level_id', $type]);
+                if($type != '1'){
+                    $query->andWhere(['=', 'company_user', $company_user]);
+                 }
+                 
+               //  ->andWhere(['like','customer_user_id',$customer_id])
+               $query->limit(20);
          
          $command = $query->createCommand();
          $data = $command->queryAll();
@@ -372,7 +386,7 @@ class UserController extends Controller
     $q = Yii::$app->request->get('q');
   //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
-
+    $company_user = Yii::$app->request->get('company_user');
  
     if(empty($type)){
         return [];
@@ -383,10 +397,15 @@ class UserController extends Controller
        $query = new \yii\db\Query();
          $query->select('id as id, name AS text')
                  ->from('users_level')
-                 ->where(['like', 'name', $q])
-                 ->andWhere(['=', 'parent_id', $type])
-               //  ->andWhere(['like','customer_user_id',$customer_id])
-                ->limit(20);
+                 ->where(['like', 'name', $q]);
+                 if($company_user == '1'){
+                    $query->andWhere(['>=', 'parent_id', $type]);
+                 }else{
+                    $query->andWhere(['=', 'parent_id', $type]);
+                    
+                 }
+
+               $query->limit(20);
          
          $command = $query->createCommand();
          $data = $command->queryAll();
@@ -397,9 +416,14 @@ class UserController extends Controller
     else{
      $query = new \yii\db\Query();
      $query->select('id as id, name AS text')
-             ->from('users_level')
-            ->where(['=', 'parent_id', $type])
-            ->limit(20);
+             ->from('users_level');
+             if($company_user == '1'){
+                $query->andWhere(['>=', 'parent_id', $type]);
+             }else{
+                $query->andWhere(['=', 'parent_id', $type]);
+                
+             }
+             $query->limit(20);
      
      $command = $query->createCommand();
      $data = $command->queryAll();

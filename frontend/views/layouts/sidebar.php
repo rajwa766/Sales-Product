@@ -158,8 +158,7 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?php Yii::$app->homeUrl; ?>stock-in"><?= Yii::t('app','Stock'); ?></a>
-
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-in">Stock</a>
                                 </li>
                             
                                 
@@ -186,6 +185,21 @@ use yii\widgets\DetailView;
                             </ul>
                         </li>
                      <?php } ?>
+                     <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-users"></i>
+                                <span class="title"><?= Yii::t('app','Stock Status'); ?></span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-status">Stock Status</a>
+                                </li>
+                            
+                                
+                                
+                            </ul>
+                        </li>
                         <!-- reports ends here -->
                     </ul>
 

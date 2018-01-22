@@ -29,17 +29,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             [
-                'label' => 'Transfer from',
-                'attribute' => 'order_request_id',
-                'value' => function($model) {
-                    return $model->username($model->order_request_id);
-                },
-            ],
-            [
-                'label' => 'Transfer to',
+                'label' => 'Return from',
                 'attribute' => 'user_id',
                 'value' => function($model) {
                     return $model->username($model->user_id);
+                },
+            ],
+            [
+                'label' => 'Return to',
+                'attribute' => 'order_request_id',
+                'value' => function($model) {
+                    return $model->username($model->order_request_id);
                 },
             ],
             'order_ref_no',
@@ -131,8 +131,13 @@ $this->params['breadcrumbs'][] = $this->title;
                // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
                 success: function (test) {
-                    $(this).parent().removeClass('payment_button_general_approve');
-                    $(this).text('Approved');
+                    if(test == '1'){
+                        $(this).parent().removeClass('payment_button_general_approve');
+                       $(this).text('Approved');
+                       }else{
+                        $(this).text('Out of Stock');
+                        $(this).css("color", "red"); 
+                       }
                 },
                 error: function (exception) {
                     alert(exception);

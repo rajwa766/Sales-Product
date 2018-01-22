@@ -129,9 +129,14 @@ $this->params['breadcrumbs'][] = $this->title;
                // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
                 success: function (test) {
-                   $(this).parent().removeClass('payment_button_general_approve');
+                   if(test == '1'){
+                    $(this).parent().removeClass('payment_button_general_approve');
                    $(this).text('Approved');
-                   
+                   }else{
+                    $(this).text('Out of Stock');
+                    $(this).css("color", "red"); 
+                   }
+                  
                 },
                 error: function (exception) {
                     alert(exception);

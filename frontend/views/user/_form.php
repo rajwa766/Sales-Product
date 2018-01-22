@@ -95,6 +95,16 @@ use yii\db\Query;
     </div>
     </div>
 </div> 
+<?php if ($model->isNewRecord) {?>
+<div class="row no-margin">
+    <div class="col-md-6">
+<?= $form->field($model, 'company_user')->checkbox() ?>
+ 
+    </div>
+    <div class="col-md-6">
+   
+    </div>
+</div> 
 <?php
     $user_id = Yii::$app->user->getId();
     $Role =   Yii::$app->authManager->getRolesByUser($user_id);
@@ -137,7 +147,17 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
     'ajax' => [
         'url' => '../user/parentuser',
         'dataType' => 'json',
-        'data' => new \yii\web\JsExpression('function(params) { var type = $("#user-all_level").val();return {q:params.term,type:type}; }')
+        'data' => new \yii\web\JsExpression('function(params) {
+            if($("#user-company_user").is(":checked")){
+                var company_user = 1;
+            }else{
+                var company_user = 0;
+                
+            }
+             var type = $("#user-all_level").val();
+            return {
+                q:params.term,type:type,company_user: company_user}; 
+            }')
     ],
 ],
 ])->label(false);
@@ -176,7 +196,14 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     'ajax' => [
         'url' => '../user/level',
         'dataType' => 'json',
-        'data' => new \yii\web\JsExpression('function(params) { var type = $("#user-all_level").val();return {q:params.term,type:type}; }')
+        'data' => new \yii\web\JsExpression('function(params) { 
+            if($("#user-company_user").is(":checked")){
+                var company_user = 1;
+            }else{
+                var company_user = 0;
+                
+            }
+            var type = $("#user-all_level").val();return {q:params.term,type:type,company_user: company_user}; }')
     ],
 ],
 ])->label(false);
@@ -259,7 +286,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 </div>
 
 </div>
-
+    <?php  }?>
   
 </div>  
 
@@ -278,6 +305,18 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 </div>
 <script>
 jQuery(document).ready(function() {
+    $('#user-company_user').change(function(){ 
+    if($('#user-company_user').is(':checked')){
+        $("#user-all_level").select2('val', 'All');
+        $("#user-parent_user").select2('val', 'All');
+        $("#user-user_level_id").select2('val', 'All');
+    }else{
+        $("#user-all_level").select2('val', 'All');
+        $("#user-parent_user").select2('val', 'All');
+        $("#user-user_level_id").select2('val', 'All');
+    }
+   
+});
 $('#user-entity_type').on('blur', function () {
     var product_id = '1';
         $.post("../user-product-level/getunitsprice?id=" + $('#user-entity_type').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id, function (data) {

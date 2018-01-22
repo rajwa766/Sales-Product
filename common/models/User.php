@@ -81,7 +81,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             //['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country','all_level','parent_user','stock_in','entity_type','product_order_info','price','single_price','total_price'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country','all_level','parent_user','stock_in','entity_type','product_order_info','price','single_price','totla_price','company_user'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['link'], 'string', 'max' => 450],
