@@ -24,16 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'category_id',
-            'name',
-            'description:ntext',
-            'price',
-        ],
-    ]) ?>
+    <div class="view-product">
+        <div class="col-md-8">
+            <ul>
+            <li>Name : <?php echo $model->name; ?></li>
+            <li>Category Id :<?php echo $model->category_id; ?></li>
+            <li>Description : <?php echo $model->description; ?></li>
+            <li>Price : <?php echo $model->price; ?></li>
+        </ul>
+        
+        </div>
+        <div class="col-md-4 text-right">
+             <img src="<?= Yii::$app->homeUrl; ?>images/beydey1.jpg" class="img-responsive">
+        </div>
+    </div>
+   
 
 </div>

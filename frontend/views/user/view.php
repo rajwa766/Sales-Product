@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="content-body">    <div class="row">
                                     <div class="col-md-3 col-sm-4 col-xs-12">
                                         <div class="uprofile-image">
-                                            <img src="../images/profile.jpg" class="img-responsive">
+                                            <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive">
                                         </div>
                                         <div class="uprofile-name">
                                             <h3>
