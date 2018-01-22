@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\select2\Select2;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,23 +31,71 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
            [
-            'label' => 'Transfer from',
             'attribute' => 'order_request_id',
-            'value' => function($model) {
+            'label'=>'Transfer from',
+            'value'=>function ($model, $key, $index, $widget) { 
                 return $model->username($model->order_request_id);
             },
+            'filter'=>Select2::widget([
+            'model' => $searchModel,
+            'attribute' => 'order_request_id',
+           'options' => ['placeholder' => 'Select User Name ...'],
+           'pluginOptions' => [
+            'allowClear' => true,
+            //'autocomplete' => true,
+            'ajax' => [
+                'url' => 'user/allusers',
+                'dataType' => 'json',
+                'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+            ],
         ],
+    // ... other params
+]),
+ ],
+ [
+    'attribute' => 'user_id',
+    'label'=>'Transfer to',
+    'value'=>function ($model, $key, $index, $widget) { 
+        return $model->username($model->user_id);
+    },
+    'filter'=>Select2::widget([
+    'model' => $searchModel,
+    'attribute' => 'user_id',
+   'options' => ['placeholder' => 'Select User Name ...'],
+   'pluginOptions' => [
+    'allowClear' => true,
+    //'autocomplete' => true,
+    'ajax' => [
+        'url' => 'user/allusers',
+        'dataType' => 'json',
+        'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+    ],
+],
+// ... other params
+]),
+],    
+   
         [
-            'label' => 'Transfer to',
-            'attribute' => 'user_id',
-            'value' => function($model) {
-                return $model->username($model->user_id);
-            },
-        ],
+            'label' => 'Status',
+      'attribute' => 'status',
+      'format' => 'raw',
+      'value' => function ($model) {                      
+           return  $model->status == 0 ? "Pending" : ($model->status == 1 ? "Approved" : ($model->status == 2 ? "Request Canceled" :($model->status == 3 ? "Return Request" :($model->status == 4 ? "Return Approved" :($model->status == 5 ? " Transfer Request" :($model->status == 6 ? "Transfer Approved" :($model->status == 7 ? "Transfer Cancelled" :($model->status == 8 ? "Return  Cancelled " : "Unknown"))))))));
+      },
+       'filter'=>[  0 => "Pending",
+       1 => "Approved",
+       2 => "Request Canceled",
+       3 => "Return Request",
+       4 => "Return Approved",
+       5 => "Transfer Request",
+       6 => "Transfer Approved",
+       7 => "Transfer Canceled",
+       8 => "Return Canceled",],
+   ],
             'order_ref_no',
             'shipper',
-            'cod',
-            'additional_requirements',
+            // 'cod',
+            // 'additional_requirements',
             //'file',
             //'user_id',
             //'status',

@@ -33,11 +33,11 @@ class Lookup {
         1 => "Approved",
         2 => "Request Canceled",
         3 => "Return Request",
-        3 => "Return Cancelled",
         4 => "Return Approved",
-        5 => "Return Request",
-        6 => "Return Approved ",
-        7 => "Return Canceled",
+        5 => "Transfer Request",
+        6 => "Transfer Approved",
+        7 => "Transfer Canceled",
+        8 => "Return Canceled",
        
     ];
 } 

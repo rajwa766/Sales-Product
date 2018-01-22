@@ -43,7 +43,6 @@ class OrderController extends Controller
         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
         if(!isset($Role['super_admin'])){
             $dataProvider->query->andwhere(['created_by'=>Yii::$app->user->identity->id]);
-            
         }
         return $this->render('index', [
             'searchModel' => $searchModel,

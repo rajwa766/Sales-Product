@@ -432,6 +432,38 @@ return $parent_id->parent_id;
     }
  return $out;
 }
+public function actionAllusers() {
+    $q = Yii::$app->request->get('q');
+ \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+ $out = ['results' => ['id' => '', 'text' => '']];
+     if (!is_null($q)) {
+       $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                 ->where(['like', 'username', $q])
+               
+                ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+    }
+    
+    else{
+     $query = new \yii\db\Query();
+     $query->select('id as id, username AS text')
+             ->from('user')
+        
+            ->limit(20);
+     
+     $command = $query->createCommand();
+     $data = $command->queryAll();
+     // if($data){
+     $out['results'] = array_values($data);
+    }
+ return $out;
+}
 public function actionAllcustomers() {
     $q = Yii::$app->request->get('q');
   //  $id = Yii::$app->request->get('id');

@@ -72,6 +72,7 @@ class UserSearch extends User
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'parent_id' => $this->parent_id,
+            
             'user_level_id' => $this->user_level_id,
             'city' => $this->city,
             'country' => $this->country,
