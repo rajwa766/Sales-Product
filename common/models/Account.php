@@ -1,0 +1,107 @@
+<?php
+
+namespace common\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\Expression;
+use Yii;
+
+/**
+ * This is the model class for table "account".
+ *
+ * @property int $id
+ * @property string $accout_type
+ * @property string $account_name
+ * @property string $account_description
+ * @property int $created_by
+ * @property int $updated_by
+ * @property string $created_on
+ * @property string $updated_on
+ * @property int $user_id
+ *
+ * @property User $user
+ * @property Gl[] $gls
+ */
+class Account extends \yii\db\ActiveRecord
+{
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'account';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['created_by', 'updated_by', 'user_id'], 'integer'],
+            [['created_on', 'updated_on'], 'safe'],
+            [['user_id'], 'required'],
+            [['accout_type', 'account_name', 'account_description'], 'string', 'max' => 45],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+        ];
+    }
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'accout_type' => Yii::t('app', 'Accout Type'),
+            'account_name' => Yii::t('app', 'Account Name'),
+            'account_description' => Yii::t('app', 'Account Description'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
+            'created_on' => Yii::t('app', 'Created On'),
+            'updated_on' => Yii::t('app', 'Updated On'),
+            'user_id' => Yii::t('app', 'User ID'),
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGls()
+    {
+        return $this->hasMany(Gl::className(), ['account_id' => 'id']);
+    }
+    public static function create_account($model){
+        $account = new Account();
+        $account->isNewRecord = true;
+        $account->id = Null;
+        $account->accout_type = '1';
+        $account->account_name =$model->username.'-recivable';
+        $account->account_description = 'Account to calculate profit';
+        $account->user_id = $model->id;
+      $account->save();
+        
+    }
+}

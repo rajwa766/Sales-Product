@@ -40,6 +40,11 @@ class Lookup {
         8 => "Return Canceled",
        
     ];
+    public static $accounts = [
+        1 => 'Asset',
+    
+      
+    ];
 } 
         
      
