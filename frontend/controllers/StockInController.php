@@ -132,18 +132,18 @@ class StockInController extends Controller
               
                    if($single_order['quantity']> 0){
                    \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
+                   // insert stock in
                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
                  \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
-                 
                    }else{
                     \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
                     $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
-                       
-                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
+                         // insert stock in
+                 \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
                  \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],$stock_out_quantity,$user_id);
                  
                    }
-                // insert stock in
+              
                 
                 
                 }else{
