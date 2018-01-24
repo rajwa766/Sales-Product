@@ -179,7 +179,7 @@ if(isset($Role['super_admin'])){
                   $model->payment_slip= $photo->name;
                   $ext = end((explode(".", $photo->name)));
                   $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
-                  $path =  Yii::getAlias('@app').'/uploads/'.$model->payment_slip;
+                  $path =  Yii::getAlias('@app').'/web/uploads/'.$model->payment_slip;
                //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
                   $photo->saveAs($path);
               }

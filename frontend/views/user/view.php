@@ -36,10 +36,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="content-body">    <div class="row">
                                     <div class="col-md-3 col-sm-4 col-xs-12">
                                         <div class="uprofile-image">
+                                       
                                         <?php if($model->profile){ ?>
-              <img src="<?php echo \yii\helpers\Url::to('@web/frontend/uploads/' . $model->profile, true) ?>">
-
+                                            <?php 
+                                            $items =array();
+                                                                                 $items[] = [
+                                                                                    'url' => \yii\helpers\Url::to('@web/uploads/'.$model->profile, true),
+                                                                                    'src' => \yii\helpers\Url::to('@web/uploads/'.$model->profile, true),
+                                                                                    'options' => array('title' => 'Camposanto monumentale (inside)')
+                                                                                  ];
+                                            ?>
+                                    <?= dosamigos\gallery\Gallery::widget(['items' => $items]);?>
                                     <?php    }else{?>
+                                    
                                 <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive">
                                     <?php  }?>
                                         </div>

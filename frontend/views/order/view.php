@@ -170,7 +170,15 @@ foreach($model->productOrders as $orders){
 
                                         
                                         <div class="col-md-6 col-sm-6 col-xs-6 text-center">
-                                        <img src="<?php echo \yii\helpers\Url::to('@web/frontend/uploads/' . $model->payment_slip, true) ?>">
+                                        <?php 
+                                            $items =array();
+                                                                                 $items[] = [
+                                                                                    'url' => \yii\helpers\Url::to('@web/uploads/'.$model->payment_slip, true),
+                                                                                    'src' => \yii\helpers\Url::to('@web/uploads/'.$model->payment_slip, true),
+                                                                                    'options' => array('title' => 'Camposanto monumentale (inside)')
+                                                                                  ];
+                                            ?>
+                                    <?= dosamigos\gallery\Gallery::widget(['items' => $items]);?>
                                         </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-center">
                                         <?php } else {?>

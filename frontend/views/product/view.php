@@ -34,9 +34,29 @@ $this->params['breadcrumbs'][] = $this->title;
         </ul>
         
         </div>
+  
         <div class="col-md-4 text-right">
-             <img src="<?= Yii::$app->homeUrl; ?>images/beydey1.jpg" class="img-responsive">
+        <?php
+     $items = array();
+     $saj =array();
+    foreach($model->images as $gallery){
+      $saj[] = [
+        'url' => \yii\helpers\Url::to('@web/uploads/'.$gallery->name, true),
+        'src' => \yii\helpers\Url::to('@web/uploads/'.$gallery->name, true),
+        'options' => array('title' => 'Camposanto monumentale (inside)')
+      ];
+ 
+  } 
+  // var_dump($saj);  
+  $items = $saj; 
+    
+
+?>
+<?= dosamigos\gallery\Gallery::widget(['items' => $items]);?>
         </div>
+        <div class="col-md-12 text-right">
+     
+</div>
     </div>
    
 

@@ -119,14 +119,13 @@ use kartik\file\FileInput;
                     ],
                 ])->label(false);
                 ?>
-    <?= $form->field($model, 'address')->textInput(['maxlength' => true])->label(false) ?>
     </div>
     </div>
     <div class="col-md-6">
     
     </div>
 </div>
-<?php if(!$model->isNewRecord  && $Role['super_admin']){
+<?php if(!$model->isNewRecord  && $Role['super_admin'] && $user_id != $model->id){
 $user_level_name =(new Query())
 ->select('users_level.name,users_level.id')
 ->from('user')

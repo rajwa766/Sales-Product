@@ -35,7 +35,6 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'price')->textInput() ?>
     <?=
                 $form->field($model, 'image')->widget(FileInput::classname(), [
-                    
                     'pluginOptions' => [
                         'showUpload' => true,
                      

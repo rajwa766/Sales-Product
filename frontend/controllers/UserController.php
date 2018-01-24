@@ -232,7 +232,7 @@ return $parent_id->parent_id;
                        $model->profile= $photo->name;
                        $ext = end((explode(".", $photo->name)));
                        $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
-                       $path =  Yii::getAlias('@app').'/uploads/'.$model->profile;
+                       $path =  Yii::getAlias('@app').'/web/uploads/'.$model->profile;
                     //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
                        $photo->saveAs($path);
                    }

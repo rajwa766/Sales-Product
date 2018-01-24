@@ -55,7 +55,7 @@ class Image extends \yii\db\ActiveRecord
           $images->name= $photo->name;
           $ext = end((explode(".", $photo->name)));
           $images->name = Yii::$app->security->generateRandomString() . ".{$ext}";
-          $path =  Yii::getAlias('@app').'/uploads/'.$images->name;
+          $path =  Yii::getAlias('@app').'/web/uploads/'.$images->name;
        //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
           $photo->saveAs($path);
           $images->product_id = $model_id;
