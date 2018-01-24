@@ -1,7 +1,9 @@
 <?php
 
 namespace common\models;
-
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\Expression;
 use Yii;
 
 /**
@@ -30,16 +32,32 @@ class Gl extends \yii\db\ActiveRecord
     {
         return 'gl';
     }
-
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['created_by', 'updated_by', 'created_at', 'updated_at', 'payment_detail_id', 'order_id', 'account_id'], 'integer'],
+            [['created_by', 'updated_by', 'payment_detail_id', 'order_id', 'account_id'], 'integer'],
             [['payment_detail_id', 'order_id', 'account_id'], 'required'],
             [['amount'], 'string', 'max' => 45],
+            [['created_at', 'updated_at', ], 'safe'],
+            
             [['account_id'], 'exist', 'skipOnError' => true, 'targetClass' => Account::className(), 'targetAttribute' => ['account_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['payment_detail_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentDetail::className(), 'targetAttribute' => ['payment_detail_id' => 'id']],
@@ -86,5 +104,15 @@ class Gl extends \yii\db\ActiveRecord
     public function getPaymentDetail()
     {
         return $this->hasOne(PaymentDetail::className(), ['id' => 'payment_detail_id']);
+    }
+    public static function create_gl($bonus_amount,$account_id,$order_id,$payment_method){
+        $gl = new Gl();
+        $gl->isNewRecord = true;
+        $gl->id = Null;
+        $gl->amount = $bonus_amount;
+        $gl->order_id = $order_id;
+        $gl->account_id = $account_id;
+        $gl->payment_detail_id = $payment_method;
+        $gl->save();
     }
 }

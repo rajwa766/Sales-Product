@@ -103,10 +103,10 @@ class Order extends \yii\db\ActiveRecord
              [['email','request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
 
             [['user_id', 'status', 'order_request_id', 'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer','customer_id'], 'integer'],
-            [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id','total_price','single_price'],'safe'],
-            
+            [['requested_date','order_type','request_agent_name','product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by','address','city','country','postal_code','district','province','mobile_no','phone_no','email','product_id','total_price','single_price','payment_method'],'safe'],
+            [['payment_slip'], 'file'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
-            [['file'], 'string', 'max' => 250],
+            [['payment_slip'], 'string', 'max' => 250],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -259,6 +259,17 @@ public static function CurrentRemaning($user_id,$urent_users){
        $order->save();
     return $order;
    }
+   public static function insert_order_bonus($model,$entity_type){
+    $order = new Order();
+    $order->isNewRecord = true;
+    $order->id = null;
+    $order->user_id = $model->id;
+    $order->order_request_id = '1';
+    $order->status = '9';
+    $order->entity_type = $entity_type;
+   $order->save();
+return $order;
+}
 public static function update_status($id){
     return    Yii::$app->db->createCommand()
     ->update('order', ['status' =>'1' ], 'id =' . $id)

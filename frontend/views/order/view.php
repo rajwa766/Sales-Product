@@ -85,8 +85,8 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                             <div class="col-xs-6 invoice-infoblock text-right">
                                                 <h4>Payment Method:</h4>
                                                 <address>
-                                                    <h3>Credit Card</h3>
-                                                    <span class='text-muted'>Visa ending **** 4242<br>
+                                                    <!-- <h3>Credit Card</h3> -->
+                                                    <span class='text-muted'><?php if(isset($model->payment_method)){ \common\models\Lookup::$order_status[$model->payment_method]; }else{ echo 'Out of System';} ?><br>
                                                     <?= $billed_to->email ?></span>
                                                 </address>
 
@@ -166,7 +166,17 @@ foreach($model->productOrders as $orders){
                                         <div class="clearfix"></div><br>
 
                                         <div class="row">
+                                        <?php if($model->payment_slip){?>
+
+                                        
+                                        <div class="col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <img src="<?php echo \yii\helpers\Url::to('@web/frontend/uploads/' . $model->payment_slip, true) ?>">
+                                        </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <?php } else {?>
                                             <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                        
+                                        <?php } ?>
                                                 <a href="#" target="_blank" class="btn btn-purple btn-md"><i class="fa fa-print"></i> &nbsp; Print </a>        
                                                 <a href="#" target="_blank" class="btn btn-orange btn-md"><i class="fa fa-send"></i> &nbsp; Send </a> 
                                                 <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [

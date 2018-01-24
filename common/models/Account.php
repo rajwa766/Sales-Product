@@ -15,8 +15,8 @@ use Yii;
  * @property string $account_description
  * @property int $created_by
  * @property int $updated_by
- * @property string $created_on
- * @property string $updated_on
+ * @property string $created_at
+ * @property string $created_at
  * @property int $user_id
  *
  * @property User $user
@@ -39,7 +39,7 @@ class Account extends \yii\db\ActiveRecord
     {
         return [
             [['created_by', 'updated_by', 'user_id'], 'integer'],
-            [['created_on', 'updated_on'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['user_id'], 'required'],
             [['accout_type', 'account_name', 'account_description'], 'string', 'max' => 45],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -72,8 +72,8 @@ class Account extends \yii\db\ActiveRecord
             'account_description' => Yii::t('app', 'Account Description'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
-            'created_on' => Yii::t('app', 'Created On'),
-            'updated_on' => Yii::t('app', 'Updated On'),
+            'created_at' => Yii::t('app', 'Created On'),
+            'created_at' => Yii::t('app', 'Updated On'),
             'user_id' => Yii::t('app', 'User ID'),
         ];
     }

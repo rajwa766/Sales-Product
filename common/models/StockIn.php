@@ -140,7 +140,36 @@ class StockIn extends \yii\db\ActiveRecord
    }
    else
    {
-    $transaction->commit();    
+         //Bonus Calculation for parents
+    $level_id = \common\models\User::findOne(['id'=>$order_request_id]);
+    $level_id = $level_id->user_level_id;
+    if($level_id != '1'){
+        $level_for_bonus = \common\models\LevelPercentage::findOne(['level_id'=>$level_id]);
+                $parent_level = $level_for_bonus['parent_id'];
+                $order = \common\models\Order::findOne(['id'=>$order_id]);
+                if($parent_level == 2 && $level_for_bonus['is_company_wide'] == true){
+                    $parent_users = \common\models\User::find()->where(['user_level_id'=>$parent_level])->all();
+                    $total_user = (int) count($parent_users);
+                    $single_price = (int)$level_for_bonus->percentage/$total_user;
+                    $bonus_amount =  $single_price * (int)$order->entity_type;
+                  
+                    foreach($parent_users as $parent_user){
+                        $account_id = \common\models\Account::findOne(['user_id'=>$parent_user->id]);
+                      
+                        $gl = \common\models\Gl::create_gl(strval($bonus_amount),$account_id->id,$order_id,'1');
+                       
+                    }
+                }
+        
+                  //Bonus Calculation for current user
+     $level_id = \common\models\User::findOne(['id'=>$user_id]);
+     $level_id = $level_id->user_level_id;
+     $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id'=>$level_id])->andwhere(['parent_id'=>$level_id])->one();;
+     $account_id = \common\models\Account::findOne(['user_id'=>$user_id]);
+     $gl = \common\models\Gl::create_gl($level_for_bonus_itself['percentage'],$account_id->id,$order_id,'1');
+    }
+   
+     $transaction->commit();    
     \common\models\Order::update_status($order_id);
     echo true;
    }

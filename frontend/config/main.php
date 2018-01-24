@@ -6,8 +6,8 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
-use \yii\web\Request;
-$baseUrl = str_replace('/frontend/web', '', (new Request)->getBaseUrl());
+// use \yii\web\Request;
+// $baseUrl = str_replace('/frontend/web', '', (new Request)->getBaseUrl());
 
 return [
     'id' => 'app-frontend',
@@ -35,9 +35,9 @@ return [
      ],
     'components' => [
  
-        'request' => [
-            'baseUrl' => $baseUrl,
-        ],
+        // 'request' => [
+        //     'baseUrl' => $baseUrl,
+        // ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

@@ -154,7 +154,7 @@ class SiteController extends Controller
      
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
+            if ($user = $model->signup($model)) {
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('customer');
                 $auth->assign($role, $user->id);

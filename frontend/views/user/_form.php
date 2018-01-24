@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\db\Query;
+use kartik\file\FileInput;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 /* @var $form yii\widgets\ActiveForm */
@@ -17,7 +19,10 @@ use yii\db\Query;
 </style>
 <div class="user-form">
 <div class="create-user">
-    <?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
+        $user_id = Yii::$app->user->getId();
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+    ?>
     
     <div class="row no-margin">
     <div class="col-md-6">
@@ -26,6 +31,7 @@ use yii\db\Query;
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label(false)  ?>
+  <?php  echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false); ?>
     </div>
     </div>
     <div class="col-md-6">
@@ -95,6 +101,104 @@ use yii\db\Query;
     </div>
     </div>
 </div> 
+<div class="row no-margin">
+    <div class="col-md-6">
+        <div class="col-md-4">
+            Upload Profile 
+        </div>
+        <div class="col-md-8">
+        <?=
+                $form->field($model, 'profile')->widget(FileInput::classname(), [
+                    
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                        'initialPreview' => [
+                            $model->profile ? Html::img(Yii::$app->request->baseUrl . '../../uploads/' . $model->profile) : null, // checks the models to display the preview
+                        ],
+                        'overwriteInitial' => false,
+                    ],
+                ])->label(false);
+                ?>
+    <?= $form->field($model, 'address')->textInput(['maxlength' => true])->label(false) ?>
+    </div>
+    </div>
+    <div class="col-md-6">
+    
+    </div>
+</div>
+<?php if(!$model->isNewRecord  && $Role['super_admin']){
+$user_level_name =(new Query())
+->select('users_level.name,users_level.id')
+->from('user')
+->innerJoin('users_level', 'user.user_level_id = users_level.id')
+->where(['=', 'user.id', $model->id])
+->one();
+$parent_user = \common\models\User::findOne(['id'=>$model->parent_id]);
+
+    ?>
+       <div class="row no-margin">
+    <div class="col-md-6">
+        <div class="col-md-4">
+        Use Level
+        </div>
+        <div class="col-md-8">
+<?php
+echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
+    'data' => common\models\UsersLevel::getalllevel(),
+     'value' =>$user_level_name['id'],
+    'initValueText' => $user_level_name['name'],
+  
+    'theme' => Select2::THEME_BOOTSTRAP,
+    'options' => ['placeholder' => 'Select a current user Level ...'],
+    'pluginOptions' => [
+      'allowClear' => true,
+      //'autocomplete' => true,
+  
+  ],
+  ])->label(false);
+?>
+    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="col-md-4">
+            Parent User
+        </div>
+        <div class="col-md-8">
+        <?php
+
+  echo $form->field($model, 'parent_id')->widget(Select2::classname(), [
+    'value' =>$model->parent_id,
+    'initValueText' =>$parent_user->username,
+    'theme' => Select2::THEME_BOOTSTRAP,
+    'options' => ['placeholder' => 'Select a Parent User ...'],
+    'pluginOptions' => [
+      'allowClear' => true,
+      //'autocomplete' => true,
+      'ajax' => [
+          'url' => '../parentuserupdate',
+          'dataType' => 'json',
+          'data' => new \yii\web\JsExpression('function(params) {
+            //   if($("#user-company_user").is(":checked")){
+            //       var company_user = 1;
+            //   }else{
+            //       var company_user = 0;
+                  
+            //   }
+               var type = $("#user-user_level_id").val();
+              return {
+                  q:params.term,type:type}; 
+              }')
+      ],
+  ],
+  ])->label(false);
+?>
+    </div>
+    </div>
+</div> 
+       
+          </div>
+    </div>
+    <?php }?>
 <?php if ($model->isNewRecord) {?>
 <div class="row no-margin">
     <div class="col-md-6">
@@ -106,8 +210,7 @@ use yii\db\Query;
     </div>
 </div> 
 <?php
-    $user_id = Yii::$app->user->getId();
-    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+
     if(isset($Role['super_admin'])){ ?>
 <div class="row no-margin">
     
@@ -176,6 +279,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
     <?= $form->field($model, 'country')->textInput(['readonly' =>true,'value'=>'Thailand '])->label(false) ?>
 </div>
     </div>
+
          <?php if($model->isNewRecord){?>
     <div class="col-md-6">
         <div class="col-md-4">

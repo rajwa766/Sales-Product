@@ -38,12 +38,18 @@ class Lookup {
         6 => "Transfer Approved",
         7 => "Transfer Canceled",
         8 => "Return Canceled",
+        9 => "Bonus",
        
     ];
     public static $accounts = [
         1 => 'Asset',
     
       
+    ];
+    public static $order_status = [
+        '1' => 'Credit Card',
+        '2' => 'Cash on Delivery',
+        '3' => 'Bank Transfer',
     ];
 } 
         

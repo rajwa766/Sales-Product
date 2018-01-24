@@ -36,7 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="content-body">    <div class="row">
                                     <div class="col-md-3 col-sm-4 col-xs-12">
                                         <div class="uprofile-image">
-                                            <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive">
+                                        <?php if($model->profile){ ?>
+              <img src="<?php echo \yii\helpers\Url::to('@web/frontend/uploads/' . $model->profile, true) ?>">
+
+                                    <?php    }else{?>
+                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive">
+                                    <?php  }?>
                                         </div>
                                         <div class="uprofile-name">
                                             <h3>

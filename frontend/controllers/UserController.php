@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -219,13 +220,29 @@ return $parent_id->parent_id;
         $model = new User();
      
         if ($model->load(Yii::$app->request->post())) {
-          
+            $transaction_failed=false; 
+            $transaction = Yii::$app->db->beginTransaction();
+            
+                 try 
+                 {
+                     //upload image
+                     $photo = UploadedFile::getInstance($model, 'profile');
+                     
+                     if ($photo !== null) {
+                       $model->profile= $photo->name;
+                       $ext = end((explode(".", $photo->name)));
+                       $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
+                       $path =  Yii::getAlias('@app').'/uploads/'.$model->profile;
+                    //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
+                       $photo->saveAs($path);
+                   }
             $current_level_id =  \common\models\UsersLevel::findOne($model->user_level_id);
             if($model->parent_user){
                 $model->parent_id = $model->parent_user;  
             }else{
             $model->parent_id = Yii::$app->user->identity->id;  
             }
+            // check seller or general
             if($current_level_id->max_user == '-1'){
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('seller');
@@ -233,12 +250,12 @@ return $parent_id->parent_id;
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('general'); 
             }
-  
+//   check the limit of user
             $total_user_current_level = User::find()->where(['=','parent_id',$model->parent_id])->count();
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
-   
+//    check not company user and not seller and user space remain
             if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user && $model->company_user != '1'){
                 return $this->render(['more_user', 'model' => $model]);  
             }else{
@@ -248,15 +265,59 @@ return $parent_id->parent_id;
                
                 if($order->id)
                 {
+                   
                     $product_order = \common\models\ProductOrder::insert_user_order_js($model,$order);
-                    $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
+                    $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
                     $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);
                }
-                
+               //bonus super vip
+              
+                if($model->user_level_id == '4'){
+                    $order = \common\models\Order::insert_order_bonus($model,'50');
+                     if($order->id)
+                     {
+                         $product_order = \common\models\ProductOrder::insert_user_order_js_bonus($model,$order);
+                        
+                         $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
+                         $stock_in = \common\models\StockIn::approve($order->id,$model->id,'1');
+                    }
+                }
+             
+                  //bonus  vip
+                  if($model->user_level_id == '6'){
+                    $order = \common\models\Order::insert_order_bonus($model,'20');
+                    if($order->id)
+                    {
+                      
+                        $product_order = \common\models\ProductOrder::insert_user_order_js_bonus($model,$order);
+                       
+                        $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
+                        $stock_in = \common\models\StockIn::approve($order->id,$model->id,'1');
+                   }
+                }
+            
                 $auth->assign($role, $model->id);
+            }else{
+                $transaction_failed=true; 
             }
-            return $this->redirect(['view', 'id' => $model->id]);
+        
             }
+        }catch (Exception $e) 
+        {
+            $transaction_failed=true;
+          
+        }
+        if($transaction_failed)
+        {
+         $transaction->rollBack();
+         return $this->redirect(['error', 'model' => $model]);
+         
+        }  else
+        {
+         $transaction->commit();  
+         return $this->redirect(['view', 'id' => $model->id]);
+         
+        }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -297,8 +358,11 @@ return $parent_id->parent_id;
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $oldmodel = $this->findModel($id);
+          $changelog_entry = \common\models\ChangeLog::insert_data($oldmodel);
+         
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -331,7 +395,45 @@ return $parent_id->parent_id;
             }
         return $out;
     }
-
+    public function actionParentuserupdate() {
+        $q = Yii::$app->request->get('q');
+      //  $id = Yii::$app->request->get('id');
+        $type = Yii::$app->request->get('type');
+        $level_id = \common\models\UsersLevel::findOne(['id',$type]);
+        $company_user = Yii::$app->request->get('company_user');
+     
+        if(empty($type)){
+            return [];
+        }
+     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     $out = ['results' => ['id' => '', 'text' => '']];
+         if (!is_null($q)) {
+           $query = new \yii\db\Query();
+             $query->select('id as id, username AS text')
+                     ->from('user')
+                     ->where(['like', 'username', $q])
+                     ->andWhere(['=', 'user_level_id', $level_id->parent_id ])
+                 ->limit(20);
+             $command = $query->createCommand();
+             $data = $command->queryAll();
+             // if($data){
+             $out['results'] = array_values($data);
+        }
+        
+        else{
+         $query = new \yii\db\Query();
+         $query->select('id as id, username AS text')
+                 ->from('user')
+                ->where(['=', 'user_level_id', $level_id->parent_id])
+              ->limit(20);
+         
+         $command = $query->createCommand();
+         $data = $command->queryAll();
+         // if($data){
+         $out['results'] = array_values($data);
+        }
+     return $out;
+ }
     public function actionParentuser() {
         $q = Yii::$app->request->get('q');
       //  $id = Yii::$app->request->get('id');

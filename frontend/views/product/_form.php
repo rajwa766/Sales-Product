@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
@@ -11,7 +12,8 @@ use kartik\select2\Select2;
 
 <div class="product-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+
     <?php
             // echo $form->field($model, 'category_id')->widget(Select2::classname(), [
             //     'data' => common\models\Category::getallcategory(),
@@ -31,7 +33,16 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
-
+    <?=
+                $form->field($model, 'image')->widget(FileInput::classname(), [
+                    
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                     
+                        'overwriteInitial' => false,
+                    ],
+                ]);
+                ?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>

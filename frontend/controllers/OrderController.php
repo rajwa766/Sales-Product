@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 use common\models\StockIn;
+use yii\web\UploadedFile;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -150,7 +151,7 @@ if(isset($Role['super_admin'])){
         $model = new Order();
 
         if ($model->load(Yii::$app->request->post())) {
-    
+  
             if($model->order_type == "Order"){
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
@@ -161,25 +162,34 @@ if(isset($Role['super_admin'])){
                     $model->user_id = $check_user_already_exist->id;
                 }else{
                     $customer_user = \common\models\User::insert_user($model);
-                    $model->scenario = Order::SCENARIO_ORDER;
                     $auth = \Yii::$app->authManager;
                     $role = $auth->getRole('customer'); 
                     $auth->assign($role, $customer_user->id);
                     $model->user_id = $customer_user->id;
-                    
                 }
               
             }else{
-                $model->scenario = Order::SCENARIO_REQUEST;
                 $model->order_request_id = $model->parent_user;
                 $model->user_id = $model->child_user;
             }
-
+            if ($model->payment_method == '3') {
+                $photo = UploadedFile::getInstance($model, 'payment_slip');
+                
+                if ($photo !== null) {
+                  $model->payment_slip= $photo->name;
+                  $ext = end((explode(".", $photo->name)));
+                  $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
+                  $path =  Yii::getAlias('@app').'/uploads/'.$model->payment_slip;
+               //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
+                  $photo->saveAs($path);
+              }
+            }
             if($model->save()){
                 $product_order = \common\models\ProductOrder::insert_order_no_js($model);
           
                
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
+              
                
             }
             return $this->redirect(['view', 'id' => $model->id]);

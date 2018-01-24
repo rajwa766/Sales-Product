@@ -325,27 +325,58 @@ var typeone = $("#order-child_level").val();
     Additional Requirements
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'cod')->textarea(['rows' => '3'])->label(false) ?>
+    <?= $form->field($model, 'additional_requirements')->textarea(['rows' => '3'])->label(false) ?>
     </div>
 </div>
-
+<div class="row">
+    <div class="col-md-4">
+    Payment Method
+    </div>
+    <div class="col-md-8">
+    <?php 
+              //$model->payment_method_for_rent = '1';
+echo $form->field($model, 'payment_method')->radioList([
+    '1' => 'Credit Card',
+    '2' => 'Cash on Delivery',
+    '3' => 'Bank Transfer',
+])->label(false);
+              ?>
+        <div class="payment_slip">    
+        <?=
+                $form->field($model, 'payment_slip')->widget(FileInput::classname(), [
+                    
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                        'initialPreview' => [
+                            $model->payment_slip ? Html::img(Yii::$app->request->baseUrl . '../../uploads/' . $model->payment_slip) : null, // checks the models to display the preview
+                        ],
+                        'overwriteInitial' => false,
+                    ],
+                ]);
+                ?>
+        </div>  
+    </div>
+</div>
  <div class="row">
  <div class="col-md-4">
-    <!-- Additional file -->
+    Postal Code
     </div>
     <div class="col-md-8">
     <?php
-// $form->field($model, 'file')->widget(FileInput::classname(), [
-//                     'pluginOptions' => [
-//                         'allowedFileExtensions' => ['jpg', 'gif', 'png', 'bmp','pdf','jpeg'],
-//                         'showUpload' => true,
-//                         'initialPreview' => [
-//                           //  $model->upload_invoice ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->upload_invoice) : null, // checks the models to display the preview
-//                         ],
-//                         'overwriteInitial' => true,
-//                     ],
-//                 ])->label(false);
-//                 ?>
+ echo $form->field($model, 'postal_code')->widget(Select2::classname(), [
+    'theme' => Select2::THEME_BOOTSTRAP,
+    'options' => ['placeholder' => 'Select a Postal Code ...'],
+    'pluginOptions' => [
+      'allowClear' => true,
+      //'autocomplete' => true,
+      'ajax' => [
+          'url' => '../postcode/allcode',
+          'dataType' => 'json',
+          'data' => new \yii\web\JsExpression('function(params) { ; return {q:params.term}; }')
+      ],
+  ],
+  ])->label(false);
+               ?>
     </div>
 
 </div>
@@ -469,16 +500,16 @@ var typeone = $("#order-child_level").val();
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-4">
     Postal Code
     </div>
     <div class="col-md-8">
    
-        <?= $form->field($model, 'postal_code')->textInput()->label(false) ?>
+        <?php // $form->field($model, 'postal_code')->textInput()->label(false) ?>
      
     </div>
-</div>
+</div> -->
 
 <div class="row">
     <div class="col-md-4">
@@ -521,6 +552,15 @@ var typeone = $("#order-child_level").val();
 
 <script type="text/javascript">
 jQuery(document).ready(function() {
+    //hide payment method
+    $('.payment_slip').hide();
+    $('#order-payment_method').click(function () {
+        if ($('input[name="Order[payment_method]"][value="3"]').is(':checked')) {
+            $('.payment_slip').show();
+        } else {
+            $('.payment_slip').hide();
+        }
+    });
     $('#order-request_agent_name').on('change', function () {
         $.post("../stock-in/getunits?id=" + $('#order-product_id').val()+"&user_id="+$(this).val(), function (data) {
     $('#order-orde').val(data);

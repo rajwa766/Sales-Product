@@ -14,13 +14,16 @@
                                 <i class="fa fa-bars"></i>
                             </a>
                         </li>
-                        <?php  if (!Yii::$app->user->isGuest) {?>
+                        <?php 
+                        $remaning_percent = '';
+                        if (!Yii::$app->user->isGuest) {?>
                             <?php $status_stock =  (new Query())
     ->select('SUM(remaining_quantity) as remaning_stock,SUM(initial_quantity) as initial_stock')
     ->from('stock_in')
     ->where(['=','user_id',Yii::$app->user->identity->id])
     ->groupby(['product_id'])
     ->one();
+    if($status_stock){
     $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
     $stock_remaning_percent = $stock_remaning_percent *100;
 $selected_percentage = \common\models\StockStatus::findOne(['user_id'=>Yii::$app->user->identity->id]);
@@ -32,6 +35,7 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
     $remaning_percent  = '';
 }
 }
+                        }
     ?>
                         <li class="notify-toggle-wrapper">
                         <a href="#" data-toggle="dropdown" class="toggle">
@@ -67,7 +71,7 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
                                                     <i class="fa fa-check"></i>
                                                 </div>
                                                 <div>
-                                                <?php if($remaning_percent ) { ?>
+                                                <?php if($remaning_percent) { ?>
                                                     <span class="name">
                                                         <strong>Your Remaning stock is <?php echo $remaning_percent ?>%</strong>
                                                         

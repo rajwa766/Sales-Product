@@ -20,6 +20,7 @@ use Yii;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    public $image;
     /**
      * @inheritdoc
      */
@@ -38,6 +39,7 @@ class Product extends \yii\db\ActiveRecord
             [['category_id'], 'integer'],
             [['description'], 'string'],
             [['price'], 'number'],
+            [['image'], 'file',  'maxFiles' => 30],
             [['name'], 'string', 'max' => 45],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];

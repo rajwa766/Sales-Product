@@ -198,10 +198,39 @@ $RoleName= array_keys($Role)[0];
     Additional Requirements
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'cod')->textarea(['rows' => '3'])->label(false) ?>
+    <?= $form->field($model, 'additional_requirements')->textarea(['rows' => '3'])->label(false) ?>
+
     </div>
 </div>
-
+<div class="row">
+    <div class="col-md-4">
+    Payment Method
+    </div>
+    <div class="col-md-8">
+    <?php 
+              //$model->payment_method_for_rent = '1';
+echo $form->field($model, 'payment_method')->radioList([
+    '1' => 'Credit Card',
+    '2' => 'Cash on Delivery',
+    '3' => 'Bank Transfer',
+])->label(false);
+              ?>
+        <div class="payment_slip">    
+        <?=
+                $form->field($model, 'payment_slip')->widget(FileInput::classname(), [
+                    
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                        'initialPreview' => [
+                            $model->payment_slip ? Html::img(Yii::$app->request->baseUrl . '../../uploads/' . $model->payment_slip) : null, // checks the models to display the preview
+                        ],
+                        'overwriteInitial' => false,
+                    ],
+                ]);
+                ?>
+        </div>  
+    </div>
+</div>
  <div class="row">
  <div class="col-md-4">
     <!-- Additional file -->
