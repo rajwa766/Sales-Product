@@ -171,27 +171,9 @@ $RoleName= array_keys($Role)[0];
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-    Select Shipper
-    </div>
-    <div class="col-md-8">
-    <?= $form->field($model, 'shipper')->radioList([
-                1 => 'EMS', 
-             
-                8 => 'Kerry BKK SAME DAY',
-            ])->label(false); ?>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-    COD
-    </div>
-    <div class="col-md-8">
-    <?= $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-</div>
+
+
 
 <div class="row">
     <div class="col-md-4">
@@ -210,7 +192,7 @@ $RoleName= array_keys($Role)[0];
     <?php 
               //$model->payment_method_for_rent = '1';
 echo $form->field($model, 'payment_method')->radioList([
-    '1' => 'Credit Card',
+    // '1' => 'Credit Card',
     '2' => 'Cash on Delivery',
     '3' => 'Bank Transfer',
 ])->label(false);

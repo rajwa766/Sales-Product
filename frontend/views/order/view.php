@@ -56,10 +56,12 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                                     <div class="col-md-3 col-sm-12 col-xs-12 invoice-head-info">
                                                     <?php if($model->status == '1') {?>
                                                         <span class='text-muted'>
+                                                        <?php if(isset($model->shippingAddresses)) {?>
                                                         <?= $model->shippingAddresses->address ?>
                                                             
                                                             <?= $model->shippingAddresses->district .''.$model->shippingAddresses->province  .''.$model->shippingAddresses->country .''. $model->shippingAddresses->postal_code ?><br>
                                                             P: <?= $model->shippingAddresses->phone_no; ?>
+                                                        <?php } ?>
                                                         </span>
                                                     <?php } ?>
                                                     </div>
@@ -166,7 +168,7 @@ foreach($model->productOrders as $orders){
                                         <div class="clearfix"></div><br>
 
                                         <div class="row">
-                                        <?php if($model->payment_slip){?>
+                                        <?php if(isset($model->payment_slip)){?>
 
                                         
                                         <div class="col-md-6 col-sm-6 col-xs-6 text-center">
