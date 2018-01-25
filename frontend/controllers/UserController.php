@@ -230,7 +230,9 @@ return $parent_id->parent_id;
                      
                      if ($photo !== null) {
                        $model->profile= $photo->name;
-                       $ext = end((explode(".", $photo->name)));
+                      
+                       $array = explode(".", $photo->name);
+                  $ext=end($array);
                        $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
                        $path =  Yii::getAlias('@app').'/web/uploads/'.$model->profile;
                     //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;

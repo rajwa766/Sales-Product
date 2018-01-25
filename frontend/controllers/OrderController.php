@@ -176,7 +176,8 @@ class OrderController extends Controller
                 
                 if ($photo !== null) {
                   $model->payment_slip= $photo->name;
-                  $ext = end((explode(".", $photo->name)));
+                  $array = explode(".", $photo->name);
+                  $ext=end($array);
                   $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
                   $path =  Yii::getAlias('@app').'/web/uploads/'.$model->payment_slip;
                //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
