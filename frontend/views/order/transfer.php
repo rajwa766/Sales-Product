@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
               'label'=> Yii::t('app', 'COD'),
-              'attribute'=> 'COD'
+              'attribute'=> 'cod'
             ],
             [
                 'label' =>  Yii::t('app', 'Quantity and Price'),
