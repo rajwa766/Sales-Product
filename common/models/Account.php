@@ -93,15 +93,22 @@ class Account extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Gl::className(), ['account_id' => 'id']);
     }
-    public static function create_account($model){
-        $account = new Account();
-        $account->isNewRecord = true;
-        $account->id = Null;
-        $account->accout_type = '1';
-        $account->account_name =$model->username.'-recivable';
-        $account->account_description = 'Account to calculate profit';
-        $account->user_id = $model->id;
-      $account->save();
+    public static function create_accounts($model){
+        for($i=1;$i<=2;$i++)
+        {
+            $account = new Account();
+            $account->isNewRecord = true;
+            $account->id = Null;
+            $account->accout_type = $i;
+            
+            if($i==2)
+            {
+                $account->account_name =$model->username.'-payable';    
+            }
+            $account->account_description = 'Account to calculate profit';
+            $account->user_id = $model->id;
+            $account->save();
+        }
         
     }
 }

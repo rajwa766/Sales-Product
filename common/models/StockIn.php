@@ -83,68 +83,58 @@ class StockIn extends \yii\db\ActiveRecord
         $stock_available = true;
         $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
         $transaction_failed=false;
-       $transaction = Yii::$app->db->beginTransaction();
+        $transaction = Yii::$app->db->beginTransaction();
         try 
         {
-        foreach($total_order_quantity as $single_order){
-           
-            if($transaction_failed)
-            {
-                break;
-            }
-            while($single_order['quantity']>0){
-                $stockin_quantity = \common\models\StockIn::avilaible_quantity($single_order['product_id'],$order_request_id);
-                if($stockin_quantity != null){
-    //  subtract the quantiy 
-                $single_order['quantity'] = $single_order['quantity'] - $stockin_quantity['remaining_quantity'];
-                // insert stock out 
+            foreach($total_order_quantity as $single_order){
             
-            //    update stock in
-              
-                   if($single_order['quantity']> 0){
-                   \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
-                   \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
-                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
-                 
-                   }else{
-                    \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
-                    $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
-                       
-                    \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
-                 \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],$stock_out_quantity,$user_id);
-                 
-                   }
-                // insert stock in
-                
-                
-                }else{
-                    $transaction_failed=true;
-                    
+                if($transaction_failed)
+                {
                     break;
                 }
-                
+                while($single_order['quantity']>0){
+                    $stockin_quantity = \common\models\StockIn::avilaible_quantity($single_order['product_id'],$order_request_id);
+                    if($stockin_quantity != null){
+                        //  subtract the quantiy 
+                        $single_order['quantity'] = $single_order['quantity'] - $stockin_quantity['remaining_quantity'];
+                        // insert stock out and update stock in
+                    if($single_order['quantity']> 0){
+                            \common\models\StockIn::update_quantity($stockin_quantity['id'],0);
+                            \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'], $stockin_quantity['remaining_quantity']);
+                            \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],abs($single_order['quantity']),$user_id);
+                    }else{
+                            \common\models\StockIn::update_quantity($stockin_quantity['id'],abs($single_order['quantity']));
+                            $stock_out_quantity= $stockin_quantity['remaining_quantity']+$single_order['quantity'] ;
+                            \common\models\StockOut::insert_quantity($single_order['id'],$stockin_quantity['id'],$stock_out_quantity);
+                            \common\models\StockIn::insert_quantity($single_order['product_id'],$single_order['order_price'],$stock_out_quantity,$user_id);
                     }
-                   
-    }
- 
-       
+                
+                    }else{
+                        $transaction_failed=true;
+                        
+                        break;
+                    }
+                    
+                }
+        }
     }catch (Exception $e) 
     {
         $transaction_failed=true;
-      
     }
    if($transaction_failed)
    {
-    $transaction->rollBack();
-    echo false;
+        $transaction->rollBack();
+        echo false;
    }
    else
    {
-         //Bonus Calculation for parents
+        $total_amount=array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
+        \common\models\Gl::create_gl($total_amount,$user_id,$order_request_id,$order_id,'1');
+    //Bonus Calculation for parents
     $level_id = \common\models\User::findOne(['id'=>$order_request_id]);
     $level_id = $level_id->user_level_id;
     if($level_id != '1'){
-        $level_for_bonus = \common\models\LevelPercentage::findOne(['level_id'=>$level_id]);
+                $level_for_bonus = \common\models\LevelPercentage::findOne(['level_id'=>$level_id]);
                 $parent_level = $level_for_bonus['parent_id'];
                 $order = \common\models\Order::findOne(['id'=>$order_id]);
                 if($parent_level == 2 && $level_for_bonus['is_company_wide'] == true){
@@ -152,24 +142,20 @@ class StockIn extends \yii\db\ActiveRecord
                     $total_user = (int) count($parent_users);
                     $single_price = (int)$level_for_bonus->percentage/$total_user;
                     $bonus_amount =  $single_price * (int)$order->entity_type;
-                  
                     foreach($parent_users as $parent_user){
-                        $account_id = \common\models\Account::findOne(['user_id'=>$parent_user->id]);
-                      
-                        $gl = \common\models\Gl::create_gl(strval($bonus_amount),$account_id->id,$order_id,'1');
+                        \common\models\Gl::create_gl(strval($bonus_amount),$parent_user->id,1,$order_id,'1');
                        
                     }
                 }
         
-                  //Bonus Calculation for current user
-     $level_id = \common\models\User::findOne(['id'=>$user_id]);
-     $level_id = $level_id->user_level_id;
-     $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id'=>$level_id])->andwhere(['parent_id'=>$level_id])->one();;
-     $account_id = \common\models\Account::findOne(['user_id'=>$user_id]);
-     $gl = \common\models\Gl::create_gl($level_for_bonus_itself['percentage'],$account_id->id,$order_id,'1');
+        //Bonus Calculation for current user
+        $level_id = \common\models\User::findOne(['id'=>$user_id]);
+        $level_id = $level_id->user_level_id;
+        $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id'=>$level_id])->andwhere(['parent_id'=>$level_id])->one();;
+        $account_id = \common\models\Account::findOne(['user_id'=>$user_id]);
+        \common\models\Gl::create_gl($level_for_bonus_itself['percentage'],$$user_id,1,$order_id,'1');
     }
-   
-     $transaction->commit();    
+    $transaction->commit();    
     \common\models\Order::update_status($order_id);
     echo true;
    }

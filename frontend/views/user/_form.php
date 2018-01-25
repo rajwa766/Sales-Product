@@ -97,8 +97,8 @@ use kartik\file\FileInput;
             City
         </div>
         <div class="col-md-8">
-    <?= $form->field($model, 'city')->textInput()->label(false) ?>
-    </div>
+         <?= $form->field($model, 'city')->textInput()->label(false) ?>
+        </div>
     </div>
 </div> 
 <div class="row no-margin">
@@ -138,7 +138,7 @@ $parent_user = \common\models\User::findOne(['id'=>$model->parent_id]);
        <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-        Use Level
+        User Level
         </div>
         <div class="col-md-8">
 <?php
@@ -201,8 +201,12 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 <?php if ($model->isNewRecord) {?>
 <div class="row no-margin">
     <div class="col-md-6">
-<?= $form->field($model, 'company_user')->checkbox() ?>
- 
+        <div class="col-md-4">
+            Company User
+        </div>
+        <div class="col-md-8">
+        <?= $form->field($model, 'company_user')->checkbox(['label' => null]) ?>
+        </div>
     </div>
     <div class="col-md-6">
    
@@ -339,7 +343,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 <div class="row no-margin">
     <div class="col-md-6">
     <div class="col-md-4">
-            Stock In
+            Current Stock
         </div>
         <div class="col-md-8">
         <?php
@@ -362,23 +366,27 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     </div>
     </div>
     <div class="col-md-6">
-    <div class="col-md-4">
     <?php
         if ($model->isNewRecord) {
             $model->status = '1';
         }
-        ?>
-<?= $form->field($model, 'status')->checkbox() ?>
+    ?>
+        <div class="col-md-4">
+            Status
+        </div>
+        <div class="col-md-8">
+        <?= $form->field($model, 'status')->checkbox(['label' => null]) ?>
+        </div>
     </div>
-</div>
+
     </div> 
 <div class="outer-container">
  <div class="col-md-12 order-panel">
     <h3>Order Items</h3>
     <div class=" col-md-12 first-row">
-    <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
+    <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
 
 
