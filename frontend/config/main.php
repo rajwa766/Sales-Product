@@ -77,6 +77,8 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
          'allowActions' => [
              'site/*',
+             'order/customer-create',
+             'postcode/allcode',
              'order/create',
              'order/view',
              
