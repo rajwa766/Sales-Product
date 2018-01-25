@@ -25,11 +25,11 @@ use kartik\time\TimePicker;
      ?>
    		
    		<div class="filter">
-           <h1> <?= Yii::t('app', 'Status Report') ?></h1>
+           <h1>Order Report</h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
-				  <?= Yii::t('app', 'From Date') ?>
+					From Date
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -49,7 +49,7 @@ use kartik\time\TimePicker;
 
 			  <div class="col-md-6">
 				<div class="col-md-4">
-				  <?= Yii::t('app', 'To Date') ?>
+					To Date
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -75,7 +75,7 @@ use kartik\time\TimePicker;
         <div class="row" style="padding-top: 20px;">
 			<div class="col-md-6">
 				<div class="col-md-4">
-           <?= Yii::t('app', 'User Levels') ?>
+                User Levels
 				</div>
 				<div class="col-md-8">
                 <?php
@@ -97,7 +97,7 @@ use kartik\time\TimePicker;
 
 			  <div class="col-md-6">
 				<div class="col-md-4">
-           <?= Yii::t('app', 'All User') ?>
+                All User
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -123,7 +123,7 @@ use kartik\time\TimePicker;
                 <div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
-			 <?= Yii::t('app', 'Status') ?>
+					Status
 				</div>
 				<div class="col-md-8">
                 <?php
@@ -174,7 +174,7 @@ $("body").delegate("#form-order-report .submit_button", "click", function (e) {
     
         data:  {'from_date':from_date, 'to_date':to_date,'user_id':user_id, 'status':status },
        // data: "id="+id+"status+"+status,
-        url: "<?php echo Yii::$app->getUrlManager()->createUrl('order/statusreport'); ?>",
+        url: "<?php echo Yii::$app->getUrlManager()->createUrl('reports/order-report-result'); ?>",
         success: function (test) {
             $('.filter').hide(1000);
             $('.view-report').html(test);

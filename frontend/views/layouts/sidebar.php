@@ -189,11 +189,11 @@ use yii\models\users_level;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/inventory-reports"><?= Yii::t('app', 'Visit Inventory');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/inventory-report"><?= Yii::t('app', 'Inventory');?></a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/status-reports"><?= Yii::t('app', 'Order');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/order-report"><?= Yii::t('app', 'Order');?></a>
 
                                 </li>
                             </ul>
