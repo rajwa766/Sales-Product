@@ -29,25 +29,36 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             [
-                'label' => 'Transfer from',
+                'label' => Yii::t('app', 'Transfer from'),
                 'attribute' => 'order_request_id',
                 'value' => function($model) {
                     return $model->username($model->order_request_id);
                 },
             ],
             [
-                'label' => 'Transfer to',
+                'label' => Yii::t('app', 'Transfer To'),
                 'attribute' => 'user_id',
                 'value' => function($model) {
                     return $model->username($model->user_id);
                 },
             ],
          
-            'order_ref_no',
-            'shipper',
-            'cod',
+            
             [
-                'label' => 'Quantity and Price',
+              'label'=> Yii::t('app', 'Order Ref No'),
+              'attribute'=> 'order_ref_no'
+            ],
+            
+             [
+              'label'=> Yii::t('app', 'Shipper'),
+              'attribute'=> 'shipper'
+            ],
+            [
+              'label'=> Yii::t('app', 'COD'),
+              'attribute'=> 'COD'
+            ],
+            [
+                'label' =>  Yii::t('app', 'Quantity and Price'),
                 'format' => 'raw',
                 'value' => function($model) {
                     return $model->productorder($model->id);
@@ -55,7 +66,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'productOrders.quantity',
             // 'productOrders.order_price',
-            'additional_requirements',
+            
+            [
+              'label'=> Yii::t('app', 'Additional Requirements'),
+              'attribute'=> 'additional_requirements'
+            ],
          
 
             [

@@ -120,8 +120,8 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
 	 							   <p class="hidden-lg hidden-md"><?= Yii::t('app', 'Profile');?></p>
 		 						</a>
 		 							<ul class="dropdown-menu language">
-                                        <li><a href="<?php echo Yii::$app->request->baseUrl; ?>/site/language?language=th-TH"><img src="<?= Yii::$app->homeUrl; ?>images/thai-flag.png" alt="user-image" class="img-circle">Thailand</a></li>
-									<li><a  href="<?php echo Yii::$app->request->baseUrl;?>/site/language?language=en-US"><img src="<?= Yii::$app->homeUrl; ?>images/uk-flag.png" alt="user-image" class="img-circle">English</a></li>
+                                        <li><a href="<?php echo Yii::$app->request->baseUrl; ?>/site/language?language=th-TH"><img src="<?= Yii::$app->homeUrl; ?>images/thai-flag.png" alt="user-image" class="img-circle">TH</a></li>
+									<li><a  href="<?php echo Yii::$app->request->baseUrl;?>/site/language?language=en-US"><img src="<?= Yii::$app->homeUrl; ?>images/uk-flag.png" alt="user-image" class="img-circle">EN</a></li>
 									
 								</ul>
 							</li>

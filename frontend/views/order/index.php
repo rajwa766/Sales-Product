@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
            // 'id',
            [
             'attribute' => 'order_request_id',
-            'label'=>'Transfer from',
+            'label'=>Yii::t('app', 'Transfer from'),
             'value'=>function ($model, $key, $index, $widget) { 
                 return $model->username($model->order_request_id);
             },
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
  ],
  [
     'attribute' => 'user_id',
-    'label'=>'Transfer to',
+    'label'=>Yii::t('app', 'Transfer to'),
     'value'=>function ($model, $key, $index, $widget) { 
         return $model->username($model->user_id);
     },
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ],    
    
         [
-            'label' => 'Status',
+            'label' => Yii::t('app', 'Status'),
       'attribute' => 'status',
       'format' => 'raw',
       'value' => function ($model) {                      
