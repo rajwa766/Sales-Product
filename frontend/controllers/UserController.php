@@ -82,7 +82,7 @@ class UserController extends Controller
 
             $image = \yii\web\UploadedFile::getInstance($model, 'file');
             $data = \common\components\Excel::import($image->tempName, ['setFirstRecordAsKeys' => true]);
-     
+    
         $array_MR=array();
         $array_SuperVIP=array();
         $array_VIP=array();
@@ -155,8 +155,10 @@ class UserController extends Controller
                             $user_model->price =  '550';
                             
                         }
-                     
-                       $user_model->save();
+                        $user_model->save();
+                        
+                        \common\models\StockStatus::set_minimum_stock_level($user_model->id);
+                        \common\models\Account::create_accounts($user_model);
                         if (strpos($entry['Level'], 'MR') !== false) {
                             $array_MR[]=$user_model->id;
                         }
@@ -170,19 +172,17 @@ class UserController extends Controller
                         
                          if($order->id)
                          {
-                             
                              $product_order = \common\models\ProductOrder::insert_user_order_exel($user_model,$order);
-                             $shipping_address = \common\models\ShippingAddress::insert_shipping_address_excel($user_model);
+                             $shipping_address = \common\models\ShippingAddress::insert_shipping_address_excel($user_model,$order->id);
                              $stock_in = \common\models\StockIn::approve($order->id,$user_model->id,$user_model->parent_id);
-                             
-                             
                          }
                          $auth = \Yii::$app->authManager;
                          $role = $auth->getRole('general'); 
                          $auth->assign($role, $user_model->id);
                 }
                 } catch (\Exception $e) {
-                  
+                    var_dump($e);
+                    exit();
                     continue;
                 }
             }

@@ -182,10 +182,14 @@ use yii\widgets\DetailView;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>reports/order-report"><?= Yii::t('app', 'Order');?></a>
 
                                 </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables/Payables');?></a>
+
+                                </li>
                             </ul>
                         </li>
                      <?php } ?>
-                     <li class=""> 
+                     <li class="" style="display:none;"> 
                             <a href="javascript:;">
                                 <i class="fa fa-users"></i>
                                 <span class="title"><?= Yii::t('app','Stock Status'); ?></span>
