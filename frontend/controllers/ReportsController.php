@@ -141,7 +141,6 @@ public function actionOrderReport()
         ]);
 }
 public function actionOrderReportResult(){
-      $model = new Order(); 
          $fromDate = Yii::$app->request->post('from_date');
          $toDate = Yii::$app->request->post('to_date');
          $userId = Yii::$app->request->post('user_id');
@@ -168,6 +167,82 @@ public function actionOrderReportResult(){
             'order' => $order,
             'model' => $model,
             
+        ]);
+
+}
+
+public function actionReceivablePayableReport()
+{
+     $model = new Order(); 
+           return $this->render('receivable-payable/index', [
+            'model' => $model,
+       
+            
+        ]);
+}
+public function actionReceivablePayableReportResult(){
+         $receivable_in_hand=0;
+         $payable_in_hand=0;
+         $rpArray=array();
+         $fromDate = Yii::$app->request->post('from_date');
+         $toDate = Yii::$app->request->post('to_date');
+         $userId = Yii::$app->request->post('user_id');
+         $account_type = Yii::$app->request->post('account_type');
+      
+         if(!$userId){
+            $userId = Yii::$app->user->getId();
+         }
+         if(!empty($fromDate))
+         {
+            $receivable_in_hand=\common\models\Gl::get_amount_by_type($userId,$fromDate,1);
+         }
+         if($account_type==2)
+         {
+            $receivable_in_hand+=\common\models\Gl::get_amount_by_type($userId,$toDate,1);
+         }
+         if(!empty($fromDate))
+         {
+            $payable_in_hand=\common\models\Gl::get_amount_by_type($userId,$fromDate,2);
+         }
+         if($account_type==1)
+         {
+            $payable_in_hand+=\common\models\Gl::get_amount_by_type($userId,$toDate,2);
+         }
+         if(empty($account_type) ||  $account_type==1)
+         {
+             
+             $gl_receivable=\common\models\Gl::get_filtered_result($userId,$fromDate,$toDate,1);
+            foreach ($gl_receivable as $gl) {
+                $rp=new \common\models\helpers\reports\ReceivablePayableReport();
+                $rp->user=$gl['name'];
+                $rp->date=$gl['created_at'];
+                $rp->amount=$gl['amount'];
+                $rp->type='Receivable';
+                $rpArray[]=$rp;
+            }
+         }
+        
+         if(empty($account_type) ||  $account_type==2)
+         {
+            
+            $gl_payable=\common\models\Gl::get_filtered_result($userId,$fromDate,$toDate,2);
+            foreach ($gl_payable as $gl) {
+                $rp=new \common\models\helpers\reports\ReceivablePayableReport();
+                $rp->user=$gl['name'];
+                $rp->date=$gl['created_at'];
+                $rp->amount=$gl['amount'];
+                $rp->type='Payable';
+                $rpArray[]=$rp;
+            }
+         }
+         
+         usort($rpArray, function($a, $b) {
+            return strtotime($a['date']) - strtotime($b['date']);
+        });
+        return $this->renderAjax('receivable-payable/_receivablepayablereport', [
+            'payable_in_hand'=>$payable_in_hand,
+            'receivable_in_hand'=>$receivable_in_hand,
+            'ReceivablePayableArr' => $rpArray,
         ]);
 
 }

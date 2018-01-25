@@ -129,7 +129,7 @@ class StockIn extends \yii\db\ActiveRecord
    else
    {
         $total_amount=array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
-        \common\models\Gl::create_gl($total_amount,$user_id,$order_request_id,$order_id,'1');
+        \common\models\Gl::create_gl($total_amount,$order_request_id,$user_id,$order_id,'1');
         
     //Bonus Calculation for parents
     $level_id = \common\models\User::findOne(['id'=>$order_request_id]);
@@ -145,7 +145,6 @@ class StockIn extends \yii\db\ActiveRecord
                     $bonus_amount =  $single_price * (int)$order->entity_type;
                     foreach($parent_users as $parent_user){
                         \common\models\Gl::create_gl(strval($bonus_amount),$parent_user->id,1,$order_id,'1');
-                       
                     }
                 }
         
@@ -154,7 +153,7 @@ class StockIn extends \yii\db\ActiveRecord
         $level_id = $level_id->user_level_id;
         $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id'=>$level_id])->andwhere(['parent_id'=>$level_id])->one();;
         $account_id = \common\models\Account::findOne(['user_id'=>$user_id]);
-        \common\models\Gl::create_gl($level_for_bonus_itself['percentage'],$$user_id,1,$order_id,'1');
+        \common\models\Gl::create_gl($level_for_bonus_itself['percentage'],$user_id,1,$order_id,'1');
     }
     $transaction->commit();    
     \common\models\Order::update_status($order_id);
