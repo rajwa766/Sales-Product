@@ -52,6 +52,11 @@
          </tbody>
 
        </table>
+       <div style="float:right;margin-right:20px;">
+		 
+			<span>Remaining Stock: </span>
+			<?=  $remaining_stock ;?>
+	  </div>
 	   </div>
      </div>
     

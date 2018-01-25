@@ -105,14 +105,29 @@ class Gl extends \yii\db\ActiveRecord
     {
         return $this->hasOne(PaymentDetail::className(), ['id' => 'payment_detail_id']);
     }
-    public static function create_gl($bonus_amount,$account_id,$order_id,$payment_method){
-        $gl = new Gl();
-        $gl->isNewRecord = true;
-        $gl->id = Null;
-        $gl->amount = $bonus_amount;
-        $gl->order_id = $order_id;
-        $gl->account_id = $account_id;
-        $gl->payment_detail_id = $payment_method;
-        $gl->save();
+    public static function create_gl($amount,$user_id,$resquester_id,$order_id,$payment_method){
+        $receivable_account=\common\models\Account::findOne(['user_id'=>$user_id,'accout_type'=>1]);
+        $payable_account=\common\models\Account::findOne(['user_id'=>$resquester_id,'accout_type'=>2]);
+        if(!empty($receivable_account) && !empty($payable_account))
+        {
+            $gl = new Gl();
+            $gl->isNewRecord = true;
+            $gl->id = Null;
+            $gl->amount = $amount;
+            $gl->order_id = $order_id;
+            $gl->account_id = $receivable_account->id;
+            $gl->payment_detail_id = $payment_method;
+            $gl->save();
+
+            $gl = new Gl();
+            $gl->isNewRecord = true;
+            $gl->id = Null;
+            $gl->amount = $amount;
+            $gl->order_id = $order_id;
+            $gl->account_id = $payable_account->id;
+            $gl->payment_detail_id = $payment_method;
+            $gl->save();
+        }
+       
     }
 }

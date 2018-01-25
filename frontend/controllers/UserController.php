@@ -260,12 +260,12 @@ return $parent_id->parent_id;
                 return $this->render(['more_user', 'model' => $model]);  
             }else{
             if($model->save()){
-                $account = \common\models\Account::create_account($model);
+                $account_receivable = \common\models\Account::create_account($model,1);
+                $account_payable = \common\models\Account::create_account($model,2);
                 $order = \common\models\Order::insert_order($model);
                
                 if($order->id)
                 {
-                   
                     $product_order = \common\models\ProductOrder::insert_user_order_js($model,$order);
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
                     $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);

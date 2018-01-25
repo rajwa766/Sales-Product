@@ -16,9 +16,8 @@
            <tr>
              <th>Order By</th>
              <th>Order To</th>
-             <th>Status</th>
-             <th>Shipper</th>
              <th>Quantity</th>
+             <th>Status</th>
              <th>Requested By</th>
              <th>Requested Date</th>
            </tr>
@@ -32,9 +31,8 @@
            <tr>
              <td><?php echo $model->username($orders['user_id']); ?></td>
              <td><?php echo $model->username($orders['order_request_id']); ?></td>
-             <td><?php echo \common\models\Lookup::$status[$orders['status']]; ?></td>
-             <td><?php echo $orders['shipper']; ?></td>
              <td><?php echo $orders['entity_type']; ?></td>        
+             <td><?php echo \common\models\Lookup::$status[$orders['status']]; ?></td>
              <td><?php echo $model->username($orders['created_by']) ?></td>             
              <td><?php echo $orders['created_at']; ?></td>             
              
