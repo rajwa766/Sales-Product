@@ -3,7 +3,7 @@
 ?>
 <div class="row main-container report_div">    
        <div class="row report-view">
-       <h2>Inventry Report</h2>
+       <h2> <?= Yii::t('app', 'Inventory Report') ?></h2>
       <div class="col-md-12" style="margin-bottom:10px;">
 	  <button id="back" class="btn btn-success">Back</button>
 	  <div style="float:right;margin-right:20px;">
@@ -24,11 +24,11 @@
        <table class="table table-bordered">
          <thead>
            <tr>
-             <th>Name</th>
-             <th>Date</th>
-             <th>Quantity</th>
-             <th>Type</th>
-             <th>Product</th>
+             <th> <?= Yii::t('app', 'Name') ?></th>
+             <th><?= Yii::t('app', 'Date') ?></th>
+             <th><?= Yii::t('app', 'Quantity') ?></th>
+             <th> <?= Yii::t('app', 'Type') ?></th>
+             <th><?= Yii::t('app', 'Product') ?></th>
            </tr>
          </thead>
          <tbody>
@@ -54,7 +54,7 @@
        </table>
        <div style="float:right;margin-right:20px;">
 		 
-			<span>Remaining Stock: </span>
+			<span> <?= Yii::t('app', 'Remaining Stock:') ?> </span>
 			<?=  $remaining_stock ;?>
 	  </div>
 	   </div>

@@ -17,9 +17,17 @@ use kartik\file\FileInput;
     
 }
 </style>
-<div class="user-form">
-<div class="create-user">
-<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
+
+<section class="box">
+<header class="panel_header">
+    <h1 class="title pull-left"><?= Html::encode($this->title) ?></h1>
+    <div class="actions panel_actions pull-right">
+        <i class="box_toggle fa fa-chevron-down"></i>
+    </div>
+</header>
+<div class="content-body">
+    <?php 
+        $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
         $user_id = Yii::$app->user->getId();
         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
     ?>
@@ -413,7 +421,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 </div>
     <?php ActiveForm::end(); ?>
 </div>
-</div>
+</section>
 <script>
 jQuery(document).ready(function() {
     $('#user-company_user').change(function(){ 

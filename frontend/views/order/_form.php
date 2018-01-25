@@ -37,7 +37,7 @@ if(isset($Role['super_admin'])){
         ?>
     <div class="row">
         <div class="col-md-4">
-        Type
+        <?= Yii::t('app', 'Type') ?>
         </div>
         <div class="col-md-8">
         <?= $form->field($model, 'order_type')->dropdownList([
