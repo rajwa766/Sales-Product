@@ -257,7 +257,10 @@ return $parent_id->parent_id;
             $model->getpassword();
             //    check not company user and not seller and user space remain
             if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user && $model->company_user != '1'){
-                return $this->render(['more_user', 'model' => $model]);  
+               // return $this->render(['more_user', 'model' => $model]);  
+                return $this->render('more_user', [
+                    'model' => $model,
+                ]);
             }else{
             if($model->save()){
                 \common\models\StockStatus::set_minimum_stock_level($model->id);
