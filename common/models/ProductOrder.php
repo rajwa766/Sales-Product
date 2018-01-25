@@ -156,7 +156,7 @@ class ProductOrder extends \yii\db\ActiveRecord
     }
     public static function order_quantity($order_id){
         return $order_quantity = (new Query())
-        ->select('*,quantity*order_price as total_price')
+        ->select('*,(quantity * order_price) as total_price')
         ->from('product_order')   
         ->where("order_id = '$order_id'")
         ->all();

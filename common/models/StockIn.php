@@ -128,8 +128,8 @@ class StockIn extends \yii\db\ActiveRecord
    }
    else
    {
-    $total_amount=array_sum($total_order_quantity['total_price']);
-    \common\models\Gl::create_gl($total_amount,$user_id,$order_request_id,$order_id,'1');
+        $total_amount=array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
+        \common\models\Gl::create_gl($total_amount,$user_id,$order_request_id,$order_id,'1');
     //Bonus Calculation for parents
     $level_id = \common\models\User::findOne(['id'=>$order_request_id]);
     $level_id = $level_id->user_level_id;
