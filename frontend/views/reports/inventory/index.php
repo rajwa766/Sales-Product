@@ -25,11 +25,11 @@ use kartik\time\TimePicker;
      ?>
    		
    		<div class="filter">
-           <h1>Inventory Report</h1>
+           <h1><?= Yii::t('app', 'Inventory Report') ?></h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
-					From Date
+				 <?= Yii::t('app', 'From Date') ?>
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -49,7 +49,7 @@ use kartik\time\TimePicker;
 
 			  <div class="col-md-6">
 				<div class="col-md-4">
-					To Date
+				 <?= Yii::t('app', 'To Date') ?>
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -75,7 +75,7 @@ use kartik\time\TimePicker;
         <div class="row" style="padding-top: 20px;">
 			<div class="col-md-6">
 				<div class="col-md-4">
-                User Levels
+             <?= Yii::t('app', 'User Levels') ?>
 				</div>
 				<div class="col-md-8">
                 <?php
@@ -97,7 +97,7 @@ use kartik\time\TimePicker;
 
 			  <div class="col-md-6">
 				<div class="col-md-4">
-                All User
+           <?= Yii::t('app', 'All users') ?>
 				</div>
 				<div class="col-md-8">
 					<?php

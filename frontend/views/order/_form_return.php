@@ -26,7 +26,7 @@ use yii\db\Query;
 <div class="col-md-9 order-setting-panel top_row">
     <div class="row">
         <div class="col-md-4">
-        Type
+        <?= Yii::t('app', 'Type') ?>
         </div>
         <div class="col-md-8">
         <?= $form->field($model, 'order_type')->dropdownList([
@@ -50,7 +50,7 @@ $RoleName= array_keys($Role)[0];
     <div class="admin">
 <div class="row">
 <div class="col-md-4">
-    User Level
+   <?= Yii::t('app', 'User Level') ?>
     </div>
     <div class="col-md-8">
       <?php
@@ -73,7 +73,7 @@ $RoleName= array_keys($Role)[0];
 
 <div class="row">
 <div class="col-md-4">
-    Parent User
+    <?= Yii::t('app', 'Parent User') ?>
     </div>
     <div class="col-md-8">
        <?php
@@ -113,7 +113,7 @@ $RoleName= array_keys($Role)[0];
 
 <div class="row">
 <div class="col-md-4">
-    Child Level
+     <?= Yii::t('app', 'Child Level') ?>
     </div>
     <div class="col-md-8">
         <?php
@@ -137,7 +137,7 @@ $RoleName= array_keys($Role)[0];
 
 <div class="row">
 <div class="col-md-4">
-    Child Name
+    <?= Yii::t('app', 'Child Name') ?>
     </div>
     <div class="col-md-8">
         <?php
@@ -177,7 +177,7 @@ var typeone = $("#order-child_level").val();
     <div class="admin">
 <div class="row">
 <div class="col-md-4">
-    User Level
+    l <?= Yii::t('app', 'User Leve') ?>
     </div>
     <div class="col-md-8">
       <?php
@@ -216,7 +216,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
 <div class="col-md-4">
-    Agent Name
+    <?= Yii::t('app', 'Agent Name') ?>
     </div>
     <div class="col-md-8">
 
@@ -255,7 +255,7 @@ var typeone = $("#order-child_level").val();
  <div class="agent">
     <div class="row">
     <div class="col-md-4">
-        Customer Name
+       <?= Yii::t('app', 'Customer Name') ?>
         </div>
         <div class="col-md-8">
             <?php
@@ -286,10 +286,10 @@ var typeone = $("#order-child_level").val();
 </div>
 <div class="row">
 <div class="col-md-9 order-panel">
-    <h3>Order Detail</h3>
+    <h3><?= Yii::t('app', 'Order Detail') ?></h3>
     <div class="row first-row">
     <div class="col-md-4">
-    Order Ref/No
+     <?= Yii::t('app', 'Order Ref/No') ?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
@@ -298,7 +298,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
     <div class="col-md-4">
-    Representative
+     <?= Yii::t('app', 'Representative') ?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
@@ -307,7 +307,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
     <div class="col-md-4">
-    Select Shipper
+     <?= Yii::t('app', 'Select Shipper') ?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'shipper')->radioList([
@@ -337,7 +337,7 @@ var typeone = $("#order-child_level").val();
 </div>
 <div class="row">
     <div class="col-md-4">
-    Payment Method
+    <?= Yii::t('app', 'Payment Method') ?>
     </div>
     <div class="col-md-8">
     <?php 
@@ -389,7 +389,7 @@ echo $form->field($model, 'payment_method')->radioList([
 <!-- this is order items section -->
 <div class="row outer-container">
  <div class="col-md-9 order-panel">
-    <h3>Order Items</h3>
+    <h3> <?= Yii::t('app', 'Order Items') ?></h3>
     <div class="row first-row">
     <?php 
     echo $form->field($model, 'status')->hiddenInput(['value'=> '3'])->label(false);
@@ -409,7 +409,7 @@ echo $form->field($model, 'payment_method')->radioList([
           ->groupby(['product_id'])
           ->one();
           ?>
-    <div class="col-md-2">Total Stock
+    <div class="col-md-2"> <?= Yii::t('app', 'Total Stock') ?>
     
     </div>
     <div class="col-md-10" style="margin-bottom: 10px;">

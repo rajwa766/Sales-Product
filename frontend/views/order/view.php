@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                         <div class="page-title">
 
                             <div class="pull-left">
-                                <h1 class="title">Invoice</h1>                            </div>
+                                <h1 class="title"><?php Yii::t('app', 'Invoice') ?></h1>                            </div>
 
                             <div class="pull-right hidden-xs">
                             <?= Breadcrumbs::widget([
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                     <div class="col-lg-12">
                         <section class="box ">
                             <header class="panel_header">
-                                <h2 class="title pull-left">Invoice</h2>
+                                <h2 class="title pull-left"><?= Yii::t('app', 'Invoice')?></h2>
                                 <div class="actions panel_actions pull-right">
                                     <i class="box_toggle fa fa-chevron-down"></i>
                                     <i class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></i>
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <div class="invoice-head">
                                                     <div class="col-md-2 col-sm-12 col-xs-12 invoice-title">
-                                                        <h2 class="text-center bg-primary ">Invoice</h2>    
+                                                        <h2 class="text-center bg-primary "><?= Yii::t('app', 'Invoice')?></h2>    
                                                     </div>
                                                     <div class="col-md-3 col-sm-12 col-xs-12 invoice-head-info">
                                                     <?php if($model->status == '1') {?>
@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                             <div class="clearfix"></div><br>
 
                                             <div class="col-xs-6 invoice-infoblock pull-left">
-                                                <h4>Billed To:</h4>
+                                                <h4><?= Yii::t('app', 'Billed To:')?></h4>
                                                 <address>
                                                 <?php $billed_to = \common\models\User::find()->where(['id'=>$model->order_request_id])->one(); ?>
                                                     <h3><?= $billed_to->first_name .'&nbsp;'.$billed_to->last_name;  ?></h3>
@@ -83,7 +83,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                             </div>
 
                                             <div class="col-xs-6 invoice-infoblock text-right">
-                                                <h4>Payment Method:</h4>
+                                                <h4><?= Yii::t('app', 'Payment Method')?></h4>
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
                                                     <span class='text-muted'><?php if(isset($model->payment_method)){ \common\models\Lookup::$order_status[$model->payment_method]; }else{ echo 'Out of System';} ?><br>
@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
                                                    
                                                   $order_sum+=   $orders->quantity * $orders->order_price;
                                                  }?>
-                                                    <h3 class="text-muted">Total Due:</h3> &nbsp; <h2 class="text-primary">$<?= $order_sum;  ?> </h2>                
+                                                    <h3 class="text-muted"><?= Yii::t('app', 'Total Due:')?></h3> &nbsp; <h2 class="text-primary">$<?= $order_sum;  ?> </h2>                
                                                 </div>
 
                                             </div>
@@ -110,15 +110,15 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
 
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <h3>Order summary</h3><br>
+                                                <h3> <?= Yii::t('app', 'Order summary')?></h3><br>
                                                 <div class="table-responsive">
                                                     <table class="table table-hover invoice-table">
                                                         <thead>
                                                             <tr>
-                                                                <td><h4>Product Name</h4></td>
-                                                                <td class="text-center"><h4>Price</h4></td>
-                                                                <td class="text-center"><h4>Quantity</h4></td>
-                                                                <td class="text-right"><h4>Totals</h4></td>
+                                                                <td><h4> <?= Yii::t('app', 'Product Name')?></h4></td>
+                                                                <td class="text-center"><h4>Price <?= Yii::t('app', 'Price')?></h4></td>
+                                                                <td class="text-center"><h4> <?= Yii::t('app', 'Quantity')?></h4></td>
+                                                                <td class="text-right"><h4><?= Yii::t('app', 'Total')?></h4></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -139,20 +139,20 @@ foreach($model->productOrders as $orders){
                                                             <tr>
                                                                 <td class="thick-line"></td>
                                                                 <td class="thick-line"></td>
-                                                                <td class="thick-line text-center"><h4>Subtotal</h4></td>
+                                                                <td class="thick-line text-center"><h4><?= Yii::t('app', 'SubTotal')?></h4></td>
                                                                 <td class="thick-line text-right"><h4><?= $sum ?></h4></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="no-line"></td>
                                                                 <td class="no-line"></td>
-                                                                <td class="no-line text-center"><h4>Shipping</h4></td>
+                                                                <td class="no-line text-center"><h4><?= Yii::t('app', 'Shipping')?></h4></td>
                                                                 <td class="no-line text-right"><h4>$0</h4></td>
                                                             </tr>
                                                            
                                                             <tr>
                                                                 <td class="no-line"></td>
                                                                 <td class="no-line"></td>
-                                                                <td class="no-line text-center"><h4>Total</h4></td>
+                                                                <td class="no-line text-center"><h4><?= Yii::t('app', 'Total')?></h4></td>
                                                                 <td class="no-line text-right"><h3 style='margin:0px;' class="text-primary"><?= $sum ?></h3></td>
                                                             </tr>
                                                         </tbody>
@@ -185,8 +185,8 @@ foreach($model->productOrders as $orders){
                                             <div class="col-md-12 col-sm-12 col-xs-12 text-center">
                                         
                                         <?php } ?>
-                                                <a href="#" target="_blank" class="btn btn-purple btn-md"><i class="fa fa-print"></i> &nbsp; Print </a>        
-                                                <a href="#" target="_blank" class="btn btn-orange btn-md"><i class="fa fa-send"></i> &nbsp; Send </a> 
+                                                <a href="#" target="_blank" class="btn btn-purple btn-md"><i class="fa fa-print"></i> &nbsp; <?= Yii::t('app', 'Print')?> </a>        
+                                                <a href="#" target="_blank" class="btn btn-orange btn-md"><i class="fa fa-send"></i> &nbsp; <?= Yii::t('app', 'Send')?> </a> 
                                                 <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [

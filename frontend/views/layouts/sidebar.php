@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\models\users_level;
 ?>
  <!-- SIDEBAR - START -->
             <div class="page-sidebar ">
@@ -13,7 +14,7 @@ use yii\widgets\DetailView;
                     <div class="profile-info row">
 
                         <div class="profile-image col-md-4 col-sm-4 col-xs-4">
-                            <a href="ui-profile.html">
+                            <a href="<?= Yii::$app->homeUrl;?>site/index">
                                 <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive img-circle">
                             </a>
                         </div>
@@ -26,8 +27,21 @@ use yii\widgets\DetailView;
                                 <!-- Available statuses: online, idle, busy, away and offline -->
                                 <span class="profile-status online"></span>
                             </h3>
+                            <?php 
+                            $user_level = '';
 
-                            <p class="profile-title"><?= Yii::t('app', 'Web Developer');?></p>
+                            $query = (new \yii\db\Query())->select(['name'])->from('users_level')->where(['id' => Yii::$app->user->identity->user_level_id]);
+                                $command = $query->createCommand();
+                                $data = $command->queryAll();
+                                
+                                 foreach($data as $row) {
+                                    $user_level .= $row['name'];
+                                }
+
+
+
+                            ?>
+                            <p class="profile-title"><?php echo $user_level; ?></p>
 
                         </div>
 
@@ -49,7 +63,7 @@ use yii\widgets\DetailView;
                         <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-user"></i>
-                                <span class="title"><?= Yii::t('app','Profile'); ?></span>
+                                <span class="title"><?= Yii::t('app','PROFILE'); ?></span>
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
@@ -79,11 +93,11 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user"><?= Yii::t('app', 'user');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user"><?= Yii::t('app', 'User');?></a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/create" ><?= Yii::t('app', 'Crete User');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/create" ><?= Yii::t('app', 'Create User');?></a>
                                 </li>
                                 
                                 

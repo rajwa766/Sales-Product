@@ -9557,10 +9557,14 @@ border-left: 3px solid transparent;
 .jsgrid-search-mode-button {
     display: none;
 } */
+.wrap
+{
+    min-height: 100vh;
+}
 .language img
 {
-    width: 40px;
-    height: 40px;
+    width: 15px;
+    height: 15px;
     margin-right: 10px;
 }
 .main-container .img-responsive
