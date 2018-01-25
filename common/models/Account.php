@@ -99,8 +99,8 @@ class Account extends \yii\db\ActiveRecord
             $account = new Account();
             $account->isNewRecord = true;
             $account->id = Null;
-            $account->accout_type = $i;
-            
+            $account->accout_type = ''.$i;
+            $account->account_name =$model->username.'-receivable';    
             if($i==2)
             {
                 $account->account_name =$model->username.'-payable';    
