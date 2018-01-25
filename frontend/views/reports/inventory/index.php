@@ -146,7 +146,7 @@ $("body").delegate("#form-order-report .submit_button", "click", function (e) {
     
         data:  {'from_date':from_date, 'to_date':to_date,'user_id':user_id },
        // data: "id="+id+"status+"+status,
-        url: "<?php echo Yii::$app->getUrlManager()->createUrl('order/ajaxreport'); ?>",
+        url: "<?php echo Yii::$app->getUrlManager()->createUrl('reports/inventory-report-result'); ?>",
         success: function (test) {
             $('.filter').hide(1000);
             $('.view-report').html(test);

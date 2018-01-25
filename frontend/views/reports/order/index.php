@@ -25,7 +25,7 @@ use kartik\time\TimePicker;
      ?>
    		
    		<div class="filter">
-           <h1>Status Report</h1>
+           <h1>Order Report</h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
@@ -174,7 +174,7 @@ $("body").delegate("#form-order-report .submit_button", "click", function (e) {
     
         data:  {'from_date':from_date, 'to_date':to_date,'user_id':user_id, 'status':status },
        // data: "id="+id+"status+"+status,
-        url: "<?php echo Yii::$app->getUrlManager()->createUrl('order/statusreport'); ?>",
+        url: "<?php echo Yii::$app->getUrlManager()->createUrl('reports/order-report-result'); ?>",
         success: function (test) {
             $('.filter').hide(1000);
             $('.view-report').html(test);

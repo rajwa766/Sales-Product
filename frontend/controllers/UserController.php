@@ -260,6 +260,7 @@ return $parent_id->parent_id;
                 return $this->render(['more_user', 'model' => $model]);  
             }else{
             if($model->save()){
+                \common\models\StockStatus::set_minimum_stock_level($model->id);
                 \common\models\Account::create_accounts($model);
                 $order = \common\models\Order::insert_order($model);
                

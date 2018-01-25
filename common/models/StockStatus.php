@@ -67,4 +67,14 @@ class StockStatus extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+    public static function set_minimum_stock_level($user_id){
+        
+            $stock_status = new StockStatus();
+            $stock_status->isNewRecord = true;
+            $stock_status->id = Null;
+            $stock_status->below_percentage='80';
+            $stock_status->product_id=1;
+            $stock_status->user_id=$user_id;
+            $stock_status->save();
+        }
 }

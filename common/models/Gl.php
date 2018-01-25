@@ -110,23 +110,25 @@ class Gl extends \yii\db\ActiveRecord
         $payable_account=\common\models\Account::findOne(['user_id'=>$resquester_id,'accout_type'=>2]);
         if(!empty($receivable_account) && !empty($payable_account))
         {
-            $gl = new Gl();
-            $gl->isNewRecord = true;
-            $gl->id = Null;
-            $gl->amount = $amount;
-            $gl->order_id = $order_id;
-            $gl->account_id = $receivable_account->id;
-            $gl->payment_detail_id = $payment_method;
-            $gl->save();
-
-            $gl = new Gl();
-            $gl->isNewRecord = true;
-            $gl->id = Null;
-            $gl->amount = $amount;
-            $gl->order_id = $order_id;
-            $gl->account_id = $payable_account->id;
-            $gl->payment_detail_id = $payment_method;
-            $gl->save();
+            for($i=0;$i<2;$i++)
+            {
+                $gl = new Gl();
+                $gl->isNewRecord = true;
+                $gl->id = Null;
+                $gl->amount = ''.$amount;
+                $gl->order_id = $order_id;
+                if($i==0)
+                {
+                    $gl->account_id = $receivable_account->id;
+                }
+                else
+                {
+                    $gl->account_id = $payable_account->id;
+                }
+                $gl->payment_detail_id = $payment_method;
+                $gl->save();
+            }
+         
         }
        
     }
