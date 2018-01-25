@@ -4,6 +4,7 @@ namespace common\models;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\Expression;
+use yii\db\Query;
 use Yii;
 
 /**
@@ -54,7 +55,7 @@ class Gl extends \yii\db\ActiveRecord
     {
         return [
             [['created_by', 'updated_by', 'payment_detail_id', 'order_id', 'account_id'], 'integer'],
-            [['payment_detail_id', 'order_id', 'account_id'], 'required'],
+            [['payment_detail_id', 'order_id', 'account_id','hit_account_id'], 'required'],
             [['amount'], 'string', 'max' => 45],
             [['created_at', 'updated_at', ], 'safe'],
             
@@ -105,14 +106,63 @@ class Gl extends \yii\db\ActiveRecord
     {
         return $this->hasOne(PaymentDetail::className(), ['id' => 'payment_detail_id']);
     }
-    public static function create_gl($bonus_amount,$account_id,$order_id,$payment_method){
-        $gl = new Gl();
-        $gl->isNewRecord = true;
-        $gl->id = Null;
-        $gl->amount = $bonus_amount;
-        $gl->order_id = $order_id;
-        $gl->account_id = $account_id;
-        $gl->payment_detail_id = $payment_method;
-        $gl->save();
+    public static function create_gl($amount,$user_id,$resquester_id,$order_id,$payment_method){
+        $receivable_account=\common\models\Account::findOne(['user_id'=>$user_id,'account_type'=>1]);
+        $payable_account=\common\models\Account::findOne(['user_id'=>$resquester_id,'account_type'=>2]);
+        if(!empty($receivable_account) && !empty($payable_account))
+        {
+            for($i=0;$i<2;$i++)
+            {
+                $gl = new Gl();
+                $gl->isNewRecord = true;
+                $gl->id = Null;
+                $gl->amount = ''.$amount;
+                $gl->order_id = $order_id;
+                if($i==0)
+                {
+                    $gl->account_id = $receivable_account->id;
+                    $gl->hit_account_id = $payable_account->id;
+                }
+                else
+                {
+                    $gl->account_id = $payable_account->id;
+                    $gl->hit_account_id = $receivable_account->id;
+                }
+                $gl->payment_detail_id = $payment_method;
+                $gl->save();
+            }
+         
+        }
+       
     }
+    public static function get_filtered_result($user_id,$fromDate,$toDate,$account_type){
+           $gl  = (new Query()) 
+          ->select('gl.*,hit_user.username as name')
+          ->from('gl')
+          ->innerJoin('account as org_acc', 'org_acc.id = gl.account_id')
+          ->innerJoin('user as org_user', 'org_user.id = org_acc.user_id')
+          ->innerJoin('account as hit_acc', 'hit_acc.id = gl.hit_account_id')
+          ->innerJoin('user as hit_user', 'hit_user.id = hit_acc.user_id')
+          ->where(['org_user.id'=>$user_id])
+          ->andWhere(['org_acc.account_type'=>$account_type]);
+         if(!empty($fromDate))
+                $gl->andWhere(['>=','DATE(gl.created_at)',$fromDate]);
+         if(!empty($toDate))
+                $gl->andWhere(['<=','DATE(gl.created_at)',$toDate]);
+        
+        $gl= $gl->all();
+        return $gl;
+    }
+    public static function get_amount_by_type($user_id,$date,$account_type){
+        $gl  = (new Query()) 
+       ->select('sum(gl.amount) as amount')
+       ->from('gl')
+       ->innerJoin('account', 'account.id = gl.account_id')
+       ->innerJoin('user', 'user.id = account.user_id')
+       ->where(['user.id'=>$user_id])
+       ->andWhere(['account.account_type'=>$account_type]);
+       $gl->andWhere(['<=','DATE(gl.created_at)',$date]);
+       $gl= $gl->all();
+       return (int)$gl[0]['amount'];
+ }
 }

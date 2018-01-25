@@ -177,9 +177,12 @@ html.boxed {
 }
 
 body {
-    background-color: #f1f2f7;
-    color: rgba(118, 118, 118, 1.0);
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    background-color: #f6f6f6;
+    /*color: rgba(118, 118, 118, 1.0);
+    color: #333;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;*/
+	color: #333;
+	font-family: 'Raleway';
     font-size: 14px;
     padding: 0px !important;
     margin: 0px !important;
@@ -207,6 +210,9 @@ body.boxed .page-topbar {
     margin-left: 5% !important;
 }
 
+label {
+    font-weight: 400;
+}
 
 /*body *{  vertical-align: top; }*/
 
@@ -356,7 +362,8 @@ blockquote.background {
 }
 
 a {
-    color: rgba(31, 181, 172, 1);
+    /*color: rgba(31, 181, 172, 1);*/
+    color: #333;
 }
 
 a:hover,
@@ -492,10 +499,10 @@ a:focus {
 ------------------------------------------*/
 
 .page-topbar {
-    min-height: 60px;
+    min-height: 70px;
     position: fixed;
     width: 100%;
-    background-color: #ffffff;
+    background-color: #fff;
     top: 0px;
     left: 0px;
     z-index: 1999;
@@ -504,16 +511,16 @@ a:focus {
     -ms-box-shadow: 0px 0px 5px rgba(86, 96, 117, 0.15);
     -moz-box-shadow: 0px 0px 5px rgba(86, 96, 117, 0.15);
     -webkit-box-shadow: 0px 0px 5px rgba(86, 96, 117, 0.15);
-    max-height: 60px;
+    max-height: 70px;
 }
 
 .page-topbar .logo-area {
     width: 300px;
-    background-color: #ffffff;
+    background-color: #222;
     display: block;
-    min-height: 60px;
+    min-height: 70px;
     float: left;
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 }
 
 .title_sles {
@@ -941,7 +948,7 @@ a:focus {
     width: 300px;
     position: fixed;
     padding: 0px;
-    background-color: rgba(50, 50, 58, 1.0);
+    background-color: #121212;
     margin-top: 60px;
     overflow: hidden;
 }
@@ -1012,18 +1019,18 @@ a:focus {
 #main-menu-wrapper li.open .sub-menu a:hover,
 #main-menu-wrapper li .sub-menu a:hover {
     background-color: #212026;
-    border-left: 3px solid rgba(31, 181, 172, 1);
+    border-left: 3px solid rgb(225, 180, 81);
 }
 
 #main-menu-wrapper li a:hover,
 #main-menu-wrapper li.open a {
-    background-color: rgba(31, 181, 172, 1);
-    color: #ffffff;
+    background-color: rgb(225, 180, 81);
+    color: #333;
 }
 
 #main-menu-wrapper li a:hover .arrow:before,
 #main-menu-wrapper li.open a .arrow:before {
-    color: rgba(234, 238, 243, 0.9);
+    color: rgba(0, 0, 0, 0.9);
 }
 
 #main-menu-wrapper li .sub-menu a:hover .arrow:before,
@@ -1186,7 +1193,7 @@ a:focus {
     position: relative;
     bottom: 0px;
     height: 40px;
-    background-color: rgba(70, 70, 78, 1.0);
+    background-color: #222;
     width: 100%;
     display: block;
     overflow: hidden;
@@ -1851,8 +1858,10 @@ textarea,
 }
 
 .btn.btn-primary {
-    background: rgba(31, 181, 172, 1.0);
-    color: #ffffff;
+    /*background: rgba(31, 181, 172, 1.0);
+    color: #ffffff;*/
+	background: rgb(230, 185, 71);
+	color: #333;
 }
 
 .btn.btn-secondary {
@@ -8814,8 +8823,11 @@ border-left: 3px solid transparent;
 ----------------------------------------------------------*/
 
 .page-topbar .logo-area {
-    background-image: url('../images/logo.png');
-    background-repeat: no-repeat;
+    /*background-image: url('../images/logo.png');
+    background-repeat: no-repeat;*/
+	background-image: url('http://project-demos.com/logo-small.png');
+	background-repeat: no-repeat;
+	background-position: left;
 }
 
 .sidebar_shift .title_sles {
@@ -9545,7 +9557,12 @@ border-left: 3px solid transparent;
 .jsgrid-search-mode-button {
     display: none;
 } */
-
+.language img
+{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
 .main-container .img-responsive
 {
     width: 200px;
@@ -9576,14 +9593,22 @@ h1,
 .user-index h1,
 .order-create h1,
 .other-details strong {
-    background-color: #1fb5ac;
+    /*background-color: #1fb5ac;
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
     text-transform: uppercase;
     font-size: 22px;
     padding: 10px;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: Oswald, Helvetica, Arial, sans-serif;*/
+	font-size: 30px;
+	background-color: transparent;
+	font-weight: 400;
+	padding: 0;
+	text-transform: uppercase;
+	font-family: Oswald, Helvetica, Arial, sans-serif;
+	color: rgba(118, 118, 118, 1.0);
+	margin-bottom: 15px;
 }
 
 .order-views {
@@ -9608,13 +9633,15 @@ h1,
 }
 
 .user-form {
-    border: 1px solid #1fb5ac;
+    border: 1px solid #e1b451;
     padding: 10px;
     border-radius: 7px;
 }
 
 .btn.btn-success {
-    background-color: #1fb5ac;
+    /*background-color: #1fb5ac;*/
+	background-color: #e1b451; 
+	color: #333;
 }
 
 .order-index {
@@ -9624,7 +9651,7 @@ h1,
 }
 
 .order-panel {
-    border: 1px solid #1fb5ac;
+    border: 1px solid #e1b451;
     padding: 0px;
     border-radius: 7px;
 }
@@ -9634,14 +9661,18 @@ h1,
 }
 
 .order-panel h3 {
-    background-color: #1fb5ac;
-    color: #fff;
-    font-weight: 500;
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
+    /*background-color: #1fb5ac;
+    color: #fff;*/
+	background-color: #e1b451;
+	color: #333;
+   font-weight: 600;
+	width: 100%;
+	margin: 0 auto;
+	padding: 10px;
+	border-top-right-radius: 7px;
+	border-top-left-radius: 7px;
+	font-family: 'Raleway';
+	font-size: 16px;
 }
 
 .order_detail {
@@ -9740,8 +9771,8 @@ h1,
 .footer
 {
    padding:10px;
-   color: #ffffff;
-    background-color: #1fb5ac;
+   color: #fff;
+    background-color: #121212;
     text-align: center;
    width: 100%;
 }

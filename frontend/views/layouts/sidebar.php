@@ -27,7 +27,7 @@ use yii\widgets\DetailView;
                                 <span class="profile-status online"></span>
                             </h3>
 
-                            <p class="profile-title">Web Developer</p>
+                            <p class="profile-title"><?= Yii::t('app', 'Web Developer');?></p>
 
                         </div>
 
@@ -54,11 +54,11 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl;?>user/view/<?= Yii::$app->user->identity->id?>">Visit Profile</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl;?>user/view/<?= Yii::$app->user->identity->id?>"><?= Yii::t('app', 'Visit Profile');?></a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl;?>user/update/<?= Yii::$app->user->identity->id?>" >Update Profile</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl;?>user/update/<?= Yii::$app->user->identity->id?>" ><?= Yii::t('app', 'Update Profile');?></a>
                                 </li>
                                
                                 
@@ -79,11 +79,11 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user">User</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user"><?= Yii::t('app', 'user');?></a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/create" >Create User</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>user/create" ><?= Yii::t('app', 'Crete User');?></a>
                                 </li>
                                 
                                 
@@ -99,7 +99,7 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order">Orders</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order"> <?= Yii::t('app', 'Order');?></a>
 
                                 </li>
                              
@@ -108,7 +108,7 @@ use yii\widgets\DetailView;
  if(!isset($Role['customer'])){
                                 ?>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return">Return Orders
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'RETURN ORDERS');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
                                 
                                 </a>
@@ -117,26 +117,26 @@ use yii\widgets\DetailView;
                                 <?php
                                 if(isset($Role['super_admin'])){ ?>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer">Transfer Request
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer"><?= Yii::t('app', 'Transfer Request');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->count(); ?></span>
                                 </a>
                                 </li>
                                 <?php }else{ ?>
                                     <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer">Transfer Request
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer"><?= Yii::t('app', 'Transfer Request');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->andWhere(['user_id'=>Yii::$app->user->identity->id])->count(); ?></span>
                                 </a>
                                 </li>
                                 <?php } ?>
                                 <li>
                                 
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending">Pending Orders
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending"><?= Yii::t('app', 'Pending Orders');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'0'])->count(); ?></span>
                                 </a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved">Approved Orders
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved"><?= Yii::t('app', 'Approved Orders');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'1'])->count(); ?></span>
                                 
                                 </a>
@@ -158,7 +158,7 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-in">Stock</a>
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-in"><?= Yii::t('app', 'Stock');?></a>
                                 </li>
                             
                                 
@@ -175,11 +175,11 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/inventory-reports">INVENTORY</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/inventory-report"><?= Yii::t('app', 'Inventory');?></a>
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/status-reports">Order</a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/order-report"><?= Yii::t('app', 'Order');?></a>
 
                                 </li>
                             </ul>
@@ -193,7 +193,7 @@ use yii\widgets\DetailView;
                             </a>
                             <ul class="sub-menu" >
                                 <li>
-                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-status">Stock Status</a>
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-status"><?= Yii::t('app', 'Stock Status');?></a>
                                 </li>
                             
                                 
@@ -211,7 +211,7 @@ use yii\widgets\DetailView;
 
                     <div class="block1">
                         <div class="data">
-                            <span class='title'>New&nbsp;Orders</span>
+                            <span class='title'><?= Yii::t('app', 'New Orders');?></span>
                             <span class='total'>2,345</span>
                         </div>
                         <div class="graph">
@@ -221,7 +221,7 @@ use yii\widgets\DetailView;
 
                     <div class="block2">
                         <div class="data">
-                            <span class='title'>Visitors</span>
+                            <span class='title'><?= Yii::t('app', 'Visitors');?></span>
                             <span class='total'>345</span>
                         </div>
                         <div class="graph">

@@ -82,12 +82,11 @@ class OrderController extends Controller
         $dataProvider->query->andWhere(['o.status'=>'1']);
         $user_id = Yii::$app->user->getId();
         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-if(isset($Role['super_admin'])){
-    $view = 'pending';
-}else{
-    $view = 'index';
-    
-}
+        if(isset($Role['super_admin'])){
+            $view = 'pending';
+        }else{
+            $view = 'index';
+        }
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -186,11 +185,7 @@ if(isset($Role['super_admin'])){
             }
             if($model->save()){
                 $product_order = \common\models\ProductOrder::insert_order_no_js($model);
-          
-               
-                    $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
-              
-               
+                $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -333,8 +328,6 @@ if(isset($Role['super_admin'])){
   //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
     $parent = Yii::$app->request->get('parent');
-
- 
     if(empty($type)){
         return [];
     }
@@ -478,30 +471,33 @@ public function actionStatusReports()
 }
 public function actionStatusreport(){
       $model = new Order(); 
-    $fromDate = Yii::$app->request->post('from_date');
+         $fromDate = Yii::$app->request->post('from_date');
          $toDate = Yii::$app->request->post('to_date');
          $userId = Yii::$app->request->post('user_id');
          $status = Yii::$app->request->post('status');
-        
+      
          if(!$userId){
             $userId = Yii::$app->user->getId();
          }
          $order  = (new Query()) 
-         ->select('*')
+          ->select('*')
           ->from('order')
-          ->where(['=','user_id',$userId]);
+          ->where(['or',
+             ['order_request_id'=>$userId],
+             ['user_id'=>$userId]
+        ]);
          if(!empty($fromDate))
                $order->andWhere(['>=','DATE(created_at)',$fromDate]);
          if(!empty($toDate))
                $order->andWhere(['<=','DATE(created_at)',$toDate]);
-               if(!empty($status))
+         if(!(empty($status) && $status!="0"))
                $order->andWhere(['=','status',$status]);
-$order= $order->all();
-return $this->renderAjax('status_report_view', [
-    'order' => $order,
-    'model' => $model,
-    
-]);
+        $order= $order->all();
+        return $this->renderAjax('status_report_view', [
+            'order' => $order,
+            'model' => $model,
+            
+        ]);
 }
 public function actionAjaxreport(){
 
@@ -515,6 +511,7 @@ public function actionAjaxreport(){
             $userId = Yii::$app->user->getId();
          }
          $stock_in_hand=0;
+         $remaining_stock=0;
          $userame = Yii::$app->user->identity->username;
 
                 $stock_in  = (new Query()) 
@@ -545,6 +542,7 @@ public function actionAjaxreport(){
                    $inventory->user=$userame;
                    $inventory->date=$stock['timestamp'];
                    $inventory->quantity=$stock['initial_quantity'];
+                   $remaining_stock+=$inventory->quantity;
                    $inventory->type='Stock In';
                    $inventory->product=$stock['name'];
                    $inventoryArr[]=$inventory;
@@ -555,6 +553,7 @@ public function actionAjaxreport(){
                    $inventory->user=$userame;
                    $inventory->date=$stock['stock_out_date'];
                    $inventory->quantity=$stock['quantity'];
+                   $remaining_stock-=$inventory->quantity;
                    $inventory->type='Stock Out';
                    $inventory->product=$stock['name'];
                    $inventoryArr[]=$inventory;
@@ -581,8 +580,9 @@ public function actionAjaxreport(){
            
                 }
                
-
+                $remaining_stock+=$stock_in_hand;
             return $this->renderAjax('report_view', [
+                'remaining_stock' => $remaining_stock,
                 'stock_in_hand' => $stock_in_hand,
                 'inventoryArr' => $inventoryArr,
                 

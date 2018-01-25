@@ -79,15 +79,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
                                         </div>
-                                        <div class=" uprofile-social">
-
-                                            <a href="#" class="btn btn-primary btn-md facebook"><i class="fa fa-facebook icon-xs"></i></a>
-                                            <a href="#" class="btn btn-primary btn-md twitter"><i class="fa fa-twitter icon-xs"></i></a>
-                                            <a href="#" class="btn btn-primary btn-md google-plus"><i class="fa fa-google-plus icon-xs"></i></a>
-                                            <a href="#" class="btn btn-primary btn-md dribbble"><i class="fa fa-dribbble icon-xs"></i></a>
-
-                                        </div> 
-
                                     </div>
                                     <div class="col-md-9 col-sm-8 col-xs-12">
                                     <div class="row">

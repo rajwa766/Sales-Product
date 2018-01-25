@@ -41,7 +41,7 @@ class Account extends \yii\db\ActiveRecord
             [['created_by', 'updated_by', 'user_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['user_id'], 'required'],
-            [['accout_type', 'account_name', 'account_description'], 'string', 'max' => 45],
+            [['account_type', 'account_name', 'account_description'], 'string', 'max' => 45],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -67,7 +67,7 @@ class Account extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'accout_type' => Yii::t('app', 'Accout Type'),
+            'account_type' => Yii::t('app', 'Account Type'),
             'account_name' => Yii::t('app', 'Account Name'),
             'account_description' => Yii::t('app', 'Account Description'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -93,15 +93,22 @@ class Account extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Gl::className(), ['account_id' => 'id']);
     }
-    public static function create_account($model,$nature,$type){
-        $account = new Account();
-        $account->isNewRecord = true;
-        $account->id = Null;
-        $account->accout_type = $type;
-        $account->account_name =$model->username.'-'.$nature;
-        $account->account_description = 'Account to calculate profit';
-        $account->user_id = $model->id;
-      $account->save();
+    public static function create_accounts($model){
+        for($i=1;$i<=2;$i++)
+        {
+            $account = new Account();
+            $account->isNewRecord = true;
+            $account->id = Null;
+            $account->account_type = ''.$i;
+            $account->account_name =$model->username.'-receivable';    
+            if($i==2)
+            {
+                $account->account_name =$model->username.'-payable';    
+            }
+            $account->account_description = 'Account to calculate profit';
+            $account->user_id = $model->id;
+            $account->save();
+        }
         
     }
 }

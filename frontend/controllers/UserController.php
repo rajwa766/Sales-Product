@@ -227,6 +227,7 @@ return $parent_id->parent_id;
                  {
                      //upload image
                      $photo = UploadedFile::getInstance($model, 'profile');
+                     
                      if ($photo !== null) {
                        $model->profile= $photo->name;
                        $ext = end((explode(".", $photo->name)));
@@ -249,24 +250,22 @@ return $parent_id->parent_id;
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('general'); 
             }
-//   check the limit of user
+            //   check the limit of user
             $total_user_current_level = User::find()->where(['=','parent_id',$model->parent_id])->count();
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
-//    check not company user and not seller and user space remain
+            //    check not company user and not seller and user space remain
             if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user && $model->company_user != '1'){
                 return $this->render(['more_user', 'model' => $model]);  
             }else{
             if($model->save()){
-                $account = \common\models\Account::create_account($model,'recivable','1');
-                $account = \common\models\Account::create_account($model,'payable','2');
-                
+                \common\models\StockStatus::set_minimum_stock_level($model->id);
+                \common\models\Account::create_accounts($model);
                 $order = \common\models\Order::insert_order($model);
                
                 if($order->id)
                 {
-                   
                     $product_order = \common\models\ProductOrder::insert_user_order_js($model,$order);
                     $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
                     $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);
