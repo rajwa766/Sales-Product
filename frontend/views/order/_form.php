@@ -423,9 +423,9 @@ echo $form->field($model, 'payment_method')->radioList([
     </div>
          <?php }?>   
 
-      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
  <?php if(Yii::$app->user->isGuest){ ?>
     <?php 
@@ -605,7 +605,7 @@ jQuery(document).ready(function() {
         }
         });
       }else{
-        if (parseInt($('#order-orde').val()) >= parseInt($('#order-entity_type').val())){
+      
       if($('#order-entity_type').val()){
             $(".noproduct").hide();
     
@@ -616,12 +616,7 @@ jQuery(document).ready(function() {
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
         }
-       }else{
-        $(".noproduct").show();
-     $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
-     $('#order-entity_type').val('');
-
-       }
+       
       
         }
         });
