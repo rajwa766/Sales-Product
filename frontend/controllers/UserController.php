@@ -227,7 +227,6 @@ return $parent_id->parent_id;
                  {
                      //upload image
                      $photo = UploadedFile::getInstance($model, 'profile');
-                     
                      if ($photo !== null) {
                        $model->profile= $photo->name;
                        $ext = end((explode(".", $photo->name)));
@@ -260,7 +259,9 @@ return $parent_id->parent_id;
                 return $this->render(['more_user', 'model' => $model]);  
             }else{
             if($model->save()){
-                $account = \common\models\Account::create_account($model);
+                $account = \common\models\Account::create_account($model,'recivable','1');
+                $account = \common\models\Account::create_account($model,'payable','2');
+                
                 $order = \common\models\Order::insert_order($model);
                
                 if($order->id)
