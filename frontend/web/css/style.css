@@ -9557,7 +9557,12 @@ border-left: 3px solid transparent;
 .jsgrid-search-mode-button {
     display: none;
 } */
-
+.language img
+{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
 .main-container .img-responsive
 {
     width: 200px;

@@ -70,7 +70,7 @@ if(isset($Role['super_admin'])){
     <div class="admin">
 <div class="row">
 <div class="col-md-4">
-    User Level
+    <?= Yii::t('app', 'User Level') ?>
     </div>
     <div class="col-md-8">
       <?php
@@ -92,7 +92,8 @@ if(isset($Role['super_admin'])){
 
 <div class="row">
 <div class="col-md-4">
-    Parent User
+    <?= Yii::t('app', 'Parent User') ?>
+
     </div>
     <div class="col-md-8">
        <?php
@@ -124,7 +125,7 @@ if(isset($Role['super_admin'])){
 
 <div class="row">
 <div class="col-md-4">
-    Child Level
+    <?= Yii::t('app', 'Child Level') ?>
     </div>
     <div class="col-md-8">
         <?php
@@ -155,7 +156,7 @@ if(isset($Role['super_admin'])){
 
 <div class="row">
 <div class="col-md-4">
-    Child Name
+    <?= Yii::t('app', 'Child Name')?>
     </div>
     <div class="col-md-8">
         <?php
@@ -194,7 +195,7 @@ var typeone = $("#order-child_level").val();
     <div class="admin">
 <div class="row">
 <div class="col-md-4">
-    User Level
+    <?= Yii::t('app', 'User Level')?>
     </div>
     <div class="col-md-8">
       <?php
@@ -231,7 +232,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
 <div class="col-md-4">
-    Agent Name
+    <?= Yii::t('app', 'Agent Name')?>
     </div>
     <div class="col-md-8">
 
@@ -283,7 +284,7 @@ var typeone = $("#order-child_level").val();
     <h3>Order Detail</h3>
     <div class="row first-row">
     <div class="col-md-4">
-    Order Ref/No
+     <?= Yii::t('app', 'Order Ref/No')?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
@@ -292,7 +293,8 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
     <div class="col-md-4">
-    Representative
+   <?= Yii::t('app', 'Representative')?>
+
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
@@ -301,7 +303,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
     <div class="col-md-4">
-    Select Shipper
+     <?= Yii::t('app', 'Select Shipper')?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'shipper')->radioList([
@@ -322,7 +324,7 @@ var typeone = $("#order-child_level").val();
 
 <div class="row">
     <div class="col-md-4">
-    Additional Requirements
+     <?= Yii::t('app', 'Additional Requirements')?>
     </div>
     <div class="col-md-8">
     <?= $form->field($model, 'additional_requirements')->textarea(['rows' => '3'])->label(false) ?>
@@ -330,7 +332,7 @@ var typeone = $("#order-child_level").val();
 </div>
 <div class="row">
     <div class="col-md-4">
-    Payment Method
+   <?= Yii::t('app', 'Payment Method')?>
     </div>
     <div class="col-md-8">
     <?php 
@@ -359,7 +361,7 @@ echo $form->field($model, 'payment_method')->radioList([
 </div>
  <div class="row">
  <div class="col-md-4">
-    Postal Code
+     <?= Yii::t('app', 'Postal Code')?>
     </div>
     <div class="col-md-8">
     <?php
@@ -443,11 +445,12 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row outer-container shipping-address">
 <div class="col-md-9 order-panel">
-    <h3>Shipping Address</h3>
+    <h3><?= Yii::t('app', 'Shipping Address')?>
+</h3>
 
     <div class="row first-row email_row">
     <div class="col-md-4">
-    Email
+    <?= Yii::t('app', 'Email')?>
     </div>
     <div class="col-md-8">
    
@@ -469,7 +472,7 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row">
     <div class="col-md-4">
-    Phone
+    <?= Yii::t('app', 'Phone')?>
     </div>
     <div class="col-md-8">
 
@@ -480,7 +483,7 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row">
     <div class="col-md-4">
-    District
+     <?= Yii::t('app', 'District')?>
     </div>
     <div class="col-md-8">
    
@@ -491,7 +494,7 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row">
     <div class="col-md-4">
-    Province
+     <?= Yii::t('app', 'Province')?>
     </div>
     <div class="col-md-8">
   
@@ -513,7 +516,7 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row">
     <div class="col-md-4">
-    Address
+    <?= Yii::t('app', 'Address')?>
     </div>
     <div class="col-md-8">
       
@@ -525,7 +528,7 @@ echo $form->field($model, 'payment_method')->radioList([
 
 <div class="row">
     <div class="col-md-4">
-    Country
+     <?= Yii::t('app', 'Country')?>
     </div>
     <div class="col-md-8">
       

@@ -54,9 +54,9 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
                                 <li class="total">
                                     <span class="small">
                                     <?php if($remaning_percent ) { ?>
-                                        You have <strong>1</strong> new notifications.
+                                        <?= Yii::t('app', 'You have');?> <strong>1</strong><?= Yii::t('app', 'New Notifications.');?>
                                     <?php  }else{ ?>
-                                        You have <strong>no</strong> new notifications.
+                                       <?= Yii::t('app', 'You have');?> <strong>1</strong><?= Yii::t('app', 'New Notifications.');?>
 
                                      <?php }
                                         ?>
@@ -73,11 +73,11 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
                                                 <div>
                                                 <?php if($remaning_percent) { ?>
                                                     <span class="name">
-                                                        <strong>Your Remaning stock is <?php echo $remaning_percent ?>%</strong>
+                                                        <strong><?= Yii::t('app', 'Your Remaning stock is');?> <?php echo $remaning_percent ?>%</strong>
                                                         
                                                     </span>
                                     <?php  }else{ ?>
-                                        <strong>Your Remaning stock is <?php echo $remaning_percent ?>%</strong>
+                                        <strong><?= Yii::t('app', 'Your Remaning stock is');?> <?php echo $remaning_percent ?>%</strong>
 
                                      <?php }
                                         ?>
@@ -112,16 +112,17 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
                     <ul class="info-menu right-links list-inline list-unstyled">
                     <?php  if (Yii::$app->user->isGuest) {?>
                        
-                      <li><a data-method="POST" href="<?= Yii::$app->request->baseUrl;?>/site/login">Login</a></li>
+                      <li><a data-method="POST" href="<?= Yii::$app->request->baseUrl;?>/site/login"><?= Yii::t('app', 'Login');?></a></li>
                       <?php }else{?>
                         <li class="">
 								<a class="data-toggle" data-toggle="dropdown">
                                 <span> language <i class="fa fa-angle-down"></i></span>
-	 							   <p class="hidden-lg hidden-md">Profile</p>
+	 							   <p class="hidden-lg hidden-md"><?= Yii::t('app', 'Profile');?></p>
 		 						</a>
-		 							<ul class="dropdown-menu">
-									<li><a  href="<?php echo Yii::$app->request->baseUrl;?>/site/language?language=en-US">English</a></li>
-									<li><a href="<?php echo Yii::$app->request->baseUrl; ?>/site/language?language=th-TH">Thiland</a></li>
+		 							<ul class="dropdown-menu language">
+                                        <li><a href="<?php echo Yii::$app->request->baseUrl; ?>/site/language?language=th-TH"><img src="<?= Yii::$app->homeUrl; ?>images/thai-flag.png" alt="user-image" class="img-circle">Thailand</a></li>
+									<li><a  href="<?php echo Yii::$app->request->baseUrl;?>/site/language?language=en-US"><img src="<?= Yii::$app->homeUrl; ?>images/uk-flag.png" alt="user-image" class="img-circle">English</a></li>
+									
 								</ul>
 							</li>
                             <?php // Yii::t('app','Tranfer from');?>
@@ -134,25 +135,25 @@ if($selected_percentage->below_percentage > $stock_remaning_percent ){
                                 <li>
                                     <a href="#settings">
                                         <i class="fa fa-wrench"></i>
-                                        Settings
+                                        <?= Yii::t('app', 'Settings');?>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="<?= Yii::$app->homeUrl;?>user/view/<?= Yii::$app->user->identity->id?>">
                                         <i class="fa fa-user"></i>
-                                        Profile
+                                        <?= Yii::t('app', 'Profile');?>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#help">
                                         <i class="fa fa-info"></i>
-                                        Help
+                                        <?= Yii::t('app', 'Help');?>
                                     </a>
                                 </li>
                                 <li class="last">
                                     <a data-method="post" href="<?= Yii::$app->request->baseUrl;?>/site/logout">
                                         <i class="fa fa-lock"></i>
-                                        Logout
+                                        <?= Yii::t('app', 'Logout');?>
                                     </a>
                                 </li>
                             </ul>
