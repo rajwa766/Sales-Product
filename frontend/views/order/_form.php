@@ -301,26 +301,26 @@ var typeone = $("#order-child_level").val();
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-4">
-     <?= Yii::t('app', 'Select Shipper')?>
+     <?php // Yii::t('app', 'Select Shipper')?>
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'shipper')->radioList([
-                1 => 'EMS', 
+    <?php // $form->field($model, 'shipper')->radioList([
+              //  1 => 'EMS', 
               
-            ])->label(false); ?>
+           // ])->label(false); ?>
     </div>
-</div>
+</div> -->
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-4">
     COD
     </div>
     <div class="col-md-8">
-    <?= $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
+    <?php // $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
     </div>
-</div>
+</div> -->
 
 <div class="row">
     <div class="col-md-4">
@@ -338,7 +338,7 @@ var typeone = $("#order-child_level").val();
     <?php 
               //$model->payment_method_for_rent = '1';
 echo $form->field($model, 'payment_method')->radioList([
-    '1' => 'Credit Card',
+    // '1' => 'Credit Card',
     '2' => 'Cash on Delivery',
     '3' => 'Bank Transfer',
 ])->label(false);
