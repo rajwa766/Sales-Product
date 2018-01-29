@@ -96,7 +96,14 @@ class ProductController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $photo = UploadedFile::getInstances($model, 'image');
+            if ($photo) {
+                $command = Yii::$app->db->createCommand()
+                ->delete('image', 'product_id = '.$model->id)
+                ->execute();
+                $save_images = \common\models\Image::save_images($model->id,$photo);
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
