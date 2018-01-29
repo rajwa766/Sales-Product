@@ -67,45 +67,11 @@ class ShippingAddress extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
-    public static function insert_shipping_address_excel($model,$order_id){
+    public static function insertShippingAddress($model,$order_id){
         $shipping_address = new ShippingAddress();
         $shipping_address->isNewRecord = true;
         $shipping_address->id = null;
         $shipping_address->order_id = $order_id;
-        $shipping_address->email = $model->email; 
-        $shipping_address->phone_no =$model->phone_no; 
-        // $shipping_address->mobile_no =$model->mobile_no; 
-        // $shipping_address->postal_code = $model->postal_code; 
-        // $shipping_address->district =$model->district; 
-        $shipping_address->province =$model->province; 
-        $shipping_address->address =$model->address; 
-        $shipping_address->country = 'thiland';
-        $shipping_address->save();
-       
-   }
-     public static function insert_shipping_address($model){
-         $shipping_address = new ShippingAddress();
-         $shipping_address->isNewRecord = true;
-         $shipping_address->id = null;
-         $shipping_address->order_id = $model->id;
-         $shipping_address->email = $model->email; 
-         $shipping_address->phone_no =$model->phone_no; 
-         $shipping_address->mobile_no =$model->mobile_no; 
-         $shipping_address->postal_code = $model->postal_code; 
-         $shipping_address->district =$model->district; 
-         $shipping_address->province =$model->province; 
-         $shipping_address->address =$model->address; 
-         $shipping_address->country = $model->country;
-       
-        return $shipping_address->save();
-     
-        
-    }
-    public static function insert_shipping_address_user($model,$order){
-        $shipping_address = new ShippingAddress();
-        $shipping_address->isNewRecord = true;
-        $shipping_address->id = null;
-        $shipping_address->order_id = $order->id;
         $shipping_address->email = $model->email; 
         $shipping_address->phone_no =$model->phone_no; 
         $shipping_address->mobile_no =$model->mobile_no; 

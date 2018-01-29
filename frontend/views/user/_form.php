@@ -392,8 +392,8 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
  <div class="col-md-12 order-panel">
     <h3>Order Items</h3>
     <div class=" col-md-12 first-row">
-    <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
+    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'unit_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
 
@@ -436,19 +436,19 @@ jQuery(document).ready(function() {
     }
    
 });
-$('#user-entity_type').on('blur', function () {
+$('#user-quantity').on('blur', function () {
     var product_id = '1';
-        $.post("../user-product-level/getunitsprice?id=" + $('#user-entity_type').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id, function (data) {
+        $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id, function (data) {
          
         var json = $.parseJSON(data);
         if(json.price){
             $(".noproduct").hide();
-                       $('#user-single_price').val(json.price);
-                       $('#user-total_price').val(parseFloat($('#user-entity_type').val())  * parseFloat(json.price));
+                       $('#user-unit_price').val(json.price);
+                       $('#user-total_price').val(parseFloat($('#user-quantity').val())  * parseFloat(json.price));
        
         }else{
             $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less than "+json.units+"</h5>");
         }
         });
     });
