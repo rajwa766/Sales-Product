@@ -264,13 +264,12 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public static function CreateUser($model)
     {
-        $error = "";
+        $result = "";
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
         try
         {
             //upload image
-
             $photo = UploadedFile::getInstance($model, 'profile');
             if ($photo !== null) {
 
@@ -282,14 +281,14 @@ class User extends ActiveRecord implements IdentityInterface
                 $photo->saveAs($path);
             }
 
-            $current_level_id = \common\models\UsersLevel::findOne($model->user_level_id);
+            $current_level = \common\models\UsersLevel::findOne($model->user_level_id);
             if ($model->parent_user) {
                 $model->parent_id = $model->parent_user;
             } else {
                 $model->parent_id = Yii::$app->user->identity->id;
             }
             // check seller or general
-            if ($current_level_id->max_user == '-1') {
+            if ($current_level->max_user == '-1') {
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('seller');
             } else {
@@ -298,13 +297,13 @@ class User extends ActiveRecord implements IdentityInterface
             }
 
             //   check the limit of user
-            $total_user_current_level = User::find()->where(['=', 'parent_id', $model->parent_id])->count();
+            $total_user_current_level = User::find()->where(['=', 'user_level_id', $model->user_level_id])->count();
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
             //    check not company user and not seller and user space remain
-            if ($current_level_id->max_user != '-1' && $total_user_current_level > $current_level_id->max_user && $model->company_user != '1') {
-                $error = "max_user_reached";
+            if ($current_level->max_user != '-1' && $total_user_current_level > $current_level->max_user && $model->company_user != '1') {
+                $result = "max_user_reached";
             } else {
 
                 if ($model->save()) {
@@ -328,17 +327,18 @@ class User extends ActiveRecord implements IdentityInterface
                     }
                     $auth->assign($role, $model->id);
                     $transaction->commit();
+                    $result=$model->id;
                 } else {
-                    $error = "transaction_failed";
+                    $result = "transaction_failed";
                 }
 
             }
         } catch (Exception $e) {
             $transaction->rollBack();
-            $error = "transaction_failed";
+            $result = "transaction_failed";
 
         }
-        return $error;
+        return $result;
     }
 
     public function username($id)

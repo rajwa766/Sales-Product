@@ -77,16 +77,14 @@ class UserController extends Controller
     {
         $model = new \common\models\Upload();
         $data = "";
-        $count=0;
-        // $this->view->model = $model;
+        $count = 0;
         if ($model->load(Yii::$app->request->post())) {
-           
-            $image = \yii\web\UploadedFile::getInstance($model, 'file');
-            $data = \common\components\Excel::import($image->tempName, ['setFirstRecordAsKeys' => true]);
 
             $array_MR = array();
             $array_SuperVIP = array();
             $array_VIP = array();
+            $file = \yii\web\UploadedFile::getInstance($model, 'file');
+            $data = \common\components\Excel::import($file->tempName, ['setFirstRecordAsKeys' => true]);
 
             foreach ($data as $entry) {
                 try {
@@ -111,74 +109,83 @@ class UserController extends Controller
                             $user_model->unit_price = '390';
 
                         } elseif (strpos($entry['Level'], 'Super VIP') !== false) {
-                            $parent_ID = $array_MR[array_rand($array_MR)];
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_MR, 'quantity');
+                            $parent_ID = $array_MR[$max_key]['id'];
+                            $array_MR[$max_key]['quantity'] -= 1000;
                             $user_model->parent_id = $parent_ID;
                             $user_model->user_level_id = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                             $user_model->quantity = '1000';
                             $user_model->unit_price = '440';
 
                         } elseif (strpos($entry['Level'], 'VIP') !== false) {
-                            $parent_ID = $array_SuperVIP[array_rand($array_SuperVIP)];
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_SuperVIP, 'quantity');
+                            $parent_ID = $array_SuperVIP[$max_key]['id'];
+                            $array_SuperVIP[$max_key]['quantity'] -= 500;
                             $user_model->parent_id = $parent_ID;
                             $user_model->user_level_id = array_search('VIP Team', \common\models\Lookup::$user_levels);
                             $user_model->quantity = '500';
                             $user_model->unit_price = '480';
 
+                        } elseif (strpos($entry['Level'], 'Pro') !== false) {
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_VIP, 'quantity');
+                            $parent_ID = $array_VIP[$max_key]['id'];
+                            $array_VIP[$max_key]['quantity'] -= 250;
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = array_search('PRO Level', \common\models\Lookup::$user_levels);
+                            $user_model->quantity = '250';
+                            $user_model->unit_price = '520';
+
+                        } elseif (strpos($entry['Level'], 'Inter') !== false) {
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_VIP, 'quantity');
+                            $parent_ID = $array_VIP[$max_key]['id'];
+                            $array_VIP[$max_key]['quantity'] -= 100;
+                            $user_model->parent_id = $parent_ID;
+                            $user_model->user_level_id = array_search('INTER Level', \common\models\Lookup::$user_levels);
+                            $user_model->quantity = '100';
+                            $user_model->unit_price = '550';
+
                         } elseif (strpos($entry['Level'], 'Advance') !== false) {
-                            $parent_ID = $array_VIP[array_rand($array_VIP)];
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_VIP, 'quantity');
+                            $parent_ID = $array_VIP[$max_key]['id'];
+                            $array_VIP[$max_key]['quantity'] -= 50;
                             $user_model->parent_id = $parent_ID;
                             $user_model->user_level_id = array_search('ADVANCE Level', \common\models\Lookup::$user_levels);
                             $user_model->quantity = '50';
                             $user_model->unit_price = '590';
 
                         } elseif (strpos($entry['Level'], 'Begin') !== false) {
-                            $parent_ID = $array_VIP[array_rand($array_VIP)];
+                            $max_key = \common\models\helpers\ArrayUtils::MaxAttributeInAssociativeArray($array_VIP, 'quantity');
+                            $parent_ID = $array_VIP[$max_key]['id'];
+                            $array_VIP[$max_key]['quantity'] -= 10;
                             $user_model->parent_id = $parent_ID;
                             $user_model->user_level_id = array_search('BEGIN Level', \common\models\Lookup::$user_levels);
                             $user_model->quantity = '10';
                             $user_model->unit_price = '630';
 
-                        } elseif (strpos($entry['Level'], 'Inter') !== false) {
-                            $parent_ID = $array_VIP[array_rand($array_VIP)];
-                            $user_model->parent_id = $parent_ID;
-                            $user_model->user_level_id = array_search('INTER Level', \common\models\Lookup::$user_levels);
-                            $user_model->quantity = '100';
-                            $user_model->unit_price = '550';
+                        }
+                        if (!empty($user_model) && !empty($user_model->email)) {
+                            $result = \common\models\User::CreateUser($user_model);
+                            if (strpos($entry['Level'], 'MR') !== false) {
+                                $array_MR[] = array('id' => $result, 'quantity' => 5000);
+                            } elseif (strpos($entry['Level'], 'Super VIP') !== false) {
+                                $array_SuperVIP[] = array('id' => $result, 'quantity' => 1000);
+                            } elseif (strpos($entry['Level'], 'VIP') !== false) {
+                                $array_VIP[] = array('id' => $result, 'quantity' => 500);
+                            }
 
                         }
-                        elseif (strpos($entry['Level'], 'Pro') !== false) {
-                            $parent_ID = $array_VIP[array_rand($array_VIP)];
-                            $user_model->parent_id = $parent_ID;
-                            $user_model->user_level_id = array_search('PRO Level', \common\models\Lookup::$user_levels);
-                            $user_model->quantity = '250';
-                            $user_model->unit_price = '520';
-
-                        }
-                        if (strpos($entry['Level'], 'MR') !== false) {
-                            $array_MR[] = $user_model->id;
-                        } elseif (strpos($entry['Level'], 'Super VIP') !== false) {
-                            $array_SuperVIP[] = $user_model->id;
-                        } elseif (strpos($entry['Level'], 'VIP') !== false) {
-                            $array_VIP[] = $user_model->id;
-                        }
-                        if(!empty($user_model) && !empty($user_model->email))
-                        {
-                            \common\models\User::CreateUser($user_model);
-                            $count++;
-                        }
-                       
                     }
-                } 
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
+                    var_dump($e);
+                    exit();
                     continue;
                 }
             }
-           
         }
         return $this->render('user_upload', [
             'model' => $model,
         ]);
-        
+
     }
     /**
      * Creates a new User model.
@@ -195,11 +202,10 @@ class UserController extends Controller
         $model = new User();
         if ($model->load(Yii::$app->request->post())) {
             $error = \common\models\User::CreateUser($model);
-            if ($error=="transaction_failed") {
+            if ($error == "transaction_failed") {
                 return $this->redirect(['error', 'model' => $model]);
-            }
-            else if ($error=="max_user_reached") {
-                return $this->render('more_user', ['model' => $model,]);
+            } else if ($error == "max_user_reached") {
+                return $this->render('more_user', ['model' => $model]);
             } else {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
