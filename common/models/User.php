@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models;
 
 use Yii;
@@ -34,8 +35,8 @@ use yii\web\UploadedFile;
  * @property Order[] $orders
  * @property StockIn[] $stockIns
  */
-class User extends ActiveRecord implements IdentityInterface
-{
+class User extends ActiveRecord implements IdentityInterface {
+
     public $password;
     public $all_level;
     public $parent_user;
@@ -46,36 +47,34 @@ class User extends ActiveRecord implements IdentityInterface
     public $unit_price;
     public $total_price;
     public $product_id;
+
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
 
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return '{{%user}}';
     }
 
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             TimestampBehavior::className(),
         ];
     }
-    public function getPassword()
-    {
+
+    public function getPassword() {
         return '';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
 
             [['username', 'password', 'email', 'first_name', 'last_name'], 'string', 'max' => 255],
@@ -97,16 +96,14 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
-    {
+    public static function findIdentity($id) {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
+    public static function findIdentityByAccessToken($token, $type = null) {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
@@ -116,8 +113,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
-    {
+    public static function findByUsername($username) {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
@@ -127,15 +123,14 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return static|null
      */
-    public static function findByPasswordResetToken($token)
-    {
+    public static function findByPasswordResetToken($token) {
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+                    'password_reset_token' => $token,
+                    'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -145,8 +140,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token password reset token
      * @return bool
      */
-    public static function isPasswordResetTokenValid($token)
-    {
+    public static function isPasswordResetTokenValid($token) {
         if (empty($token)) {
             return false;
         }
@@ -159,24 +153,21 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->getPrimaryKey();
     }
 
     /**
      * @inheritdoc
      */
-    public function getAuthKey()
-    {
+    public function getAuthKey() {
         return $this->auth_key;
     }
 
     /**
      * @inheritdoc
      */
-    public function validateAuthKey($authKey)
-    {
+    public function validateAuthKey($authKey) {
         return $this->getAuthKey() === $authKey;
     }
 
@@ -186,8 +177,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
+    public function validatePassword($password) {
 
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
@@ -197,52 +187,47 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @param string $password
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
      * Generates "remember me" authentication key
      */
-    public function generateAuthKey()
-    {
+    public function generateAuthKey() {
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**
      * Generates new password reset token
      */
-    public function generatePasswordResetToken()
-    {
+    public function generatePasswordResetToken() {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
      * Removes password reset token
      */
-    public function removePasswordResetToken()
-    {
+    public function removePasswordResetToken() {
         $this->password_reset_token = null;
     }
-    public function getOrders()
-    {
+
+    public function getOrders() {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
         return $this->hasMany(Order::className(), ['user_id' => 'id']);
     }
-    public function getStockIns()
-    {
+
+    public function getStockIns() {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
-    public function getProfile()
-    {
+    public function getProfile() {
         $user = User::find()
-            ->where(['id' => Yii::app()->user->id])
-            ->one();
+                ->where(['id' => Yii::app()->user->id])
+                ->one();
     }
-    public static function insert_user($model)
-    {
+
+    public static function insert_user($model) {
         $user = new User();
         $user->isNewRecord = true;
         $user->id = null;
@@ -262,88 +247,80 @@ class User extends ActiveRecord implements IdentityInterface
             return $user;
         }
     }
-    
-public static function update_user_parent_with_param($q,$parent_id){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-            ->where(['like', 'username', $q])
-            ->andWhere(['=', 'user_level_id',$parent_id ])
-        ->limit(20);
-    $command = $query->createCommand();
-   return $data = $command->queryAll();
-}
-public static function update_user_parent($parent_id){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-           ->where(['=', 'user_level_id',$parent_id])
-         ->limit(20);
-    $command = $query->createCommand();
-    return $data = $command->queryAll();
-}
-public static function all_parent_users_with_param($q,$type,$company_user){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-            ->where(['like', 'username', $q])
-            ->andWhere(['=', 'user_level_id', $type]);
-            if($type != '1'){
-               $query->andWhere(['=', 'company_user', $company_user]);
-            }
-          $query->limit(20);
-    $command = $query->createCommand();
-  return  $data = $command->queryAll();
-}
-public static function all_parent_users($type,$company_user){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-           ->where(['=', 'user_level_id', $type]);
-           if($type != '1'){
-               $query->andWhere(['=', 'company_user', $company_user]);
-            }
-          $query->limit(20);
-    $command = $query->createCommand();
-  return  $data = $command->queryAll();
-}
-public static function all_user_with_param($q){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-            ->where(['like', 'username', $q])
-           ->limit(20);
-    $command = $query->createCommand();
- return   $data = $command->queryAll();
-}
-public static function all_user(){
-    $query = new \yii\db\Query();
-    $query->select('id as id, username AS text')
-            ->from('user')
-           ->limit(20);
-    $command = $query->createCommand();
- return   $data = $command->queryAll();
-}
-public static function profile_save($photo,$model){
-    $model->profile= $photo->name;
-    $array = explode(".", $photo->name);
-    $ext=end($array);
-    $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
-    $path =  Yii::getAlias('@app').'/web/uploads/'.$model->profile;
-    $photo->saveAs($path);
-}
-    public static function CreateUser($model)
-    {
+
+    public static function getParentUsers($q, $parent_id) {
+        if (empty($type)) {
+            return [];
+        }
+        $level_id = \common\models\UsersLevel::findOne(['id', $type]);
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['=', 'user_level_id', $level_id->parent_id]);
+        if (!is_null($q))
+            $query->andWhere(['like', 'username', $q]);
+        $query->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
+    }
+
+    public static function getAllParentUser($q, $type, $company_user) {
+        if (empty($type)) {
+            return [];
+        }
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['=', 'user_level_id', $type]);
+        if (!is_null($q))
+            $query->andWhere(['like', 'username', $q]);
+        $query->andWhere(['=', 'user_level_id', $type]);
+        if ($type != '1')
+            $query->andWhere(['=', 'company_user', $company_user]);
+        $query->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
+    }
+
+    public static function getAllUsers($q) {
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user');
+        if (!is_null($q))
+            $query->where(['like', 'username', $q]);
+        $query->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
+    }
+
+    public static function profile_save($photo, $model) {
+        $model->profile = $photo->name;
+        $array = explode(".", $photo->name);
+        $ext = end($array);
+        $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
+        $path = Yii::getAlias('@app') . '/web/uploads/' . $model->profile;
+        $photo->saveAs($path);
+    }
+
+    public static function CreateUser($model) {
         $result = "";
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
-        try
-        {
-           //upload image
-           $photo = UploadedFile::getInstance($model, 'profile');
-           if ($photo !== null) {
-               $profile_save = User::profile_save($photo,$model);
-         }
+        try {
+            //upload image
+            $photo = UploadedFile::getInstance($model, 'profile');
+            if ($photo !== null) {
+                $profile_save = User::profile_save($photo, $model);
+            }
             $current_level = \common\models\UsersLevel::findOne($model->user_level_id);
             if ($model->parent_user) {
                 $model->parent_id = $model->parent_user;
@@ -386,54 +363,64 @@ public static function profile_save($photo,$model){
                             $model->quantity = '20';
                             $order = \common\models\Order::insertOrder($model, true, true);
                         }
-
                     }
                     $auth->assign($role, $model->id);
                     $transaction->commit();
-                    $result=$model->id;
+                    $result = $model->id;
                 } else {
                     $result = "transaction_failed";
                 }
-
             }
         } catch (Exception $e) {
             $transaction->rollBack();
             $result = "transaction_failed";
-
         }
         return $result;
     }
 
-    public function username($id)
-    {
+    public function username($id) {
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users['username'];
-
     }
 
-    public function getUserLevel()
-    {
+    public function getUserLevel() {
         return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);
     }
-    public static function parent_user_for_admin_with_param($q,$type,$parent){
+
+    public static function parent_user_for_admin_with_param($q, $type, $parent) {
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
                 ->from('user')
                 ->where(['like', 'username', $q])
                 ->andWhere(['=', 'user_level_id', $type])
                 ->andWhere(['=', 'parent_id', $parent])
-               ->limit(20);
+                ->limit(20);
         $command = $query->createCommand();
-      return  $data = $command->queryAll();
+        return $data = $command->queryAll();
     }
-    public static function parent_user_for_admin($type,$parent){
+
+    public static function parent_user_for_admin($type, $parent) {
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
                 ->from('user')
-               ->where(['=', 'user_level_id', $type])
-               ->andWhere(['=', 'parent_id', $parent])
-               ->limit(20);
+                ->where(['=', 'user_level_id', $type])
+                ->andWhere(['=', 'parent_id', $parent])
+                ->limit(20);
         $command = $query->createCommand();
-      return  $data = $command->queryAll();
+        return $data = $command->queryAll();
     }
+
+    public static function CreateCustomer($model) {
+        $auth = \Yii::$app->authManager;
+        $role = $auth->getRole('customer');
+        $model->setPassword($model->password);
+        $model->generateAuthKey();
+        if ($model->save()) {
+            $auth->assign($role, $model->id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

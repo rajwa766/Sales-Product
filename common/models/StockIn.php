@@ -76,7 +76,7 @@ class StockIn extends \yii\db\ActiveRecord
     {
         return $this->hasMany(StockOut::className(), ['stock_in_id' => 'id']);
     }
-    public static function get_total_remaning_stock($id,$user_id){
+    public static function getRemaningStock($id,$user_id){
         $order_quantity = (new Query())
         ->select('SUM(remaining_quantity) as remaning_stock')
         ->from('stock_in')   
@@ -86,7 +86,8 @@ class StockIn extends \yii\db\ActiveRecord
         ->one();
      return $order_quantity['remaning_stock'];
     }
-    public static function get_all_stock($q,$type,$type_order){
+    public static function getStocks($q,$type,$type_order){
+        $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('stock_in.id as id, stock_in.remaining_quantity AS text')
                 ->from('stock_in')
@@ -97,7 +98,9 @@ class StockIn extends \yii\db\ActiveRecord
               ->andWhere(['=','stock_in.product_id',$type_order])
              ->limit(20);
         $command = $query->createCommand();
-     return   $data = $command->queryAll();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
     }
     public static function approve($order_id,$user_id,$order_request_id )
     {

@@ -97,5 +97,22 @@ class Product extends \yii\db\ActiveRecord
 
      return $value;
   }
-
+  public static function CreateProduct($model){
+    if($model->save()){
+        $photo = UploadedFile::getInstances($model, 'image');
+      if ($photo !== null) {
+         $save_images = \common\models\Image::save_images($model->id,$photo);
+                }
+    }
+  }
+public static function updateProduct($model){
+    $photo = UploadedFile::getInstances($model, 'image');
+    if ($photo) {
+        $command = Yii::$app->db->createCommand()
+        ->delete('image', 'product_id = '.$model->id)
+        ->execute();
+        $save_images = \common\models\Image::save_images($model->id,$photo);
+    }
+    return true;
+}
 }

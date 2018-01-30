@@ -85,21 +85,30 @@ public static function customer_by_parent($type){
     $command = $query->createCommand();
   return  $data = $command->queryAll();
 }
-public static function all_level_seach($q){
+public static function allLevelSearch($q){
+     $out = ['results' => ['id' => '', 'text' => '']];
     $query = new \yii\db\Query();
     $query->select('id as id, name AS text')
             ->from('users_level')
-            ->where(['like', 'name', $q])
-            ->andWhere(['!=', 'max_user', '-1'])
-           ->limit(20);
+            ->where(['!=', 'max_user', '-1']);
+                if (!is_null($q))
+            $query->andWhere(['like', 'name', $q]);
+           $query->limit(20);
     $command = $query->createCommand();
-    return $data = $command->queryAll();
+     $data = $command->queryAll();
+       $out['results'] = array_values($data);
+        return $out;
 }
-public static function all_level_with_param($q,$type,$company_user){
+public static function getAllLevels($q,$type,$company_user){
+     if(empty($type)){
+        return [];
+    }
+     $out = ['results' => ['id' => '', 'text' => '']];
     $query = new \yii\db\Query();
     $query->select('id as id, name AS text')
-            ->from('users_level')
-            ->where(['like', 'name', $q]);
+            ->from('users_level');
+            if (!is_null($q))
+            $query->where(['like', 'name', $q]);
             if($company_user == '1'){
                $query->andWhere(['>=', 'parent_id', $type]);
             }else{
@@ -107,21 +116,11 @@ public static function all_level_with_param($q,$type,$company_user){
             }
           $query->limit(20);
     $command = $query->createCommand();
-   return $data = $command->queryAll();
+   $data = $command->queryAll();
+    $out['results'] = array_values($data);
+        return $out;
 }
-public static function all_levels($type,$company_user){
-    $query = new \yii\db\Query();
-    $query->select('id as id, name AS text')
-            ->from('users_level');
-            if($company_user == '1'){
-               $query->andWhere(['>=', 'parent_id', $type]);
-            }else{
-               $query->andWhere(['=', 'parent_id', $type]);
-            }
-            $query->limit(20);
-    $command = $query->createCommand();
-   return  $data = $command->queryAll();
-}
+
     public static function getlevel(){
        $parent_id =  Yii::$app->user->identity->user_level_id;
         $data= UsersLevel::find()->where(['=','parent_id',$parent_id])->all();

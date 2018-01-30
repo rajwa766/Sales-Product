@@ -182,7 +182,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
       'allowClear' => true,
       //'autocomplete' => true,
       'ajax' => [
-          'url' => '../parentuserupdate',
+          'url' => '../parentusersOnupdate',
           'dataType' => 'json',
           'data' => new \yii\web\JsExpression('function(params) {
             //   if($("#user-company_user").is(":checked")){

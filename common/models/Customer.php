@@ -17,21 +17,19 @@ use Yii;
  * @property string $phone
  * @property string $email
  */
-class Customer extends \yii\db\ActiveRecord
-{
+class Customer extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'customer';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['name', 'post_code', 'district', 'province', 'mobile', 'phone', 'email'], 'string', 'max' => 45],
             [['address'], 'string', 'max' => 250],
@@ -41,8 +39,7 @@ class Customer extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
@@ -55,25 +52,22 @@ class Customer extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
         ];
     }
-    public static function all_customer_with_param($q){
+
+    public static function getAllCustomer($q) {
+        $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
                 ->from('user')
-                ->where(['like', 'username', $q])
-                ->andWhere(['user_level_id'=>Null])
-                ->andWhere(['parent_id'=>Null])
-               ->limit(20);
+                ->where(['user_level_id' => Null]);
+        if (!is_null($q))
+            $query->andWhere(['like', 'username', $q]);
+        $query->andWhere(['user_level_id' => Null])
+                ->andWhere(['parent_id' => Null])
+                ->limit(20);
         $command = $query->createCommand();
-       return $data = $command->queryAll();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
     }
-    public static function all_customer(){
-        $query = new \yii\db\Query();
-        $query->select('id as id, username AS text')
-                ->from('user')
-                ->where(['user_level_id'=>Null])
-                ->andWhere(['parent_id'=>Null])
-               ->limit(20);
-        $command = $query->createCommand();
-     return   $data = $command->queryAll();
-    }
+
 }

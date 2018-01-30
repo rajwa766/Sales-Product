@@ -15,21 +15,19 @@ use Yii;
  * @property Product $product
  * @property User $user
  */
-class StockStatus extends \yii\db\ActiveRecord
-{
+class StockStatus extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'stock_status';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['user_id', 'product_id'], 'required'],
             [['user_id', 'product_id'], 'integer'],
@@ -42,8 +40,7 @@ class StockStatus extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'below_percentage' => Yii::t('app', 'Below Percentage'),
@@ -55,26 +52,32 @@ class StockStatus extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProduct()
-    {
+    public function getProduct() {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-    public static function set_minimum_stock_level($user_id){
-        
-            $stock_status = new StockStatus();
-            $stock_status->isNewRecord = true;
-            $stock_status->id = Null;
-            $stock_status->below_percentage='80';
-            $stock_status->product_id=1;
-            $stock_status->user_id=$user_id;
-            $stock_status->save();
-        }
+
+    public static function CreateStatus($model) {
+        $model->product_id = '1';
+        $model->user_id = Yii::$app->user->identity->id;
+        $model->save();
+    }
+
+    public static function set_minimum_stock_level($user_id) {
+
+        $stock_status = new StockStatus();
+        $stock_status->isNewRecord = true;
+        $stock_status->id = Null;
+        $stock_status->below_percentage = '80';
+        $stock_status->product_id = 1;
+        $stock_status->user_id = $user_id;
+        $stock_status->save();
+    }
+
 }
