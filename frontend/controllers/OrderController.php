@@ -300,40 +300,20 @@ class OrderController extends Controller
         if(empty($type)){
             return [];
         }
-     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-     $out = ['results' => ['id' => '', 'text' => '']];
-         if (!is_null($q)) {
-           $query = new \yii\db\Query();
-             $query->select('id as id, username AS text')
-                     ->from('user')
-                     ->where(['like', 'username', $q])
-                     ->andWhere(['=', 'user_level_id', $type])
-                   //  ->andWhere(['like','customer_user_id',$customer_id])
-                    ->limit(20);
-             
-             $command = $query->createCommand();
-             $data = $command->queryAll();
-             // if($data){
-             $out['results'] = array_values($data);
-        }
-        
-        else{
-         $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                ->where(['=', 'user_level_id', $type])
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
-         $out['results'] = array_values($data);
-        }
-     return $out;
- }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+            if (!is_null($q)) {
+               $data = \common\models\User::update_user_parent_with_param($q,$type );
+                $out['results'] = array_values($data);
+           }
+           else{
+               $data = \common\models\User::update_user_parent($type);
+            $out['results'] = array_values($data);
+           }
+        return $out;
+    }
  public function actionParentuseradmin() {
     $q = Yii::$app->request->get('q');
-  //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
     $parent = Yii::$app->request->get('parent');
     if(empty($type)){
@@ -341,42 +321,20 @@ class OrderController extends Controller
     }
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
-     if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                 ->where(['like', 'username', $q])
-                 ->andWhere(['=', 'user_level_id', $type])
-                 ->andWhere(['=', 'parent_id', $parent])
-               //  ->andWhere(['like','customer_user_id',$customer_id])
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+     if (!is_null($q)){
+         $data = \commmon\models\User::parent_user_for_admin_with_param($q,$type,$parent);
          $out['results'] = array_values($data);
     }
-    
     else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, username AS text')
-             ->from('user')
-            ->where(['=', 'user_level_id', $type])
-            ->andWhere(['=', 'parent_id', $parent])
-            ->limit(20);
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+        $data = \commmon\models\User::parent_user_for_admin($type,$parent);
      $out['results'] = array_values($data);
     }
  return $out;
 }
  public function actionLevel() {
     $q = Yii::$app->request->get('q');
-  //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
    $typeone = Yii::$app->request->get('typeone');
- 
     if(empty($type)){
         return [];
     }
@@ -386,33 +344,10 @@ class OrderController extends Controller
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
      if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                 ->where(['like', 'username', $q])
-                 ->andWhere(['=', 'parent_id', $type])
-                   ->andWhere(['=', 'user_level_id', $typeone])
-
-               //  ->andWhere(['like','customer_user_id',$customer_id])
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+         $data = \common\models\User::parent_user_for_admin_with_param($q,$typeone,$type);
          $out['results'] = array_values($data);
-    }
-    
-    else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, username AS text')
-             ->from('user')
-            ->where(['=', 'parent_id', $type])
-                ->andWhere(['=', 'user_level_id', $typeone])
-            ->limit(20);
-     
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+    } else{
+        $data = \common\models\User::parent_user_for_admin($typeone,$type);
      $out['results'] = array_values($data);
     }
  return $out;
@@ -420,40 +355,18 @@ class OrderController extends Controller
 
 public function actionCustomerLevel() {
     $q = Yii::$app->request->get('q');
-  //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
-
- 
     if(empty($type)){
         return [];
     }
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
      if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, name AS text')
-                 ->from('users_level')
-                 ->where(['like', 'name', $q])
-                 ->andWhere(['=', 'parent_id', $type])
-               //  ->andWhere(['like','customer_user_id',$customer_id])
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+        $data = \common\models\UsersLevel::customer_by_parent_with_param($q,$type);
          $out['results'] = array_values($data);
     }
-    
     else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, name AS text')
-             ->from('users_level')
-            ->where(['=', 'parent_id', $type])
-            ->limit(20);
-     
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+        $data = \common\models\UsersLevel::customer_by_parent($type);
      $out['results'] = array_values($data);
     }
  return $out;
@@ -464,8 +377,6 @@ public function actionInventoryReports()
      $model = new Order(); 
            return $this->render('report', [
             'model' => $model,
-       
-            
         ]);
 }
 public function actionStatusReports()
@@ -473,130 +384,7 @@ public function actionStatusReports()
      $model = new Order(); 
            return $this->render('status_report', [
             'model' => $model,
-       
-            
         ]);
-}
-public function actionStatusreport(){
-      $model = new Order(); 
-         $fromDate = Yii::$app->request->post('from_date');
-         $toDate = Yii::$app->request->post('to_date');
-         $userId = Yii::$app->request->post('user_id');
-         $status = Yii::$app->request->post('status');
-      
-         if(!$userId){
-            $userId = Yii::$app->user->getId();
-         }
-         $order  = (new Query()) 
-          ->select('*')
-          ->from('order')
-          ->where(['or',
-             ['order_request_id'=>$userId],
-             ['user_id'=>$userId]
-        ]);
-         if(!empty($fromDate))
-               $order->andWhere(['>=','DATE(created_at)',$fromDate]);
-         if(!empty($toDate))
-               $order->andWhere(['<=','DATE(created_at)',$toDate]);
-         if(!(empty($status) && $status!="0"))
-               $order->andWhere(['=','status',$status]);
-        $order= $order->all();
-        return $this->renderAjax('status_report_view', [
-            'order' => $order,
-            'model' => $model,
-            
-        ]);
-}
-public function actionAjaxreport(){
-
-         $inventoryArr=array();
-         $fromDate = Yii::$app->request->post('from_date');
-    
-         $toDate = Yii::$app->request->post('to_date');
-         $userId = Yii::$app->request->post('user_id');
-      
-         if(!$userId){
-            $userId = Yii::$app->user->getId();
-         }
-         $stock_in_hand=0;
-         $remaining_stock=0;
-         $userame = Yii::$app->user->identity->username;
-
-                $stock_in  = (new Query()) 
-                               ->select('*')
-                               ->from('stock_in')
-                               ->innerJoin('product', 'product.id = stock_in.product_id')
-                               ->where(['=','stock_in.user_id',$userId]);
-                               if(!empty($fromDate))
-                                    $stock_in->andWhere(['>=','DATE(stock_in.timestamp)',$fromDate]);
-                                if(!empty($toDate))
-                                    $stock_in->andWhere(['<=','DATE(stock_in.timestamp)',$toDate]);
-                $stock_in=$stock_in->all();
-        
-                $stock_out  = (new Query()) 
-                              ->select('*,stock_out.timestamp as stock_out_date')
-                               ->from('stock_out')
-                               ->innerJoin('stock_in', 'stock_out.stock_in_id = stock_in.id')
-                               ->innerJoin('product', 'product.id = stock_in.product_id')
-                               ->where(['=','stock_in.user_id',$userId]);
-                              if(!empty($fromDate))
-                                    $stock_out->andWhere(['>=','DATE(stock_out.timestamp)',$fromDate]);
-                              if(!empty($toDate))
-                                    $stock_out->andWhere(['<=','DATE(stock_out.timestamp)',$toDate]);
-                $stock_out= $stock_out->all();
-               
-                foreach ($stock_in as $stock) {
-                   $inventory=new \common\models\helpers\reports\InventoryReport();
-                   $inventory->user=$userame;
-                   $inventory->date=$stock['timestamp'];
-                   $inventory->quantity=$stock['initial_quantity'];
-                   $remaining_stock+=$inventory->quantity;
-                   $inventory->type='Stock In';
-                   $inventory->product=$stock['name'];
-                   $inventoryArr[]=$inventory;
-
-                }
-                 foreach ($stock_out as $stock) {
-                   $inventory=new \common\models\helpers\reports\InventoryReport();
-                   $inventory->user=$userame;
-                   $inventory->date=$stock['stock_out_date'];
-                   $inventory->quantity=$stock['quantity'];
-                   $remaining_stock-=$inventory->quantity;
-                   $inventory->type='Stock Out';
-                   $inventory->product=$stock['name'];
-                   $inventoryArr[]=$inventory;
-
-                }
-                usort($inventoryArr, function($a, $b) {
-                    return strtotime($a['date']) - strtotime($b['date']);
-                });
-                if(!empty($fromDate))
-                {
-                        $result=(new Query()) 
-                               ->select('SUM(initial_quantity) as initial_quantity,sum(remaining_quantity) as remaining_quantity')
-                               ->from('stock_in')
-                               ->where(['=','stock_in.user_id',$userId])
-                               ->andWhere(['<','DATE(stock_in.timestamp)',$fromDate])->one();
-                               try
-                               {
-                                  $stock_in_hand=  $result['initial_quantity'] -$result['remaining_quantity'];
-                               }
-                               catch(Exception $e)
-                               {
-
-                               }
-           
-                }
-               
-                $remaining_stock+=$stock_in_hand;
-            return $this->renderAjax('report_view', [
-                'remaining_stock' => $remaining_stock,
-                'stock_in_hand' => $stock_in_hand,
-                'inventoryArr' => $inventoryArr,
-                
-            ]);
-                            
-       
 }
 
 }

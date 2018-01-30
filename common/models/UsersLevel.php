@@ -65,6 +65,26 @@ class UsersLevel extends \yii\db\ActiveRecord
     $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
  return $value;
 }
+public static function customer_by_parent_with_param($q,$type){
+      
+    $query = new \yii\db\Query();
+    $query->select('id as id, name AS text')
+            ->from('users_level')
+            ->where(['like', 'name', $q])
+            ->andWhere(['=', 'parent_id', $type])
+           ->limit(20);
+    $command = $query->createCommand();
+ return   $data = $command->queryAll();
+}
+public static function customer_by_parent($type){
+    $query = new \yii\db\Query();
+    $query->select('id as id, name AS text')
+            ->from('users_level')
+           ->where(['=', 'parent_id', $type])
+           ->limit(20);
+    $command = $query->createCommand();
+  return  $data = $command->queryAll();
+}
 public static function all_level_seach($q){
     $query = new \yii\db\Query();
     $query->select('id as id, name AS text')

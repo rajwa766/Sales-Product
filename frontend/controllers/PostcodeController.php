@@ -96,34 +96,11 @@ class PostcodeController extends Controller
     }
     public function actionAllcode() {
         $q = Yii::$app->request->get('q');
-  
-        
      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-     $out = ['results' => ['id' => '', 'text' => '']];
-         if (!is_null($q)) {
-           $query = new \yii\db\Query();
-             $query->select('id as id, zip AS text')
-                     ->from('postcode')
-                     ->where(['like', 'province', $q])
-                 ->limit(20);
-             
-             $command = $query->createCommand();
-             $data = $command->queryAll();
-             // if($data){
-             $out['results'] = array_values($data);
-        }
-        
-        else{
-         $query = new \yii\db\Query();
-         $query->select('id as id, zip AS text')
-                 ->from('postcode')
-             ->limit(20);
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
-         $out['results'] = array_values($data);
-        }
-     return $out;
+       $out = ['results' => ['id' => '', 'text' => '']];
+        $data = \common\models\Postcode::get_all_codes($q);
+        $out['results'] = array_values($data);
+        return $out;
  }
     /**
      * Deletes an existing Postcode model.

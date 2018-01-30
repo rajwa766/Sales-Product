@@ -171,9 +171,7 @@ class SiteController extends Controller
     public function actionLanguage()
     {
         $language = Yii::$app->request->get('language');
-        
 Yii::$app->language = $language;
-
 $languageCookie = new Cookie([
     'name' => 'language',
     'value' => $language,

@@ -262,6 +262,76 @@ class User extends ActiveRecord implements IdentityInterface
             return $user;
         }
     }
+    
+public static function update_user_parent_with_param($q,$parent_id){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+            ->where(['like', 'username', $q])
+            ->andWhere(['=', 'user_level_id',$parent_id ])
+        ->limit(20);
+    $command = $query->createCommand();
+   return $data = $command->queryAll();
+}
+public static function update_user_parent($parent_id){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+           ->where(['=', 'user_level_id',$parent_id])
+         ->limit(20);
+    $command = $query->createCommand();
+    return $data = $command->queryAll();
+}
+public static function all_parent_users_with_param($q,$type,$company_user){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+            ->where(['like', 'username', $q])
+            ->andWhere(['=', 'user_level_id', $type]);
+            if($type != '1'){
+               $query->andWhere(['=', 'company_user', $company_user]);
+            }
+          $query->limit(20);
+    $command = $query->createCommand();
+  return  $data = $command->queryAll();
+}
+public static function all_parent_users($type,$company_user){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+           ->where(['=', 'user_level_id', $type]);
+           if($type != '1'){
+               $query->andWhere(['=', 'company_user', $company_user]);
+            }
+          $query->limit(20);
+    $command = $query->createCommand();
+  return  $data = $command->queryAll();
+}
+public static function all_user_with_param($q){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+            ->where(['like', 'username', $q])
+           ->limit(20);
+    $command = $query->createCommand();
+ return   $data = $command->queryAll();
+}
+public static function all_user(){
+    $query = new \yii\db\Query();
+    $query->select('id as id, username AS text')
+            ->from('user')
+           ->limit(20);
+    $command = $query->createCommand();
+ return   $data = $command->queryAll();
+}
+public static function profile_save($photo,$model){
+    $model->profile= $photo->name;
+    $array = explode(".", $photo->name);
+    $ext=end($array);
+    $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
+    $path =  Yii::getAlias('@app').'/web/uploads/'.$model->profile;
+    $photo->saveAs($path);
+}
     public static function CreateUser($model)
     {
         $result = "";
@@ -269,18 +339,11 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = Yii::$app->db->beginTransaction();
         try
         {
-            //upload image
-            $photo = UploadedFile::getInstance($model, 'profile');
-            if ($photo !== null) {
-
-                $model->profile = $photo->name;
-                $array = explode(".", $photo->name);
-                $ext = end($array);
-                $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
-                $path = Yii::getAlias('@app') . '/web/uploads/' . $model->profile;
-                $photo->saveAs($path);
-            }
-
+           //upload image
+           $photo = UploadedFile::getInstance($model, 'profile');
+           if ($photo !== null) {
+               $profile_save = User::profile_save($photo,$model);
+         }
             $current_level = \common\models\UsersLevel::findOne($model->user_level_id);
             if ($model->parent_user) {
                 $model->parent_id = $model->parent_user;
@@ -351,5 +414,26 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUserLevel()
     {
         return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);
+    }
+    public static function parent_user_for_admin_with_param($q,$type,$parent){
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['like', 'username', $q])
+                ->andWhere(['=', 'user_level_id', $type])
+                ->andWhere(['=', 'parent_id', $parent])
+               ->limit(20);
+        $command = $query->createCommand();
+      return  $data = $command->queryAll();
+    }
+    public static function parent_user_for_admin($type,$parent){
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+               ->where(['=', 'user_level_id', $type])
+               ->andWhere(['=', 'parent_id', $parent])
+               ->limit(20);
+        $command = $query->createCommand();
+      return  $data = $command->queryAll();
     }
 }

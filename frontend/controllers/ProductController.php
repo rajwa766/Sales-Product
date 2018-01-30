@@ -95,7 +95,6 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load(Yii::$app->request->post())) {
             $photo = UploadedFile::getInstances($model, 'image');
             if ($photo) {
@@ -106,7 +105,6 @@ class ProductController extends Controller
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
         return $this->render('update', [
             'model' => $model,
         ]);

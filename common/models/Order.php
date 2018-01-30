@@ -271,7 +271,28 @@ class Order extends \yii\db\ActiveRecord
         }
         return $order;
     }
-    
+    public static function cancel_request($order_id){
+        $order_detail = Order::find()->where(['id'=>$order_id])->one();
+        $transfer_request = array_search('Transfer Request', \common\models\Lookup::$status);
+        $transfer_cancel = array_search('Transfer Canceled', \common\models\Lookup::$status);
+        $return_request = array_search('Return Request', \common\models\Lookup::$status);
+        $return_cancel = array_search('Return Canceled', \common\models\Lookup::$status);
+        $request_cancel = array_search('Request Canceled', \common\models\Lookup::$status);
+       if($order_detail->status == $transfer_request){
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>$transfer_cancel], 'id =' . $order_id)
+        ->execute();
+       }elseif($order_detail->status == $return_request){
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>$return_cancel], 'id =' . $order_id)
+        ->execute();
+    }else{
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' =>$request_cancel], 'id =' . $order_id)
+        ->execute();
+       }
+        return true;
+    }
     public static function update_status($id)
     {
         return Yii::$app->db->createCommand()
