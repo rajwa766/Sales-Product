@@ -153,46 +153,11 @@ class OrderController extends Controller {
     public function actionCreate() {
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
-
-            if ($model->order_type == "Order") {
-                $model->order_request_id = $model->request_agent_name;
-                $model->user_id = $model->rquest_customer;
-                $check_user_already_exist = \common\models\User::find()
-                        ->where([ 'email' => $model->email])
-                        ->one();
-                if ($check_user_already_exist) {
-                    $model->user_id = $check_user_already_exist->id;
-                } else {
-                    $customer_user = \common\models\User::insert_user($model);
-                    $auth = \Yii::$app->authManager;
-                    $role = $auth->getRole('customer');
-                    $auth->assign($role, $customer_user->id);
-                    $model->user_id = $customer_user->id;
-                }
-            } else {
-                $model->order_request_id = $model->parent_user;
-                $model->user_id = $model->child_user;
-            }
-            if ($model->payment_method == '3') {
-                $photo = UploadedFile::getInstance($model, 'payment_slip');
-
-                if ($photo !== null) {
-                    $model->payment_slip = $photo->name;
-                    $array = explode(".", $photo->name);
-                    $ext = end($array);
-                    $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
-                    $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
-                    //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
-                    $photo->saveAs($path);
-                }
-            }
-            if ($model->save()) {
-                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
-                $shipping_address = \common\models\ShippingAddress::insert_shipping_address($model);
-            }
-            return $this->redirect(['view', 'id' => $model->id]);
+        $orderCreate = \common\models\Order::CreateOrder($model);
+        if($orderCreate == 'transaction_complete'){
+                return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        }
         return $this->render('create', [
                     'model' => $model,
         ]);
@@ -200,18 +165,8 @@ class OrderController extends Controller {
 
     public function actionCreatereturn() {
         $model = new Order();
-
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->order_type == "Order") {
-                $model->order_request_id = $model->request_agent_name;
-                $model->user_id = $model->rquest_customer;
-            } else {
-                $model->order_request_id = $model->parent_user;
-                $model->user_id = $model->child_user;
-            }
-            if ($model->save()) {
-                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
-            }
+            $orderCreate = \common\models\Order::CreateOrderReturn($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -224,12 +179,6 @@ class OrderController extends Controller {
         $model = new Order();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->order_request_id = $model->parent_user;
-            $model->user_id = $model->child_user;
-            $model->status = '5';
-            if ($model->save()) {
-                $product_order = \common\models\ProductOrder::insert_order_no_js($model);
-            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

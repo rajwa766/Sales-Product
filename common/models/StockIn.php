@@ -91,11 +91,11 @@ class StockIn extends \yii\db\ActiveRecord
         $query = new \yii\db\Query();
         $query->select('stock_in.id as id, stock_in.remaining_quantity AS text')
                 ->from('stock_in')
-                ->join('join product on stock_in.product_id=product.id', []);
+                ->join('join product on stock_in.product_id=product.id', [])
+                ->where(['=', 'stock_in.user_id', $type]);
                 if(!is_null($q))
-                $query->where(['like', 'product.name', $q]);
-                $query->andWhere(['=', 'stock_in.user_id', $type])
-              ->andWhere(['=','stock_in.product_id',$type_order])
+                $query->andWhere(['like', 'product.name', $q]);
+                $query->andWhere(['=','stock_in.product_id',$type_order])
              ->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();

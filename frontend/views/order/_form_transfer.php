@@ -283,7 +283,7 @@ echo $form->field($model, 'payment_method')->radioList([
          ?>
     <input type="hidden" id="parent_sected_user" readonly="true" class="form-control" value="" name="Order[total_stock]" maxlength="45">
          
-          <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
+          <div class="col-md-4"><?php echo $form->field($model, 'quantity')->textInput(['maxlength' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
@@ -317,21 +317,21 @@ jQuery(document).ready(function() {
         });
     });
 
-$('#order-entity_type').on('blur', function () {
-    if (parseInt($('#order-orde').val()) >= parseInt($('#order-entity_type').val())){
-    if($('#order-entity_type').val()){
+$('#order-quantity').on('blur', function () {
+    if (parseInt($('#order-orde').val()) >= parseInt($('#order-quantity').val())){
+    if($('#order-quantity').val()){
             $(".noproduct").hide();   
                        $('#order-single_price').val('760');
-                       $('#order-total_price').val($('#order-entity_type').val() * 760);
+                       $('#order-total_price').val($('#order-quantity').val() * 760);
           
         }else{
             $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less then stock amount</h5>");
         }   
     }else{
         $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
-            $('#order-entity_type').val('');
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock</h5>");
+            $('#order-quantity').val('');
         
     }
     });

@@ -426,7 +426,7 @@ echo $form->field($model, 'payment_method')->radioList([
     </div>
          <?php }?>   
 
-      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'single_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
@@ -590,34 +590,34 @@ jQuery(document).ready(function() {
         });
     });
        //this code is to hidden the grid and show for order and request if user login
-     $('#order-entity_type').on('blur', function () {
+     $('#order-quantity').on('blur', function () {
      
        if($('#order-type').val() == 'Request'){
          
-        $.post("../user-product-level/getunitsprice?id=" + $('#order-entity_type').val()+"&user_level="+$('#order-child_level').val()+"&product_id="+$('#order-product_id').val(), function (data) {
+        $.post("../user-product-level/getunitsprice?id=" + $('#order-quantity').val()+"&user_level="+$('#order-child_level').val()+"&product_id="+$('#order-product_id').val(), function (data) {
          
         var json = $.parseJSON(data);
         if(json.price){
                        $(".noproduct").hide();
                        $('#order-single_price').val(json.price);
-                       $('#order-total_price').val(parseFloat($('#order-entity_type').val())  * parseFloat(json.price));
+                       $('#order-total_price').val(parseFloat($('#order-quantity').val())  * parseFloat(json.price));
         }else{
             $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchse Minimun then this "+json.units+"</h5>");
-            $('#order-entity_type').val('');
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less then  "+json.units+" Units</h5>");
+            $('#order-quantity').val('');
         }
         });
       }else{
       
-      if($('#order-entity_type').val()){
+      if($('#order-quantity').val()){
             $(".noproduct").hide();
     
                        $('#order-single_price').val('760');
-                       $('#order-total_price').val($('#order-entity_type').val() * 760);
+                       $('#order-total_price').val($('#order-quantity').val() * 760);
           
         }else{
             $(".noproduct").show();
-            $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
+            $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less then stock amount</h5>");
         }
        
       

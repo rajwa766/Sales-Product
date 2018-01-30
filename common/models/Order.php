@@ -7,6 +7,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\db\Query;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "order".
@@ -26,8 +27,8 @@ use yii\db\Query;
  * @property User $user
  * @property ProductOrder[] $productOrders
  */
-class Order extends \yii\db\ActiveRecord
-{
+class Order extends \yii\db\ActiveRecord {
+
     public $order_type;
     public $all_level;
     public $parent_user;
@@ -52,18 +53,18 @@ class Order extends \yii\db\ActiveRecord
     public $total_price;
     public $product_id;
     public $quantity;
+
     const SCENARIO_ORDER = 'order';
     const SCENARIO_REQUEST = 'request';
 
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'order';
     }
-    public function behaviors()
-    {
+
+    public function behaviors() {
         return [
             [
                 'class' => BlameableBehavior::className(),
@@ -79,26 +80,23 @@ class Order extends \yii\db\ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
+    public function scenarios() {
 
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
         $scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
         return $scenarios;
-
     }
+
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['user_id', 'order_request_id'], 'required'],
             [['all_level', 'parent_user', 'child_level', 'child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
             [['email', 'request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
-
-            [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id'], 'integer'],
+            [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
             [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method'], 'safe'],
             [['payment_slip'], 'file'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
@@ -110,8 +108,7 @@ class Order extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'order_ref_no' => Yii::t('app', 'Order Ref No'),
@@ -132,12 +129,11 @@ class Order extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAccounts()
-    {
+    public function getAccounts() {
         return $this->hasMany(Account::className(), ['order_id' => 'id']);
     }
-    public static function all_status_dashboard($user_id)
-    {
+
+    public static function all_status_dashboard($user_id) {
         $all_status = array();
 
         $all_status['current_level'] = Order::CurrentLevel($user_id);
@@ -150,120 +146,184 @@ class Order extends \yii\db\ActiveRecord
         $all_status['approved_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => '1'])->count();
 
         return $all_status;
-
     }
-    public static function CurrentLevel($user_id)
-    {
+
+    public static function CurrentLevel($user_id) {
         $current_level = (new Query())
-            ->select('users_level.name as current_level')
-            ->from('user')
-            ->innerJoin('users_level', 'user.user_level_id = users_level.id')
-            ->where(['=', 'user.id', $user_id])
-            ->one();
+                ->select('users_level.name as current_level')
+                ->from('user')
+                ->innerJoin('users_level', 'user.user_level_id = users_level.id')
+                ->where(['=', 'user.id', $user_id])
+                ->one();
         return $current_level['current_level'];
     }
-    public static function CurrentStock($user_id)
-    {
+
+    public static function CurrentStock($user_id) {
         $current_stock = (new Query())
-            ->select('SUM(remaining_quantity) as current_stock')
-            ->from('stock_in')
-            ->where(['=', 'user_id', $user_id])
-            ->groupby(['product_id'])
-            ->one();
+                ->select('SUM(remaining_quantity) as current_stock')
+                ->from('stock_in')
+                ->where(['=', 'user_id', $user_id])
+                ->groupby(['product_id'])
+                ->one();
         return $current_stock['current_stock'];
     }
-    public static function CurrentProfit($user_id)
-    {
+
+    public static function CurrentProfit($user_id) {
         $stock_in_remaning_price = (new Query())
-            ->select('SUM(initial_quantity * price) -  SUM(remaining_quantity *price) as stock_in_price')
-            ->from('stock_in')
-            ->where(['=', 'user_id', $user_id])
-            ->one();
+                ->select('SUM(initial_quantity * price) -  SUM(remaining_quantity *price) as stock_in_price')
+                ->from('stock_in')
+                ->where(['=', 'user_id', $user_id])
+                ->one();
 
         $total_buying_price = (new Query())
-            ->select('SUM(product_order.order_price * product_order.quantity) as buying_price ')
-            ->from('order')
-            ->innerJoin('product_order', 'product_order.order_id = order.id')
-            ->where(['=', 'order.user_id', $user_id])
-            ->andWhere(['=', 'order.status', '1'])
-            ->one();
+                ->select('SUM(product_order.order_price * product_order.quantity) as buying_price ')
+                ->from('order')
+                ->innerJoin('product_order', 'product_order.order_id = order.id')
+                ->where(['=', 'order.user_id', $user_id])
+                ->andWhere(['=', 'order.status', '1'])
+                ->one();
 
         $total_return_price = (new Query())
-            ->select('SUM(product_order.order_price * product_order.quantity) as return_price')
-            ->from('order')
-            ->innerJoin('product_order', 'product_order.order_id = order.id')
-            ->where(['=', 'order.user_id', $user_id])
-            ->andWhere(['=', 'order.status', '4'])
-            ->one();
+                ->select('SUM(product_order.order_price * product_order.quantity) as return_price')
+                ->from('order')
+                ->innerJoin('product_order', 'product_order.order_id = order.id')
+                ->where(['=', 'order.user_id', $user_id])
+                ->andWhere(['=', 'order.status', '4'])
+                ->one();
         $total_sale_price = (new Query())
-            ->select('SUM(product_order.order_price * product_order.quantity) as return_price')
-            ->from('order')
-            ->innerJoin('product_order', 'product_order.order_id = order.id')
-            ->where(['=', 'order.order_request_id', $user_id])
-            ->andWhere(['=', 'order.status', '1'])
-            ->one();
+                ->select('SUM(product_order.order_price * product_order.quantity) as return_price')
+                ->from('order')
+                ->innerJoin('product_order', 'product_order.order_id = order.id')
+                ->where(['=', 'order.order_request_id', $user_id])
+                ->andWhere(['=', 'order.status', '1'])
+                ->one();
         $total_price = floatval($total_buying_price['buying_price']) - floatval($total_return_price['return_price']);
         $total_purcahse_price = $total_price - floatval($stock_in_remaning_price['stock_in_price']);
         return $total_purcahse_price - floatval($total_sale_price);
-
     }
-    public static function CurrentUser($user_id)
-    {
+
+    public static function CurrentUser($user_id) {
         return (new Query())
-            ->select('*')
-            ->from('user')
-            ->where(['=', 'parent_id', $user_id])
-            ->count();
-
+                        ->select('*')
+                        ->from('user')
+                        ->where(['=', 'parent_id', $user_id])
+                        ->count();
     }
-    public static function CurrentRemaning($user_id, $urent_users)
-    {
+
+    public static function CurrentRemaning($user_id, $urent_users) {
         $total_user = (new Query())
-            ->select('*')
-            ->from('user')
-            ->innerJoin('users_level', 'users_level.id = user.user_level_id')
-            ->where(['=', 'user.id', $user_id])
-            ->one();
+                ->select('*')
+                ->from('user')
+                ->innerJoin('users_level', 'users_level.id = user.user_level_id')
+                ->where(['=', 'user.id', $user_id])
+                ->one();
         return $total_user['max_user'] - $urent_users;
-
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-    public function getShippingAddresses()
-    {
+
+    public function getShippingAddresses() {
         return $this->hasOne(ShippingAddress::className(), ['order_id' => 'id']);
     }
-    public function username($id)
-    {
+
+    public function username($id) {
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users->username;
-
     }
-    public static function insertOrder($user_model, $approve_order = false,$is_bonus=false)
-    {
+
+    public static function saveSlip($model, $photo) {
+        $model->payment_slip = $photo->name;
+        $array = explode(".", $photo->name);
+        $ext = end($array);
+        $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
+        $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
+        $photo->saveAs($path);
+    }
+
+    public static function CreateOrder($model) {
+        $result = "";
+        $transaction_failed = false;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            if ($model->order_type == "Order") {
+                $model->order_request_id = $model->request_agent_name;
+                $model->user_id = $model->rquest_customer;
+                $check_user_already_exist = \common\models\User::find()->where([ 'email' => $model->email])->one();
+                if ($check_user_already_exist) {
+                    $model->user_id = $check_user_already_exist->id;
+                } else {
+                    $customer_user = \common\models\User::insert_user($model);
+                    $auth = \Yii::$app->authManager;
+                    $role = $auth->getRole('customer');
+                    $auth->assign($role, $customer_user->id);
+                    $model->user_id = $customer_user->id;
+                }
+            } else {
+                $model->order_request_id = $model->parent_user;
+                $model->user_id = $model->child_user;
+            }
+            
+            $payment_method = array_search('Bank Transfer', \common\models\Lookup::$order_status);
+            if ($model->payment_method == $payment_method) {
+                $photo = UploadedFile::getInstance($model, 'payment_slip');
+                if ($photo !== null) {
+                    $photo_save = Order::saveSlip($model, $photo);
+                }
+            }
+            if ($model->save()) {
+                $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
+                $shipping_address = \common\models\ShippingAddress::insertShippingAddress($model, $model->id);
+                $transaction->commit();
+                $result = "transaction_complete";
+            }
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            $result = "transaction_failed";
+        }
+        return $result;
+    }
+public static function CreateOrderReturn($model){
+       if ($model->order_type == "Order") {
+                $model->order_request_id = $model->request_agent_name;
+                $model->user_id = $model->rquest_customer;
+            } else {
+                $model->order_request_id = $model->parent_user;
+                $model->user_id = $model->child_user;
+            }
+            if ($model->save()) {
+                $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
+            }
+}
+public static function CreateOrderTransfer($model){
+        $model->order_request_id = $model->parent_user;
+            $model->user_id = $model->child_user;
+            $model->status  = array_search('Transfer Request', \common\models\Lookup::$status);
+            if ($model->save()) {
+                $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
+            }
+}
+    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false) {
         $order = new Order();
         $order->isNewRecord = true;
         $order->id = null;
         $order->user_id = $user_model->id;
-        if(!$is_bonus)
-        {
+        if (!$is_bonus) {
             $order->order_request_id = $user_model->parent_id;
-            $pending_status=array_search ('Pending', \common\models\Lookup::$status);
+            $pending_status = array_search('Pending', \common\models\Lookup::$status);
             $order->status = $pending_status;
-        }
-        else{
+        } else {
             $order->order_request_id = '1';
-            $bonus_status=array_search ('Bonus', \common\models\Lookup::$status);
+            $bonus_status = array_search('Bonus', \common\models\Lookup::$status);
             $order->status = $bonus_status;
         }
         $order->save();
         if ($order->id) {
-            $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity,$user_model->unit_price, $order);
+            $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity, $user_model->unit_price, $order);
             $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id);
             if ($approve_order) {
                 $stock_in = \common\models\StockIn::approve($order->id, $user_model->id, $user_model->parent_id);
@@ -271,55 +331,56 @@ class Order extends \yii\db\ActiveRecord
         }
         return $order;
     }
-    public static function cancel_request($order_id){
-        $order_detail = Order::find()->where(['id'=>$order_id])->one();
+
+    public static function cancel_request($order_id) {
+        $order_detail = Order::find()->where(['id' => $order_id])->one();
         $transfer_request = array_search('Transfer Request', \common\models\Lookup::$status);
         $transfer_cancel = array_search('Transfer Canceled', \common\models\Lookup::$status);
         $return_request = array_search('Return Request', \common\models\Lookup::$status);
         $return_cancel = array_search('Return Canceled', \common\models\Lookup::$status);
         $request_cancel = array_search('Request Canceled', \common\models\Lookup::$status);
-       if($order_detail->status == $transfer_request){
-        Yii::$app->db->createCommand()
-        ->update('order', ['status' =>$transfer_cancel], 'id =' . $order_id)
-        ->execute();
-       }elseif($order_detail->status == $return_request){
-        Yii::$app->db->createCommand()
-        ->update('order', ['status' =>$return_cancel], 'id =' . $order_id)
-        ->execute();
-    }else{
-        Yii::$app->db->createCommand()
-        ->update('order', ['status' =>$request_cancel], 'id =' . $order_id)
-        ->execute();
-       }
+        if ($order_detail->status == $transfer_request) {
+            Yii::$app->db->createCommand()
+                    ->update('order', ['status' => $transfer_cancel], 'id =' . $order_id)
+                    ->execute();
+        } elseif ($order_detail->status == $return_request) {
+            Yii::$app->db->createCommand()
+                    ->update('order', ['status' => $return_cancel], 'id =' . $order_id)
+                    ->execute();
+        } else {
+            Yii::$app->db->createCommand()
+                    ->update('order', ['status' => $request_cancel], 'id =' . $order_id)
+                    ->execute();
+        }
         return true;
     }
-    public static function update_status($id)
-    {
+
+    public static function update_status($id) {
         return Yii::$app->db->createCommand()
-            ->update('order', ['status' => '1'], 'id =' . $id)
-            ->execute();
+                        ->update('order', ['status' => '1'], 'id =' . $id)
+                        ->execute();
     }
-    public static function update_return_status($id)
-    {
+
+    public static function update_return_status($id) {
         return Yii::$app->db->createCommand()
-            ->update('order', ['status' => '4'], 'id =' . $id)
-            ->execute();
+                        ->update('order', ['status' => '4'], 'id =' . $id)
+                        ->execute();
     }
-    public static function update_transfer_status($id)
-    {
+
+    public static function update_transfer_status($id) {
         return Yii::$app->db->createCommand()
-            ->update('order', ['status' => '6'], 'id =' . $id)
-            ->execute();
+                        ->update('order', ['status' => '6'], 'id =' . $id)
+                        ->execute();
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProductOrders()
-    {
+    public function getProductOrders() {
         return $this->hasMany(ProductOrder::className(), ['order_id' => 'id']);
     }
-    public function productorder($id)
-    {
+
+    public function productorder($id) {
         $i = 1;
         $product_order_data = "";
         $order = \common\models\ProductOrder::find()->where(['=', 'order_id', $id])->all();
@@ -330,4 +391,5 @@ class Order extends \yii\db\ActiveRecord
         }
         return $product_order_data;
     }
+
 }

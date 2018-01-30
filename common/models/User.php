@@ -290,7 +290,7 @@ class User extends ActiveRecord implements IdentityInterface {
        if(empty($type)){
         return [];
     }
-     if(empty($typeone)){
+     if(empty($parent)){
         return [];
     }
        $out = ['results' => ['id' => '', 'text' => '']];
