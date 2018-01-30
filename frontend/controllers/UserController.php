@@ -227,16 +227,8 @@ return $parent_id->parent_id;
                  {
                      //upload image
                      $photo = UploadedFile::getInstance($model, 'profile');
-                     
                      if ($photo !== null) {
-                       $model->profile= $photo->name;
-                      
-                       $array = explode(".", $photo->name);
-                  $ext=end($array);
-                       $model->profile = Yii::$app->security->generateRandomString() . ".{$ext}";
-                       $path =  Yii::getAlias('@app').'/web/uploads/'.$model->profile;
-                    //   $path = Yii::getAlias('@upload') .'/'. $model->payment_slip;
-                       $photo->saveAs($path);
+                         $profile_save = User::profile_save($photo,$model);
                    }
             $current_level_id =  \common\models\UsersLevel::findOne($model->user_level_id);
             if($model->parent_user){
@@ -256,10 +248,8 @@ return $parent_id->parent_id;
             $total_user_current_level = User::find()->where(['=','parent_id',$model->parent_id])->count();
             $model->setPassword($model->password);
             $model->generateAuthKey();
-            $model->getpassword();
             //    check not company user and not seller and user space remain
             if($current_level_id->max_user != '-1' && $total_user_current_level>$current_level_id->max_user && $model->company_user != '1'){
-               // return $this->render(['more_user', 'model' => $model]);  
                 return $this->render('more_user', [
                     'model' => $model,
                 ]);
@@ -268,7 +258,6 @@ return $parent_id->parent_id;
                 \common\models\StockStatus::set_minimum_stock_level($model->id);
                 \common\models\Account::create_accounts($model);
                 $order = \common\models\Order::insert_order($model);
-               
                 if($order->id)
                 {
                     $product_order = \common\models\ProductOrder::insert_user_order_js($model,$order);
@@ -276,13 +265,11 @@ return $parent_id->parent_id;
                     $stock_in = \common\models\StockIn::approve($order->id,$model->id,$model->parent_id);
                }
                //bonus super vip
-              
                 if($model->user_level_id == '4'){
                     $order = \common\models\Order::insert_order_bonus($model,'50');
                      if($order->id)
                      {
                          $product_order = \common\models\ProductOrder::insert_user_order_js_bonus($model,$order);
-                        
                          $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
                          $stock_in = \common\models\StockIn::approve($order->id,$model->id,'1');
                     }
@@ -293,35 +280,28 @@ return $parent_id->parent_id;
                     $order = \common\models\Order::insert_order_bonus($model,'20');
                     if($order->id)
                     {
-                      
                         $product_order = \common\models\ProductOrder::insert_user_order_js_bonus($model,$order);
-                       
                         $shipping_address = \common\models\ShippingAddress::insert_shipping_address_user($model,$order);
                         $stock_in = \common\models\StockIn::approve($order->id,$model->id,'1');
                    }
                 }
-            
                 $auth->assign($role, $model->id);
             }else{
                 $transaction_failed=true; 
             }
-        
             }
         }catch (Exception $e) 
         {
             $transaction_failed=true;
-          
         }
         if($transaction_failed)
         {
          $transaction->rollBack();
          return $this->redirect(['error', 'model' => $model]);
-         
-        }  else
+        }else
         {
          $transaction->commit();  
          return $this->redirect(['view', 'id' => $model->id]);
-         
         }
         } else {
             return $this->render('create', [
@@ -332,14 +312,12 @@ return $parent_id->parent_id;
     public function actionCustomer()
     {
         $model = new User();
-
         if ($model->load(Yii::$app->request->post())) {
                 $auth = \Yii::$app->authManager;
                 $role = $auth->getRole('customer');
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
-          
             if($model->save()){
                 $auth->assign($role, $model->id);
             return $this->redirect(['view', 'id' => $model->id]);
@@ -381,230 +359,101 @@ return $parent_id->parent_id;
      return Json::encode($user_detail, $asArray = true);
    
     }
+    // get all level
     public function actionAlllevel($q = null, $id = null) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = ['results' => ['id' => '', 'text' => '']];
             if (!is_null($q)) {
-              $query = new \yii\db\Query();
-                $query->select('id as id, name AS text')
-                        ->from('users_level')
-                        ->where(['like', 'name', $q])
-                        ->andWhere(['!=', 'max_user', '-1'])
-                       ->limit(20);
-                
-                $command = $query->createCommand();
-                $data = $command->queryAll();
+                $data = \common\models\UsersLevel::all_level_seach($q);
                 $out['results'] = array_values($data);
             } elseif ($id > 0) {
                 $out['results'] = ['id' => $id, 'text' => \common\models\UserLevel::find($id)->id];
             }
         return $out;
     }
+    // on update select parent on change the level
     public function actionParentuserupdate() {
         $q = Yii::$app->request->get('q');
-      //  $id = Yii::$app->request->get('id');
         $type = Yii::$app->request->get('type');
         $level_id = \common\models\UsersLevel::findOne(['id',$type]);
         $company_user = Yii::$app->request->get('company_user');
-     
         if(empty($type)){
             return [];
         }
      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
      $out = ['results' => ['id' => '', 'text' => '']];
          if (!is_null($q)) {
-           $query = new \yii\db\Query();
-             $query->select('id as id, username AS text')
-                     ->from('user')
-                     ->where(['like', 'username', $q])
-                     ->andWhere(['=', 'user_level_id', $level_id->parent_id ])
-                 ->limit(20);
-             $command = $query->createCommand();
-             $data = $command->queryAll();
-             // if($data){
+            $data = User::update_user_parent_with_param($q,$level_id->parent_id );
              $out['results'] = array_values($data);
         }
-        
         else{
-         $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                ->where(['=', 'user_level_id', $level_id->parent_id])
-              ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+            $data = User::update_user_parent($level_id->parent_id);
          $out['results'] = array_values($data);
         }
      return $out;
  }
+//  Parent user of specific user
     public function actionParentuser() {
         $q = Yii::$app->request->get('q');
-      //  $id = Yii::$app->request->get('id');
         $type = Yii::$app->request->get('type');
         $company_user = Yii::$app->request->get('company_user');
-     
         if(empty($type)){
             return [];
         }
      \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
      $out = ['results' => ['id' => '', 'text' => '']];
          if (!is_null($q)) {
-           $query = new \yii\db\Query();
-             $query->select('id as id, username AS text')
-                     ->from('user')
-                     ->where(['like', 'username', $q])
-                     ->andWhere(['=', 'user_level_id', $type]);
-                     if($type != '1'){
-                        $query->andWhere(['=', 'company_user', $company_user]);
-                     }
-                     
-                   //  ->andWhere(['like','customer_user_id',$customer_id])
-                   $query->limit(20);
-             
-             $command = $query->createCommand();
-             $data = $command->queryAll();
-             // if($data){
+             $data= \common\models\User::all_parent_users_with_param($q,$type,$company_user);
              $out['results'] = array_values($data);
-        }
-        
-        else{
-         $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                ->where(['=', 'user_level_id', $type]);
-                if($type != '1'){
-                    $query->andWhere(['=', 'company_user', $company_user]);
-                 }
-                 
-               //  ->andWhere(['like','customer_user_id',$customer_id])
-               $query->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+        }else{
+            $data= \common\models\User::all_parent_users($type,$company_user);
          $out['results'] = array_values($data);
         }
      return $out;
  }
+//  All users
  public function actionLevel() {
     $q = Yii::$app->request->get('q');
-  //  $id = Yii::$app->request->get('id');
     $type = Yii::$app->request->get('type');
     $company_user = Yii::$app->request->get('company_user');
- 
     if(empty($type)){
         return [];
     }
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
      if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, name AS text')
-                 ->from('users_level')
-                 ->where(['like', 'name', $q]);
-                 if($company_user == '1'){
-                    $query->andWhere(['>=', 'parent_id', $type]);
-                 }else{
-                    $query->andWhere(['=', 'parent_id', $type]);
-                    
-                 }
-
-               $query->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+         $data = \common\models\UsersLevel::all_level_with_param($q,$type,$company_user);
          $out['results'] = array_values($data);
-    }
-    
-    else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, name AS text')
-             ->from('users_level');
-             if($company_user == '1'){
-                $query->andWhere(['>=', 'parent_id', $type]);
-             }else{
-                $query->andWhere(['=', 'parent_id', $type]);
-                
-             }
-             $query->limit(20);
-     
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+    }else{
+        $data = \common\models\UsersLevel::all_levels($type,$company_user);
      $out['results'] = array_values($data);
     }
  return $out;
 }
+// All user
 public function actionAllusers() {
     $q = Yii::$app->request->get('q');
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
      if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                 ->where(['like', 'username', $q])
-               
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+         $data = User::all_user_with_param($q);
          $out['results'] = array_values($data);
-    }
-    
-    else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, username AS text')
-             ->from('user')
-        
-            ->limit(20);
-     
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+    }else{
+        $data = User::all_user();
      $out['results'] = array_values($data);
     }
  return $out;
 }
+// All customer
 public function actionAllcustomers() {
     $q = Yii::$app->request->get('q');
-  //  $id = Yii::$app->request->get('id');
-    //$type = Yii::$app->request->get('type');
-
- 
-  
  \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
  $out = ['results' => ['id' => '', 'text' => '']];
      if (!is_null($q)) {
-       $query = new \yii\db\Query();
-         $query->select('id as id, username AS text')
-                 ->from('user')
-                 ->where(['like', 'username', $q])
-                 ->andWhere(['user_level_id'=>Null])
-                 ->andWhere(['parent_id'=>Null])
-                ->limit(20);
-         
-         $command = $query->createCommand();
-         $data = $command->queryAll();
-         // if($data){
+         $data = \common\models\Customer::all_customer_with_param($q);
          $out['results'] = array_values($data);
-    }
-    
-    else{
-     $query = new \yii\db\Query();
-     $query->select('id as id, username AS text')
-             ->from('user')
-             ->where(['user_level_id'=>Null])
-             ->andWhere(['parent_id'=>Null])
-            ->limit(20);
-     
-     $command = $query->createCommand();
-     $data = $command->queryAll();
-     // if($data){
+    }else{
+         $data = \common\models\Customer::all_customer();
      $out['results'] = array_values($data);
     }
  return $out;

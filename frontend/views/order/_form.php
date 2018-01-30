@@ -37,7 +37,7 @@ if(isset($Role['super_admin'])){
         ?>
     <div class="row">
         <div class="col-md-4">
-        <?= Yii::t('app', 'Type') ?>
+        Type
         </div>
         <div class="col-md-8">
         <?= $form->field($model, 'order_type')->dropdownList([
@@ -301,26 +301,26 @@ var typeone = $("#order-child_level").val();
     </div>
 </div>
 
-<!-- <div class="row">
+<div class="row">
     <div class="col-md-4">
-     <?php // Yii::t('app', 'Select Shipper')?>
+     <?= Yii::t('app', 'Select Shipper')?>
     </div>
     <div class="col-md-8">
-    <?php // $form->field($model, 'shipper')->radioList([
-              //  1 => 'EMS', 
+    <?= $form->field($model, 'shipper')->radioList([
+                1 => 'EMS', 
               
-           // ])->label(false); ?>
+            ])->label(false); ?>
     </div>
-</div> -->
+</div>
 
-<!-- <div class="row">
+<div class="row">
     <div class="col-md-4">
     COD
     </div>
     <div class="col-md-8">
-    <?php // $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
+    <?= $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
     </div>
-</div> -->
+</div>
 
 <div class="row">
     <div class="col-md-4">
@@ -338,7 +338,7 @@ var typeone = $("#order-child_level").val();
     <?php 
               //$model->payment_method_for_rent = '1';
 echo $form->field($model, 'payment_method')->radioList([
-    // '1' => 'Credit Card',
+    '1' => 'Credit Card',
     '2' => 'Cash on Delivery',
     '3' => 'Bank Transfer',
 ])->label(false);
@@ -423,9 +423,9 @@ echo $form->field($model, 'payment_method')->radioList([
     </div>
          <?php }?>   
 
-      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'entity_type')->textInput(['maxlength' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
+      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
  <?php if(Yii::$app->user->isGuest){ ?>
     <?php 
@@ -605,7 +605,7 @@ jQuery(document).ready(function() {
         }
         });
       }else{
-      
+        if (parseInt($('#order-orde').val()) >= parseInt($('#order-entity_type').val())){
       if($('#order-entity_type').val()){
             $(".noproduct").hide();
     
@@ -616,7 +616,12 @@ jQuery(document).ready(function() {
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>the value can not empty and must be less then stock amount</h5>");
         }
-       
+       }else{
+        $(".noproduct").show();
+     $(".noproduct").html("<h5 style='text-align:center;color:red;'>OO no man this exceed the stock </h5>");
+     $('#order-entity_type').val('');
+
+       }
       
         }
         });

@@ -55,4 +55,25 @@ class Customer extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
         ];
     }
+    public static function all_customer_with_param($q){
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['like', 'username', $q])
+                ->andWhere(['user_level_id'=>Null])
+                ->andWhere(['parent_id'=>Null])
+               ->limit(20);
+        $command = $query->createCommand();
+       return $data = $command->queryAll();
+    }
+    public static function all_customer(){
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['user_level_id'=>Null])
+                ->andWhere(['parent_id'=>Null])
+               ->limit(20);
+        $command = $query->createCommand();
+     return   $data = $command->queryAll();
+    }
 }

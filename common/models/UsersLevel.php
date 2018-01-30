@@ -65,11 +65,47 @@ class UsersLevel extends \yii\db\ActiveRecord
     $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
  return $value;
 }
+public static function all_level_seach($q){
+    $query = new \yii\db\Query();
+    $query->select('id as id, name AS text')
+            ->from('users_level')
+            ->where(['like', 'name', $q])
+            ->andWhere(['!=', 'max_user', '-1'])
+           ->limit(20);
+    $command = $query->createCommand();
+    return $data = $command->queryAll();
+}
+public static function all_level_with_param($q,$type,$company_user){
+    $query = new \yii\db\Query();
+    $query->select('id as id, name AS text')
+            ->from('users_level')
+            ->where(['like', 'name', $q]);
+            if($company_user == '1'){
+               $query->andWhere(['>=', 'parent_id', $type]);
+            }else{
+               $query->andWhere(['=', 'parent_id', $type]);
+            }
+          $query->limit(20);
+    $command = $query->createCommand();
+   return $data = $command->queryAll();
+}
+public static function all_levels($type,$company_user){
+    $query = new \yii\db\Query();
+    $query->select('id as id, name AS text')
+            ->from('users_level');
+            if($company_user == '1'){
+               $query->andWhere(['>=', 'parent_id', $type]);
+            }else{
+               $query->andWhere(['=', 'parent_id', $type]);
+            }
+            $query->limit(20);
+    $command = $query->createCommand();
+   return  $data = $command->queryAll();
+}
     public static function getlevel(){
        $parent_id =  Yii::$app->user->identity->user_level_id;
         $data= UsersLevel::find()->where(['=','parent_id',$parent_id])->all();
         $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
-     
      return $value;
   }
 }
