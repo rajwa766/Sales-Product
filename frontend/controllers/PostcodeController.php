@@ -2,12 +2,12 @@
 
 namespace frontend\controllers;
 
-use Yii;
 use common\models\Postcode;
 use common\models\PostcodeSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * PostcodeController implements the CRUD actions for Postcode model.
@@ -94,14 +94,12 @@ class PostcodeController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionAllcode() {
+    public function actionAllcode()
+    {
         $q = Yii::$app->request->get('q');
-     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-       $out = ['results' => ['id' => '', 'text' => '']];
-        $data = \common\models\Postcode::get_all_codes($q);
-        $out['results'] = array_values($data);
-        return $out;
- }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return \common\models\Postcode::getCodes($q);
+    }
     /**
      * Deletes an existing Postcode model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

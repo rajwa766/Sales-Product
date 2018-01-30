@@ -45,7 +45,8 @@ class Postcode extends \yii\db\ActiveRecord
             'zip' => Yii::t('app', 'Zip'),
         ];
     }
-    public static function get_all_codes($q){
+    public static function getCodes($q){
+        $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, zip AS text')
                 ->from('postcode');
@@ -53,7 +54,9 @@ class Postcode extends \yii\db\ActiveRecord
                 $query->where(['like', 'province', $q]);
                 $query->limit(20);
         $command = $query->createCommand();
-      return  $data = $command->queryAll();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
        
     }
 }
