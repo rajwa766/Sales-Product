@@ -83,7 +83,7 @@ $RoleName= array_keys($Role)[0];
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/parentuser',
+                'url' => '../user/parentuser',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
             ],
@@ -114,7 +114,7 @@ $RoleName= array_keys($Role)[0];
                   'allowClear' => true,
                   //'autocomplete' => true,
                   'ajax' => [
-                      'url' => '../order/parentuseradmin',
+                      'url' => '../order/parentuser',
                       'dataType' => 'json',
                       'data' => new \yii\web\JsExpression('function(params) { 
                           var parent = $("#parent_sected_user").val();

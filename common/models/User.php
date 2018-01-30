@@ -278,8 +278,7 @@ class User extends ActiveRecord implements IdentityInterface {
                 ->where(['=', 'user_level_id', $type]);
         if (!is_null($q))
             $query->andWhere(['like', 'username', $q]);
-        $query->andWhere(['=', 'user_level_id', $type]);
-        if ($type != '1')
+        if ($type != '1' && !is_null($company_user))
             $query->andWhere(['=', 'company_user', $company_user]);
         $query->limit(20);
         $command = $query->createCommand();
@@ -287,7 +286,28 @@ class User extends ActiveRecord implements IdentityInterface {
         $out['results'] = array_values($data);
         return $out;
     }
+  public static function getParentUserAdmin($q, $type, $parent) {
+       if(empty($type)){
+        return [];
+    }
+     if(empty($typeone)){
+        return [];
+    }
+       $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                  ->where(['=', 'user_level_id', $type]);
+if(!(is_null($q)))
+               $query->andWhere(['like', 'username', $q]);
+                $query->andWhere(['=', 'parent_id', $parent])
+                ->limit(20);
+        $command = $query->createCommand();
+         $data = $command->queryAll();
+              $out['results'] = array_values($data);
+        return $out;
 
+    }
     public static function getAllUsers($q) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
@@ -387,28 +407,25 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);
     }
 
-    public static function parent_user_for_admin_with_param($q, $type, $parent) {
+    public static function getParent($q, $type, $parent) {
+         if(empty($type)){
+        return [];
+    }
+         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
                 ->from('user')
-                ->where(['like', 'username', $q])
-                ->andWhere(['=', 'user_level_id', $type])
-                ->andWhere(['=', 'parent_id', $parent])
+         ->where(['=', 'user_level_id', $type]);
+             if(!is_null($q))
+                $query->andWhere(['like', 'username', $q]);
+                $query->andWhere(['=', 'parent_id', $parent])
                 ->limit(20);
         $command = $query->createCommand();
-        return $data = $command->queryAll();
+         $data = $command->queryAll();
+             $out['results'] = array_values($data);
+return $out;
     }
 
-    public static function parent_user_for_admin($type, $parent) {
-        $query = new \yii\db\Query();
-        $query->select('id as id, username AS text')
-                ->from('user')
-                ->where(['=', 'user_level_id', $type])
-                ->andWhere(['=', 'parent_id', $parent])
-                ->limit(20);
-        $command = $query->createCommand();
-        return $data = $command->queryAll();
-    }
 
     public static function CreateCustomer($model) {
         $auth = \Yii::$app->authManager;

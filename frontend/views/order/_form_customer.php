@@ -109,7 +109,7 @@ if(isset($Role['super_admin'])){
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/parentuser',
+                'url' => '../user/parentuser',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
             ],

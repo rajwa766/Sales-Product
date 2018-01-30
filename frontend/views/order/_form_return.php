@@ -77,6 +77,7 @@ $RoleName= array_keys($Role)[0];
     </div>
     <div class="col-md-8">
        <?php
+       
        $user_id = Yii::$app->user->getId();
        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
        if(isset($Role['super_admin'])){
@@ -87,7 +88,7 @@ $RoleName= array_keys($Role)[0];
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/parentuser',
+                'url' => '../user/parentuser',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
             ],
@@ -232,7 +233,7 @@ var typeone = $("#order-child_level").val();
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../order/parentuser',
+                'url' => '../user/parentuser',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-request_user_level").val(); return {q:params.term,type:type}; }')
             ],
