@@ -36,9 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
   
         <div class="col-md-4 text-right">
+        </div>
+        <div class="col-md-12">
         <?php
      $items = array();
      $saj =array();
+   
     foreach($model->images as $gallery){
       $saj[] = [
         'url' => \yii\helpers\Url::to('@web/uploads/'.$gallery->name, true),
@@ -49,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
   } 
   // var_dump($saj);  
   $items = $saj; 
-    
+
 
 ?>
 <?= dosamigos\gallery\Gallery::widget(['items' => $items]);?>

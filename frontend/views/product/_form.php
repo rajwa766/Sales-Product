@@ -33,11 +33,16 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
+    <?php if($model->isNewRecord){
+$all_images = '';
+    }
+    ?>
     <?=
-                $form->field($model, 'image')->widget(FileInput::classname(), [
+                $form->field($model, 'image[]')->widget(FileInput::classname(), [
+                    'options' => ['accept' => 'image/*','multiple' => true],
                     'pluginOptions' => [
                         'showUpload' => true,
-                     
+                        'initialPreview'=>$all_images,
                         'overwriteInitial' => false,
                     ],
                 ]);

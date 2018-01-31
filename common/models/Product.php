@@ -1,9 +1,9 @@
 <?php
 
 namespace common\models;
-
+use yii\helpers\Html;
 use Yii;
-
+use yii\web\UploadedFile;
 /**
  * This is the model class for table "product".
  *
@@ -105,7 +105,7 @@ class Product extends \yii\db\ActiveRecord
                 }
     }
   }
-public static function updateProduct($model){
+public static function updateProduct($model,$product_old_images){
     $photo = UploadedFile::getInstances($model, 'image');
     if ($photo) {
         $command = Yii::$app->db->createCommand()
@@ -114,5 +114,13 @@ public static function updateProduct($model){
         $save_images = \common\models\Image::save_images($model->id,$photo);
     }
     return true;
+}
+public static function imgaesGallery($product_old_images){
+    foreach ($product_old_images as $image) {
+        $baseurl = \Yii::$app->request->BaseUrl;
+        $image_url = $baseurl.'/uploads/'.$image->name;    
+        $all_images[] = Html::img("$image_url",  ['class'=>'file-preview-image']);
+    }
+    return $all_images;
 }
 }

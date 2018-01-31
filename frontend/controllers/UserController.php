@@ -227,8 +227,8 @@ class UserController extends Controller {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
             $oldmodel = $this->findModel($id);
-            $changelog_entry = \common\models\ChangeLog::insert_data($oldmodel);
-            $model->save();
+            $updateUser = User::updateUser($model,$oldmodel);
+           
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

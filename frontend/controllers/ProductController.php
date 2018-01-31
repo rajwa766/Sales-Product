@@ -82,12 +82,19 @@ class ProductController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
+        $product_old_images = \common\models\Image::find()->where(['=','product_id',$model->id])->all();
+        if($product_old_images){
+            $all_images = Product::imgaesGallery($product_old_images);
+        }else{
+            $all_images ='';
+        } 
         if ($model->load(Yii::$app->request->post())) {
-            $updateProduct = Product::updateProduct($model);
+            $updateProduct = Product::updateProduct($model,$product_old_images);
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('update', [
                     'model' => $model,
+                    'all_images' => $all_images,
         ]);
     }
 

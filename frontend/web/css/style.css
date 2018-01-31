@@ -181,8 +181,8 @@ body {
     /*color: rgba(118, 118, 118, 1.0);
     color: #333;
     font-family: 'Open Sans', Arial, Helvetica, sans-serif;*/
-	color: #333;
-	font-family: 'Raleway';
+    color: #333;
+    font-family: 'Raleway';
     font-size: 14px;
     padding: 0px !important;
     margin: 0px !important;
@@ -213,6 +213,7 @@ body.boxed .page-topbar {
 label {
     font-weight: 400;
 }
+
 
 /*body *{  vertical-align: top; }*/
 
@@ -817,6 +818,15 @@ a:focus {
     max-width: 180px;
     height: auto;
     padding: 0px;
+}
+
+.kv-file-content img {
+    width: 213px;
+    height: 160px
+}
+
+.gallery-item img {
+    width: 25%;
 }
 
 .page-topbar li .dropdown-menu.profile li {
@@ -1860,8 +1870,8 @@ textarea,
 .btn.btn-primary {
     /*background: rgba(31, 181, 172, 1.0);
     color: #ffffff;*/
-	background: rgb(230, 185, 71);
-	color: #333;
+    background: rgb(230, 185, 71);
+    color: #333;
 }
 
 .btn.btn-secondary {
@@ -8825,9 +8835,9 @@ border-left: 3px solid transparent;
 .page-topbar .logo-area {
     /*background-image: url('../images/logo.png');
     background-repeat: no-repeat;*/
-	background-image: url('http://project-demos.com/logo-small.png');
-	background-repeat: no-repeat;
-	background-position: left;
+    background-image: url('http://project-demos.com/logo-small.png');
+    background-repeat: no-repeat;
+    background-position: left;
 }
 
 .sidebar_shift .title_sles {
@@ -9557,20 +9567,20 @@ border-left: 3px solid transparent;
 .jsgrid-search-mode-button {
     display: none;
 } */
-.wrap
-{
+
+.wrap {
     min-height: 100vh;
 }
-.language img
-{
+
+.language img {
     width: 15px;
     height: 15px;
     margin-right: 10px;
 }
-.main-container .img-responsive
-{
+
+.main-container .img-responsive {
     width: 200px;
-    height:200px;
+    height: 200px;
     margin: 0 auto;
     padding-bottom: 10px;
 }
@@ -9605,14 +9615,14 @@ h1,
     font-size: 22px;
     padding: 10px;
     font-family: Oswald, Helvetica, Arial, sans-serif;*/
-	font-size: 30px;
-	background-color: transparent;
-	font-weight: 400;
-	padding: 0;
-	text-transform: uppercase;
-	font-family: Oswald, Helvetica, Arial, sans-serif;
-	color: rgba(118, 118, 118, 1.0);
-	margin-bottom: 15px;
+    font-size: 30px;
+    background-color: transparent;
+    font-weight: 400;
+    padding: 0;
+    text-transform: uppercase;
+    font-family: Oswald, Helvetica, Arial, sans-serif;
+    color: rgba(118, 118, 118, 1.0);
+    margin-bottom: 15px;
 }
 
 .order-views {
@@ -9644,8 +9654,8 @@ h1,
 
 .btn.btn-success {
     /*background-color: #1fb5ac;*/
-	background-color: #e1b451; 
-	color: #333;
+    background-color: #e1b451;
+    color: #333;
 }
 
 .order-index {
@@ -9667,16 +9677,16 @@ h1,
 .orders-panel h3 {
     /*background-color: #1fb5ac;
     color: #fff;*/
-	background-color: #e1b451;
-	color: #333;
-   font-weight: 600;
-	width: 100%;
-	margin: 0 auto;
-	padding: 10px;
-	border-top-right-radius: 7px;
-	border-top-left-radius: 7px;
-	font-family: 'Raleway';
-	font-size: 16px;
+    background-color: #e1b451;
+    color: #333;
+    font-weight: 600;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+    font-family: 'Raleway';
+    font-size: 16px;
 }
 
 .order_detail .dropdown {
@@ -9698,9 +9708,9 @@ h1,
     height: 44px;
     font-size: 20px;
 }
-.order-settings
-{
-    margin-bottom:20px;
+
+.order-settings {
+    margin-bottom: 20px;
 }
 
 .customer-detail {}
@@ -9755,34 +9765,32 @@ h1,
     margin-top: 10px !important;
 }
 
-.footer
-{
-   padding:10px;
-   color: #fff;
+.footer {
+    padding: 10px;
+    color: #fff;
     background-color: #121212;
     text-align: center;
-   width: 100%;
+    width: 100%;
 }
 
-.view-product
-{
-    padding:20px;
- 
+.view-product {
+    padding: 20px;
 }
 
-.view-product ul
-{
+.view-product ul {
     text-align: left;
     list-style: none;
 }
-.view-product ul li
-{
+
+.view-product ul li {
     line-height: 30px;
 }
-.view-product .imge-responsive
-{
+
+.view-product .imge-responsive {
     box-shadow: 1px 1px 1px 1px #c2c2c2;
 }
+
+
 /*----------------------------------------
   Widget - User Profile Tile
 ------------------------------------------*/

@@ -121,7 +121,7 @@ use kartik\file\FileInput;
                     'pluginOptions' => [
                         'showUpload' => true,
                         'initialPreview' => [
-                            $model->profile ? Html::img(Yii::$app->request->baseUrl . '../../uploads/' . $model->profile) : null, // checks the models to display the preview
+                            $model->profile ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->profile) : null, // checks the models to display the preview
                         ],
                         'overwriteInitial' => false,
                     ],
@@ -151,10 +151,9 @@ $parent_user = \common\models\User::findOne(['id'=>$model->parent_id]);
         <div class="col-md-8">
 <?php
 echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-    'data' => common\models\UsersLevel::getalllevel(),
+    'data' => common\models\UsersLevel::getAllLevels(),
      'value' =>$user_level_name['id'],
     'initValueText' => $user_level_name['name'],
-  
     'theme' => Select2::THEME_BOOTSTRAP,
     'options' => ['placeholder' => 'Select a current user Level ...'],
     'pluginOptions' => [

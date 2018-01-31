@@ -353,7 +353,15 @@ class User extends ActiveRecord implements IdentityInterface {
     public function getUserLevel() {
         return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);
     }
-
+public static function updateUser($model,$oldmodel){
+      //upload image
+      $photo = UploadedFile::getInstance($model, 'profile');
+      if ($photo !== null ) {
+        $profile_save = User::profile_save($photo, $model);
+      }
+    $changelog_entry = \common\models\ChangeLog::insertData($oldmodel);
+  $model->save();
+}
     public static function getParent($q, $type, $parent) {
          if(empty($type)){
         return [];

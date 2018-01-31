@@ -69,7 +69,7 @@ class ChangeLog extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    public static function insert_data($model){
+    public static function insertData($model){
 $change_log = new ChangeLog();
 $change_log->isNewRecord = true;
 $change_log->id = null;
