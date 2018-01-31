@@ -268,6 +268,7 @@ class User extends ActiveRecord implements IdentityInterface {
     }
 
     public static function getAllParentUser($q, $type, $company_user) {
+          
         if (empty($type)) {
             return [];
         }
@@ -284,6 +285,7 @@ class User extends ActiveRecord implements IdentityInterface {
         $command = $query->createCommand();
         $data = $command->queryAll();
         $out['results'] = array_values($data);
+      
         return $out;
     }
   public static function getParentUserAdmin($q, $type, $parent) {
@@ -411,6 +413,7 @@ if(!(is_null($q)))
          if(empty($type)){
         return [];
     }
+  
          $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')

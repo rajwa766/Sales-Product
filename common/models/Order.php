@@ -121,8 +121,8 @@ class Order extends \yii\db\ActiveRecord {
             'order_request_id' => Yii::t('app', 'Order Request ID'),
             'quantity' => Yii::t('app', 'Quantity'),
             'requested_date' => Yii::t('app', 'Requested Date'),
-            'total_price' => Yii::t('app', 'Requested Date'),
-            'single_price' => Yii::t('app', 'Requested Date'),
+            'total_price' => Yii::t('app', 'Total Price'),
+            'single_price' => Yii::t('app', 'Unit Price'),
         ];
     }
 

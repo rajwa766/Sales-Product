@@ -59,7 +59,7 @@ class AppAsset extends AssetBundle
         'js/src/fields/jsgrid.field.control.js',
         'js/db_items.js',
         'js/db_export_vehicle.js',
-        // jsgrid above
+         'js/custom.js',
     //    'js/jquery-1.11.2.min.js',
         'js/jquery.easing.min.js',
         'js/bootstrap.min.js',
