@@ -266,7 +266,25 @@ class User extends ActiveRecord implements IdentityInterface {
         $out['results'] = array_values($data);
         return $out;
     }
-
+    public static function getAllChildUsers($q, $type) {
+          
+        if (empty($type)) {
+            return [];
+        }
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, username AS text')
+                ->from('user')
+                ->where(['=', 'parent_id', $type]);
+        if (!is_null($q))
+            $query->andWhere(['like', 'username', $q]);
+        $query->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+      
+        return $out;
+    }
     public static function getAllParentUser($q, $type, $company_user) {
           
         if (empty($type)) {
