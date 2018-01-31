@@ -14,18 +14,16 @@ use yii\db\Query;
 <h3><?= Yii::t('app', 'Shipping Address') ?>
 </h3>
 
-<div class="row first-row email_row">
+<div class="row first-row">
     <div class="col-md-4">
         <?= Yii::t('app', 'Email') ?>
     </div>
     <div class="col-md-8">
-
         <?= $form->field($model, 'email')->textInput()->label(false) ?>
-
     </div>
 </div>
 
-<div class="row first-row">
+<div class="row">
     <div class="col-md-4">
         Mobile
     </div>
@@ -38,22 +36,11 @@ use yii\db\Query;
 
 <div class="row">
     <div class="col-md-4">
-        <?= Yii::t('app', 'Phone') ?>
-    </div>
-    <div class="col-md-8">
-
-        <?= $form->field($model, 'phone_no')->textInput()->label(false) ?>
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
         <?= Yii::t('app', 'District') ?>
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'district')->textInput()->label(false) ?>
+        <?= $form->field($model, 'district')->textInput(['readonly' => true,])->label(false) ?>
 
     </div>
 </div>
@@ -64,21 +51,11 @@ use yii\db\Query;
     </div>
     <div class="col-md-8">
 
-        <?= $form->field($model, 'province')->textInput()->label(false) ?>
+        <?= $form->field($model, 'province')->textInput(['readonly' => true,])->label(false) ?>
 
     </div>
 </div>
 
-<!-- <div class="row">
-    <div class="col-md-4">
-    Postal Code
-    </div>
-    <div class="col-md-8">
-   
-<?php // $form->field($model, 'postal_code')->textInput()->label(false)  ?>
-     
-    </div>
-</div> -->
 
 <div class="row">
     <div class="col-md-4">
@@ -99,7 +76,7 @@ use yii\db\Query;
     <div class="col-md-8">
 
 
-        <?= $form->field($model, 'country')->textInput()->label(false) ?>
+        <?= $form->field($model, 'country')->textInput(['readonly' => true, 'value' => 'Thailand'])->label(false) ?>
 
     </div>
 </div>

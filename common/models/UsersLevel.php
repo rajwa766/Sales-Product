@@ -52,29 +52,24 @@ class UsersLevel extends \yii\db\ActiveRecord {
         return $this->hasMany(UserProductLevel::className(), ['user_level_id' => 'id']);
     }
 
-    public static function getalllevel() {
+    public static function getAllLevels() {
         $data = UsersLevel::find()->where(['!=', 'max_user', '-1'])->all();
         $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
         return $value;
     }
 
-    public static function getalllevel_with_seller() {
-        $data = UsersLevel::find()->all();
-        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
-        return $value;
-    }
-
-    public static function getCustomers($q, $type) {
-        if (empty($type)) {
-            return [];
-        }
+    public static function getLevels($q,$parent_id=null,$max_user=null) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, name AS text')
                 ->from('users_level')
-                ->where(['=', 'parent_id', $type]);
+                ->where('true');
         if (!is_null($q))
             $query->andWhere(['like', 'name', $q]);
+        if (!is_null($max_user))
+            $query->andWhere(['=', 'max_user', $max_user]);
+        if (!is_null($parent_id))
+            $query->andWhere(['=', 'parent_id', $parent_id]);
         $query->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();
@@ -82,50 +77,6 @@ class UsersLevel extends \yii\db\ActiveRecord {
         return $out;
     }
 
-
-
-    public static function allLevelSearch($q) {
-        $out = ['results' => ['id' => '', 'text' => '']];
-        $query = new \yii\db\Query();
-        $query->select('id as id, name AS text')
-                ->from('users_level')
-                ->where(['!=', 'max_user', '-1']);
-        if (!is_null($q))
-            $query->andWhere(['like', 'name', $q]);
-        $query->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-        return $out;
-    }
-
-    public static function getAllLevels($q, $type, $company_user) {
-        if (empty($type)) {
-            return [];
-        }
-        $out = ['results' => ['id' => '', 'text' => '']];
-        $query = new \yii\db\Query();
-        $query->select('id as id, name AS text')
-                ->from('users_level');
-        if (!is_null($q))
-            $query->where(['like', 'name', $q]);
-        if ($company_user == '1') {
-            $query->andWhere(['>=', 'parent_id', $type]);
-        } else {
-            $query->andWhere(['=', 'parent_id', $type]);
-        }
-        $query->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-        return $out;
-    }
-
-    public static function getlevel() {
-        $parent_id = Yii::$app->user->identity->user_level_id;
-        $data = UsersLevel::find()->where(['=', 'parent_id', $parent_id])->all();
-        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
-        return $value;
-    }
+  
 
 }

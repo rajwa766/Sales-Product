@@ -18,7 +18,7 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['id', 'status',  'entity_id', 'entity_type','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer'], 'integer'],
+            [['id', 'status','all_level','parent_user','child_user','child_level','request_user_level','rquest_customer'], 'integer'],
             [['order_ref_no', 'shipper','order_request_id', 'user_id','cod', 'additional_requirements', 'file', 'requested_date','order_type','request_agent_name','created_by'], 'safe'],
         ];
     }
@@ -63,8 +63,6 @@ class OrderSearch extends Order
             'user_id' => $this->user_id,
             'o.status' => $this->status,
             'order_request_id' => $this->order_request_id,
-            'entity_id' => $this->entity_id,
-            'entity_type' => $this->entity_type,
             'requested_date' => $this->requested_date,
         ]);
       

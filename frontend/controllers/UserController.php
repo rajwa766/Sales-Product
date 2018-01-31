@@ -242,29 +242,14 @@ class UserController extends Controller {
         return Json::encode($user_detail, $asArray = true);
     }
 
-    // show all level
-    public function actionAlllevel($q = null, $id = null) {
-        $q = Yii::$app->request->get('q');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::allLevelSearch($q);
-    }
-
-    // on update or upgrade the user level
-    public function actionParentusersOnupdate() {
-        $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
-        $company_user = Yii::$app->request->get('company_user');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return User::getParentUsers($q, $type);
-    }
-
 //  parent user of selected user
-    public function actionParentuser() {
+    public function actionGetUsers() {
         $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
+        $user_level = Yii::$app->request->get('user_level');
         $company_user = Yii::$app->request->get('company_user');
+        $parent_id = Yii::$app->request->get('parent_id');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\User::getAllParentUser($q, $type, $company_user);
+        return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user);
     }
 //child user of selected user
 public function actionChildusers() {
@@ -274,27 +259,14 @@ public function actionChildusers() {
         return \common\models\User::getAllChildUsers($q, $type);
     }
 // all level
-    public function actionLevel() {
+    public function actionGetLevels() {
         $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
-        $company_user = Yii::$app->request->get('company_user');
+        $parent_id = Yii::$app->request->get('parent_id');
+        $max_user = Yii::$app->request->get('max_user');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getAllLevels($q, $type, $company_user);
+        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user);
     }
 
-// all user 
-    public function actionAllusers() {
-        $q = Yii::$app->request->get('q');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return User::getAllUsers($q);
-    }
-
-//  all customer
-    public function actionAllcustomers() {
-        $q = Yii::$app->request->get('q');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\Customer::getAllCustomer($q);
-    }
 
     /**
      * Deletes an existing User model.

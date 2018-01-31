@@ -9654,17 +9654,17 @@ h1,
     border-radius: 7px !important;
 }
 
-.order-panel {
+.orders-panel {
     border: 1px solid #e1b451;
     padding: 0px;
     border-radius: 7px;
 }
 
-.order-panel .first-row {
+.orders-panel .first-row {
     padding-top: 20px;
 }
 
-.order-panel h3 {
+.orders-panel h3 {
     /*background-color: #1fb5ac;
     color: #fff;*/
 	background-color: #e1b451;
@@ -9677,27 +9677,6 @@ h1,
 	border-top-left-radius: 7px;
 	font-family: 'Raleway';
 	font-size: 16px;
-}
-
-.order_detail {
-    border: 1px solid #1fb5ac;
-    padding: 0px;
-    border-radius: 7px;
-}
-
-.order_detail h3 {
-    background-color: #1fb5ac;
-    color: #fff;
-    font-weight: 500;
-    width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
-}
-
-.order_detail .first-row {
-    padding-top: 20px;
 }
 
 .order_detail .dropdown {
@@ -9718,6 +9697,10 @@ h1,
     width: 84px;
     height: 44px;
     font-size: 20px;
+}
+.order-settings
+{
+    margin-bottom:20px;
 }
 
 .customer-detail {}

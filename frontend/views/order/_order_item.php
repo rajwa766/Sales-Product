@@ -10,10 +10,6 @@ use yii\db\Query;
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
 /* @var $form yii\widgets\ActiveForm */
-$user_id = Yii::$app->user->getId();
-$Role = Yii::$app->authManager->getRolesByUser($user_id);
-$Role = Yii::$app->authManager->getRolesByUser($user_id);
-$RoleName = array_keys($Role)[0];
 ?>
 
 <h3>Order Items</h3>
@@ -37,7 +33,7 @@ $RoleName = array_keys($Role)[0];
                             ->groupby(['product_id'])
                             ->one();
                     ?>
-                    <input type="text" id="order-orde" readonly="true" class="form-control" value="<?= $order_quantity['remaning_stock'] ?>" name="Order[total_stock]" maxlength="45">
+                    <input type="text" id="available-stock" readonly="true" class="form-control" value="<?= $order_quantity['remaning_stock'] ?>" name="Order[total_stock]" maxlength="45">
 
                     <?php
                 } else {

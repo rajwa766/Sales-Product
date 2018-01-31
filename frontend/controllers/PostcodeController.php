@@ -94,7 +94,7 @@ class PostcodeController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionAllcode()
+    public function actionAllCode()
     {
         $q = Yii::$app->request->get('q');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
