@@ -26,6 +26,11 @@ use Yii;
  */
 class Gl extends \yii\db\ActiveRecord
 {
+    public $user_level;
+    public $receivable_user;
+        public $payable_user;
+public $recieveable_amount;
+
     /**
      * @inheritdoc
      */
@@ -55,9 +60,9 @@ class Gl extends \yii\db\ActiveRecord
     {
         return [
             [['created_by', 'updated_by', 'payment_detail_id', 'order_id', 'account_id'], 'integer'],
-            [['payment_detail_id', 'order_id', 'account_id','hit_account_id'], 'required'],
+            [['payment_detail_id',  'account_id','hit_account_id'], 'required'],
             [['amount'], 'string', 'max' => 45],
-            [['created_at', 'updated_at', ], 'safe'],
+            [['created_at', 'updated_at','receivable_user','payable_user', ], 'safe'],
             
             [['account_id'], 'exist', 'skipOnError' => true, 'targetClass' => Account::className(), 'targetAttribute' => ['account_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -109,6 +114,7 @@ class Gl extends \yii\db\ActiveRecord
     public static function create_gl($amount,$user_id,$resquester_id,$order_id,$payment_method){
         $receivable_account=\common\models\Account::findOne(['user_id'=>$user_id,'account_type'=>1]);
         $payable_account=\common\models\Account::findOne(['user_id'=>$resquester_id,'account_type'=>2]);
+        
         if(!empty($receivable_account) && !empty($payable_account))
         {
             for($i=0;$i<2;$i++)
@@ -130,10 +136,26 @@ class Gl extends \yii\db\ActiveRecord
                 }
                 $gl->payment_detail_id = $payment_method;
                 $gl->save();
+                
+                  if($i==0)
+                {
+                    $recievable_id = $gl->id;
+                }
             }
          
         }
-       
+     
+       return $recievable_id;
+    }
+    public static function totalRecieveable($receivable_account_id,$payable_account_id){
+               $gl  = (new Query()) 
+       ->select('sum(amount) as amount')
+       ->from('gl')
+       ->where(['account_id'=>$receivable_account_id])
+       ->andWhere(['hit_account_id'=>$payable_account_id])
+      ->one();
+       return $gl['amount'];
+ 
     }
     public static function get_filtered_result($user_id,$fromDate,$toDate,$account_type){
            $gl  = (new Query()) 

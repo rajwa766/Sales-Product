@@ -251,7 +251,13 @@ class UserController extends Controller {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user);
     }
-
+//child user of selected user
+public function actionChildusers() {
+        $q = Yii::$app->request->get('q');
+        $type = Yii::$app->request->get('type');
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return \common\models\User::getAllChildUsers($q, $type);
+    }
 // all level
     public function actionGetLevels() {
         $q = Yii::$app->request->get('q');
