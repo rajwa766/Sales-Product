@@ -118,5 +118,10 @@ class ProductController extends Controller {
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+    public function actionGetProduct($id) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+       return  Product::findOne($id);
+    }
+
 
 }

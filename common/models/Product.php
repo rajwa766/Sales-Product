@@ -39,7 +39,7 @@ class Product extends \yii\db\ActiveRecord
             [['category_id'], 'integer'],
             [['description'], 'string'],
             [['price'], 'number'],
-            [['image'], 'file',  'maxFiles' => 30],
+            [['image'], 'file', 'maxFiles' => 30],
             [['name'], 'string', 'max' => 45],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
@@ -90,29 +90,33 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserProductLevel::className(), ['product_id' => 'id']);
     }
-    public static function getallproduct(){
-        $data= Product::find()->all();
-       
-        $value=(count($data)==0)? [''=>'']: \yii\helpers\ArrayHelper::map($data, 'id','name'); //id = your ID model, name = your caption
+    public static function getallproduct()
+    {
+        $data = Product::find()->all();
 
-     return $value;
-  }
-  public static function CreateProduct($model){
-    if($model->save()){
+        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
+
+        return $value;
+    }
+    public static function CreateProduct($model)
+    {
+        if ($model->save()) {
+            $photo = UploadedFile::getInstances($model, 'image');
+            if ($photo !== null) {
+                $save_images = \common\models\Image::save_images($model->id, $photo);
+            }
+        }
+    }
+    public static function updateProduct($model)
+    {
         $photo = UploadedFile::getInstances($model, 'image');
-      if ($photo !== null) {
-         $save_images = \common\models\Image::save_images($model->id,$photo);
-                }
+        if ($photo) {
+            $command = Yii::$app->db->createCommand()
+                ->delete('image', 'product_id = ' . $model->id)
+                ->execute();
+            $save_images = \common\models\Image::save_images($model->id, $photo);
+        }
+        return true;
     }
-  }
-public static function updateProduct($model){
-    $photo = UploadedFile::getInstances($model, 'image');
-    if ($photo) {
-        $command = Yii::$app->db->createCommand()
-        ->delete('image', 'product_id = '.$model->id)
-        ->execute();
-        $save_images = \common\models\Image::save_images($model->id,$photo);
-    }
-    return true;
-}
+   
 }

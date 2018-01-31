@@ -38,7 +38,7 @@ use yii\db\Query;
                     <?php
                 } else {
                     ?>
-                    <input type="text" id="order-orde" readonly="true" class="form-control" name="Order[total_stock]" maxlength="45">
+                    <input type="text" id="available-stock" readonly="true" class="form-control" name="Order[total_stock]" maxlength="45">
                 <?php }
                 ?>
             </div>
