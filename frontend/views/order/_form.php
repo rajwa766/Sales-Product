@@ -19,6 +19,13 @@ use yii\db\Query;
     }
 </style>
  <?php
+ 
+        $referral_id = Yii::$app->request->get('id');// For Customers
+        $referral_user=null;
+        if(!empty($referral_id))
+        {
+            $referral_user=\common\models\User::findOne(['id'=>$referral_id]);
+        }
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $RoleName='';
@@ -96,6 +103,14 @@ use yii\db\Query;
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
+        <?php
+        if(!empty($referral_user))
+        {
+        ?>
+            $("#order-representative").val("<?= $referral_user['username'] ?>");
+        <?php  
+        }
+        ?>
         $('#order-request_agent_name').on('change', function () {
                 $.post("../stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + $(this).val(), function (data) {
                 $('#available-stock').val(data);
@@ -123,7 +138,7 @@ use yii\db\Query;
                     $('#order-single_price').val(json.price);
                     $('#order-total_price').val(parseFloat($('#order-quantity').val()) * parseFloat(json.price));
                 } else{
-                $(".noproduct").show();
+                    $(".noproduct").show();
                     $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less then  " + json.units + " Units</h5>");
                     $('#order-quantity').val('');
                 }
@@ -131,7 +146,7 @@ use yii\db\Query;
         } else{
             if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
                 if ($('#order-quantity').val()){
-                $(".noproduct").hide();
+                    $(".noproduct").hide();
                     $('#order-single_price').val('760');
                     $('#order-total_price').val($('#order-quantity').val() * 760);
                 } else{

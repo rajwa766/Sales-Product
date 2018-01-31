@@ -78,7 +78,7 @@ return [
          'allowActions' => [
              'site/*',
              'order/customer-create',
-             'postcode/allcode',
+             'postcode/all-code',
              'order/create',
              'order/view',
              

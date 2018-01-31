@@ -254,46 +254,5 @@ class OrderController extends Controller
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
-    public function actionParentuser()
-    {
-        $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
-        $parent = Yii::$app->request->get('parent');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\User::getParent($q, $type, $parent);
-    }
-
-    public function actionLevel()
-    {
-        $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
-        $typeone = Yii::$app->request->get('typeone');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\User::getParentUserAdmin($q, $typeone, $type);
-    }
-
-    public function actionCustomerLevel()
-    {
-        $q = Yii::$app->request->get('q');
-        $type = Yii::$app->request->get('type');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getCustomers($q, $type);
-    }
-
-    public function actionInventoryReports()
-    {
-        $model = new Order();
-        return $this->render('report', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionStatusReports()
-    {
-        $model = new Order();
-        return $this->render('status_report', [
-            'model' => $model,
-        ]);
-    }
-
+   
 }

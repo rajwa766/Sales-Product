@@ -248,75 +248,20 @@ class User extends ActiveRecord implements IdentityInterface {
         }
     }
 
-    public static function getParentUsers($q, $parent_id) {
-        if (empty($type)) {
-            return [];
-        }
-        $level_id = \common\models\UsersLevel::findOne(['id', $type]);
+    public static function getUsers($q, $parent_id=null,$user_level=null,$company_user=null) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
                 ->from('user')
-                ->where(['=', 'user_level_id', $level_id->parent_id]);
+                ->where('true');
         if (!is_null($q))
             $query->andWhere(['like', 'username', $q]);
-        $query->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-        return $out;
-    }
-
-    public static function getAllParentUser($q, $type, $company_user) {
-          
-        if (empty($type)) {
-            return [];
-        }
-        $out = ['results' => ['id' => '', 'text' => '']];
-        $query = new \yii\db\Query();
-        $query->select('id as id, username AS text')
-                ->from('user')
-                ->where(['=', 'user_level_id', $type]);
-        if (!is_null($q))
-            $query->andWhere(['like', 'username', $q]);
-        if ($type != '1' && !is_null($company_user))
+        if (!is_null($parent_id))
+            $query->andWhere(['=', 'parent_id', $parent_id]);
+        if (!is_null($user_level))
+            $query->andWhere(['=', 'user_level_id', $user_level]);
+        if (!is_null($company_user))
             $query->andWhere(['=', 'company_user', $company_user]);
-        $query->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-      
-        return $out;
-    }
-  public static function getParentUserAdmin($q, $type, $parent) {
-       if(empty($type)){
-        return [];
-    }
-     if(empty($parent)){
-        return [];
-    }
-       $out = ['results' => ['id' => '', 'text' => '']];
-        $query = new \yii\db\Query();
-        $query->select('id as id, username AS text')
-                ->from('user')
-                  ->where(['=', 'user_level_id', $type]);
-if(!(is_null($q)))
-               $query->andWhere(['like', 'username', $q]);
-                $query->andWhere(['=', 'parent_id', $parent])
-                ->limit(20);
-        $command = $query->createCommand();
-         $data = $command->queryAll();
-              $out['results'] = array_values($data);
-        return $out;
-
-    }
-    public static function getAllUsers($q) {
-        $out = ['results' => ['id' => '', 'text' => '']];
-        $query = new \yii\db\Query();
-        $query->select('id as id, username AS text')
-                ->from('user');
-        if (!is_null($q))
-            $query->where(['like', 'username', $q]);
         $query->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();

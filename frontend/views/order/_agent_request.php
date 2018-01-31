@@ -16,7 +16,7 @@ use yii\db\Query;
             <div class="col-md-8">
                 <?php
                     echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-                    'data' => common\models\UsersLevel::getalllevel(),
+                    'data' => common\models\UsersLevel::getAllLevels(),
                     'theme' => Select2::THEME_BOOTSTRAP,
                     'options' => ['placeholder' => 'Select a Level  ...'],
                     //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
@@ -42,9 +42,9 @@ use yii\db\Query;
                             'allowClear' => true,
                             //'autocomplete' => true,
                             'ajax' => [
-                                'url' => '../user/parentuser',
+                                'url' => '../user/get-users',
                                 'dataType' => 'json',
-                                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }'),
+                                'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
                             ],
                         ],
                     ])->label(false);
@@ -72,9 +72,9 @@ use yii\db\Query;
                                 'allowClear' => true,
                                 //'autocomplete' => true,
                                 'ajax' => [
-                                    'url' => '../order/customer-level',
+                                    'url' => '../user/get-levels',
                                     'dataType' => 'json',
-                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val(); return {q:params.term,type:type}; }'),
+                                    'data' => new \yii\web\JsExpression('function(params) { var parent_id = $("#order-all_level").val(); return {q:params.term,parent_id:parent_id}; }'),
                                 ],
                             ],
                         ])->label(false);
@@ -102,11 +102,11 @@ use yii\db\Query;
                                 'allowClear' => true,
                                 //'autocomplete' => true,
                                 'ajax' => [
-                                    'url' => '../order/level',
+                                    'url' => '../user/get-users',
                                     'dataType' => 'json',
-                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-parent_user").val();
-                                                                        var typeone = $("#order-child_level").val();
-                                                                        return {q:params.term,type:type,typeone:typeone}; }'),
+                                    'data' => new \yii\web\JsExpression('function(params) { var parent_id = $("#order-parent_user").val();
+                                                                        var user_level = $("#order-child_level").val();
+                                                                        return {q:params.term,parent_id:parent_id,user_level:user_level}; }'),
                                 ],
                             ],
                         ])->label(false);
