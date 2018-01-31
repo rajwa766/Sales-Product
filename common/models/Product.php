@@ -107,16 +107,23 @@ class Product extends \yii\db\ActiveRecord
             }
         }
     }
-    public static function updateProduct($model)
-    {
+  
+    public static function updateProduct($model,$product_old_images){
         $photo = UploadedFile::getInstances($model, 'image');
         if ($photo) {
             $command = Yii::$app->db->createCommand()
-                ->delete('image', 'product_id = ' . $model->id)
-                ->execute();
-            $save_images = \common\models\Image::save_images($model->id, $photo);
+            ->delete('image', 'product_id = '.$model->id)
+            ->execute();
+            $save_images = \common\models\Image::save_images($model->id,$photo);
         }
         return true;
     }
-   
+    public static function imgaesGallery($product_old_images){
+        foreach ($product_old_images as $image) {
+            $baseurl = \Yii::$app->request->BaseUrl;
+            $image_url = $baseurl.'/uploads/'.$image->name;    
+            $all_images[] = Html::img("$image_url",  ['class'=>'file-preview-image']);
+        }
+        return $all_images;
+    }
 }
