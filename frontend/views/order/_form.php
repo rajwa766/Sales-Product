@@ -112,12 +112,7 @@ use yii\db\Query;
         }
         ?>
         $('#order-request_agent_name').on('change', function () {
-                $.post("../stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + $(this).val(), function (data) {
-                $('#available-stock').val(data);
-                var data = $('#order-request_agent_name').select2('data');
-                var user_name=data[0].text;
-                $("#order-representative").val(user_name);
-            });
+                GetUserStock($(this).val());
          });
          $('#order-postal_code').on('change', function () {
                 var data = $('#order-postal_code').select2('data');
@@ -130,35 +125,48 @@ use yii\db\Query;
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            if ($('#order-type').val() == 'Request'){
+            var type = '<?= $type ?>';
+            if (type == 'Request'){
             $.post("../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val(), function (data) {
                 var json = $.parseJSON(data);
                     if (json.price){
-                $(".noproduct").hide();
+                    $(".noproduct").hide();
                     $('#order-single_price').val(json.price);
                     $('#order-total_price').val(parseFloat($('#order-quantity').val()) * parseFloat(json.price));
                 } else{
                     $(".noproduct").show();
-                    $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less then  " + json.units + " Units</h5>");
+                    $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less than  " + json.units + " Units</h5>");
                     $('#order-quantity').val('');
                 }
             });
         } else{
-            if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
-                if ($('#order-quantity').val()){
-                    $(".noproduct").hide();
-                    $('#order-single_price').val('760');
-                    $('#order-total_price').val($('#order-quantity').val() * 760);
-                } else{
-                $(".noproduct").show();
-                    $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less then stock amount</h5>");
+                $.post("../product/get-product?id=1", function (data) {
+               
+                <?php if (!Yii::$app->user->isGuest) { ?>
+                    if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
+                        if ($('#order-quantity').val()){
+                            $(".noproduct").hide();
+                            $('#order-single_price').val(data.price);
+                            $('#order-total_price').val($('#order-quantity').val() * data.price);
+                        } else{
+                        $(".noproduct").show();
+                            $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less than stock.</h5>");
+                        }
+                    } else{
+                        $(".noproduct").show();
+                        $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock </h5>");
+                        $('#order-quantity').val('');
+                    }
+                <?php }
+                else
+                {
+                ?>
+                    $('#order-single_price').val(data.price);
+                    $('#order-total_price').val($('#order-quantity').val() * data.price);
+                <?php
                 }
-            } else{
-                $(".noproduct").show();
-                $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock </h5>");
-                $('#order-quantity').val('');
-            }
-
+                ?>
+            });
         }
     });
     <?php if (!Yii::$app->user->isGuest) { ?>
@@ -193,5 +201,14 @@ use yii\db\Query;
                 jQuery(".order-details").show();
             }
 
+        }
+        function GetUserStock(user_id)
+        {
+            $.post("../stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + user_id, function (data) {
+                $('#available-stock').val(data);
+                var data = $('#order-request_agent_name').select2('data');
+                var user_name=data[0].text;
+                $("#order-representative").val(user_name);
+            });
         }
 </script>
