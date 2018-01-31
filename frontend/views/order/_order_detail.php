@@ -15,42 +15,12 @@ use yii\db\Query;
 <h3>Order Detail</h3>
 <div class="row first-row">
     <div class="col-md-4">
-        <?= Yii::t('app', 'Order Ref/No') ?>
-    </div>
-    <div class="col-md-8">
-        <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
         <?= Yii::t('app', 'Representative') ?>
-
     </div>
     <div class="col-md-8">
-        <?= $form->field($model, 'order_ref_no')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <?= Yii::t('app', 'Select Shipper') ?>
-    </div>
-    <div class="col-md-8">
-        <?=
-        $form->field($model, 'shipper')->radioList([
-            1 => 'EMS',
-        ])->label(false);
-        ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        COD
-    </div>
-    <div class="col-md-8">
-        <?= $form->field($model, 'cod')->textInput(['maxlength' => true])->label(false) ?>
+        <div class="form-group">
+            <input id="order-representative" class="form-control" readonly aria-invalid="false" type="text">
+        </div>
     </div>
 </div>
 

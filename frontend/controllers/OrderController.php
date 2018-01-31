@@ -2,25 +2,25 @@
 
 namespace frontend\controllers;
 
-use Yii;
 use common\models\Order;
 use common\models\OrderSearch;
+use Yii;
+use yii\db\Query;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\db\Query;
-use common\models\StockIn;
-use yii\web\UploadedFile;
 
 /**
  * OrderController implements the CRUD actions for Order model.
  */
-class OrderController extends Controller {
+class OrderController extends Controller
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -35,7 +35,8 @@ class OrderController extends Controller {
      * Lists all Order models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
@@ -44,36 +45,39 @@ class OrderController extends Controller {
             $dataProvider->query->andwhere(['created_by' => Yii::$app->user->identity->id]);
         }
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionPending() {
+    public function actionPending()
+    {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $dataProvider->query->andWhere(['o.status' => '0']);
 
         return $this->render('pending', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionCancel() {
+    public function actionCancel()
+    {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $dataProvider->query->andWhere(['o.status' => '2']);
 
         return $this->render('pending', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionApproved() {
+    public function actionApproved()
+    {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
@@ -86,12 +90,13 @@ class OrderController extends Controller {
             $view = 'index';
         }
         return $this->render('pending', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionTransfer() {
+    public function actionTransfer()
+    {
         $searchModel = new OrderSearch();
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
@@ -109,20 +114,21 @@ class OrderController extends Controller {
         }
 
         return $this->render($view, [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionReturn() {
+    public function actionReturn()
+    {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $dataProvider->query->andWhere(['o.status' => '3']);
 
         return $this->render('return', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -132,9 +138,10 @@ class OrderController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id) {
+    public function actionView($id)
+    {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -143,27 +150,36 @@ class OrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCustomerCreate() {
+    public function actionCustomerCreate()
+    {
         $model = new Order();
         return $this->render('customer_create', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
-    public function actionCreate() {
+    public function actionCreate()
+    {
+        $type=Yii::$app->request->get('type');
+        if(empty($type))
+        {
+            $type="Order";
+        }
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
-        $orderCreate = \common\models\Order::CreateOrder($model);
-        if($orderCreate == 'transaction_complete'){
+            $orderCreate = \common\models\Order::CreateOrder($model);
+            if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
-        }
+            }
         }
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
+            'type'=>$type,
         ]);
     }
 
-    public function actionCreatereturn() {
+    public function actionCreatereturn()
+    {
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
             $orderCreate = \common\models\Order::CreateOrderReturn($model);
@@ -171,11 +187,12 @@ class OrderController extends Controller {
         }
 
         return $this->render('create_return', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
-    public function actionCreatetransfer() {
+    public function actionCreatetransfer()
+    {
         $model = new Order();
 
         if ($model->load(Yii::$app->request->post())) {
@@ -183,7 +200,7 @@ class OrderController extends Controller {
         }
 
         return $this->render('create_transfer', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -194,7 +211,8 @@ class OrderController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -202,7 +220,7 @@ class OrderController extends Controller {
         }
 
         return $this->render('update', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -213,7 +231,8 @@ class OrderController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -226,7 +245,8 @@ class OrderController extends Controller {
      * @return Order the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = Order::findOne($id)) !== null) {
             return $model;
         }
@@ -234,7 +254,8 @@ class OrderController extends Controller {
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
-    public function actionParentuser() {
+    public function actionParentuser()
+    {
         $q = Yii::$app->request->get('q');
         $type = Yii::$app->request->get('type');
         $parent = Yii::$app->request->get('parent');
@@ -242,7 +263,8 @@ class OrderController extends Controller {
         return \common\models\User::getParent($q, $type, $parent);
     }
 
-    public function actionLevel() {
+    public function actionLevel()
+    {
         $q = Yii::$app->request->get('q');
         $type = Yii::$app->request->get('type');
         $typeone = Yii::$app->request->get('typeone');
@@ -250,24 +272,27 @@ class OrderController extends Controller {
         return \common\models\User::getParentUserAdmin($q, $typeone, $type);
     }
 
-    public function actionCustomerLevel() {
+    public function actionCustomerLevel()
+    {
         $q = Yii::$app->request->get('q');
         $type = Yii::$app->request->get('type');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return \common\models\UsersLevel::getCustomers($q, $type);
     }
 
-    public function actionInventoryReports() {
+    public function actionInventoryReports()
+    {
         $model = new Order();
         return $this->render('report', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
-    public function actionStatusReports() {
+    public function actionStatusReports()
+    {
         $model = new Order();
         return $this->render('status_report', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 

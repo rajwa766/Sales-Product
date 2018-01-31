@@ -1,0 +1,123 @@
+<?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use yii\models\order;
+use kartik\file\FileInput;
+use yii\db\Query;
+?>
+<!-- Agent order starts from here-->
+<div class="request-setting">
+    <div class="admin">
+        <div class="row first-row">
+            <div class="col-md-4">
+                <?=Yii::t('app', 'User Level')?>
+            </div>
+            <div class="col-md-8">
+                <?php
+                    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
+                    'data' => common\models\UsersLevel::getalllevel(),
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'options' => ['placeholder' => 'Select a Level  ...'],
+                    //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                    ])->label(false);
+                ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <?=Yii::t('app', 'Parent User')?>
+            </div>
+            <div class="col-md-8">
+                <?php
+                    if (isset($Role['super_admin'])) {
+                        echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+                        'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['placeholder' => 'Select a Parent User ...'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            //'autocomplete' => true,
+                            'ajax' => [
+                                'url' => '../user/parentuser',
+                                'dataType' => 'json',
+                                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }'),
+                            ],
+                        ],
+                    ])->label(false);
+                    } else {
+                        echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+                            'theme' => Select2::THEME_BOOTSTRAP,
+                            'options' => ['placeholder' => 'Select a Parent User ...', 'value' => Yii::$app->user->identity->parent_id],
+                        ])->label(false);
+                    }
+            ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <?=Yii::t('app', 'Child Level')?>
+            </div>
+            <div class="col-md-8">
+                <?php
+                    if (isset($Role['super_admin'])) {
+                        echo $form->field($model, 'child_level')->widget(Select2::classname(), [
+                            'theme' => Select2::THEME_BOOTSTRAP,
+                            'options' => ['placeholder' => 'Select a child user Level ...'],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                //'autocomplete' => true,
+                                'ajax' => [
+                                    'url' => '../order/customer-level',
+                                    'dataType' => 'json',
+                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val(); return {q:params.term,type:type}; }'),
+                                ],
+                            ],
+                        ])->label(false);
+                    } else {
+                        echo $form->field($model, 'child_level')->widget(Select2::classname(), [
+                            'theme' => Select2::THEME_BOOTSTRAP,
+                            'options' => ['placeholder' => 'Select a Parent User ...', 'value' => Yii::$app->user->identity->user_level_id],
+                        ])->label(false);
+                    }
+                ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <?=Yii::t('app', 'Child Name')?>
+            </div>
+            <div class="col-md-8">
+                <?php
+                    if (isset($Role['super_admin'])) {
+                        echo $form->field($model, 'child_user')->widget(Select2::classname(), [
+                            'theme' => Select2::THEME_BOOTSTRAP,
+                            'options' => ['placeholder' => 'Select a current user Level ...'],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                //'autocomplete' => true,
+                                'ajax' => [
+                                    'url' => '../order/level',
+                                    'dataType' => 'json',
+                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-parent_user").val();
+                                                                        var typeone = $("#order-child_level").val();
+                                                                        return {q:params.term,type:type,typeone:typeone}; }'),
+                                ],
+                            ],
+                        ])->label(false);
+                    } else {
+                        echo $form->field($model, 'child_user')->widget(Select2::classname(), [
+                            'theme' => Select2::THEME_BOOTSTRAP,
+                            'options' => ['placeholder' => 'Select a current user Level ...', 'value' => Yii::$app->user->identity->id],
+                        ])->label(false);
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
