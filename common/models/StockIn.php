@@ -119,7 +119,7 @@ class StockIn extends \yii\db\ActiveRecord
         try
         {
             foreach ($total_order_quantity as $single_order) {
-
+                $total_quantity = $single_order['quantity'];
                 if ($transaction_failed) {
                     break;
                 }
@@ -147,6 +147,7 @@ class StockIn extends \yii\db\ActiveRecord
                     }
 
                 }
+                \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
             }
         } catch (Exception $e) {
             $transaction_failed = true;
@@ -158,30 +159,6 @@ class StockIn extends \yii\db\ActiveRecord
             $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
             \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
 
-            //Bonus Calculation for parents
-            $level_id = \common\models\User::findOne(['id' => $order_request_id]);
-            $level_id = $level_id->user_level_id;
-            if ($level_id != '1') {
-                $level_for_bonus = \common\models\LevelPercentage::findOne(['level_id' => $level_id]);
-                $parent_level = $level_for_bonus['parent_id'];
-                $order = \common\models\Order::findOne(['id' => $order_id]);
-                if ($parent_level == 2 && $level_for_bonus['is_company_wide'] == true) {
-                    $parent_users = \common\models\User::find()->where(['user_level_id' => $parent_level])->all();
-                    $total_user = (int) count($parent_users);
-                    $unit_price = (int) $level_for_bonus->percentage / $total_user;
-                    $bonus_amount = $unit_price * (int) $order->quantity;
-                    foreach ($parent_users as $parent_user) {
-                        \common\models\Gl::create_gl(strval($bonus_amount), $parent_user->id, 1, $order_id, '1');
-                    }
-                }
-
-                //Bonus Calculation for current user
-                $level_id = \common\models\User::findOne(['id' => $user_id]);
-                $level_id = $level_id->user_level_id;
-                $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id' => $level_id])->andwhere(['parent_id' => $level_id])->one();
-                $account_id = \common\models\Account::findOne(['user_id' => $user_id]);
-                \common\models\Gl::create_gl($level_for_bonus_itself['percentage'], $user_id, 1, $order_id, '1');
-            }
             $transaction->commit();
             \common\models\Order::update_status($order_id);
             echo true;
@@ -197,6 +174,57 @@ class StockIn extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+    public static function CalculateBonus($order_request_id, $user_id, $order_id, $quantity)
+    {
+        $MR_Comission = 10;
+        $MR_Level_Id = array_search('Management Team', \common\models\Lookup::$user_levels);
+        $MRUsers = \common\models\User::find()->where(['user_level_id' => $MR_Level_Id])->all();
+
+        $MRComission = ($quantity * $MR_Comission) / count($MRUsers);
+
+        foreach ($MRUsers as $parent_user) {
+            \common\models\Gl::create_gl(strval($MRComission), $parent_user->id, 1, $order_id, '1');
+        }
+        $Super_Vip_Level_Id = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
+        $Super_VIP_Comission = 5;
+        $Super_VIP = \common\models\User::find()->where(['user_level_id' => $Super_Vip_Level_Id])->andWhere(['id' => $order_request_id])->one();
+        if (!empty($Super_VIP)) {
+            \common\models\Gl::create_gl(strval(($quantity * $Super_VIP_Comission)), $Super_VIP->id, 1, $order_id, '1');
+        }
+        $VIP_Level_Id = array_search('VIP Team', \common\models\Lookup::$user_levels);
+        $VIP_Comission = 3;
+        $VIP = \common\models\User::find()->where(['user_level_id' => $VIP_Level_Id])->andWhere(['id' => $order_request_id])->one();
+        if (!empty($VIP)) {
+            \common\models\Gl::create_gl(strval(($quantity * $VIP_Comission)), $VIP_Level_Id->id, 1, $order_id, '1');
+        }
+        // Check If Super Vip is parent
+        // Check If  Vip is parent
+
+        //  //Bonus Calculation for parents
+        //  $level_id = \common\models\User::findOne(['id' => $order_request_id]);
+        //  $level_id = $level_id->user_level_id;
+        //  if ($level_id != '1') {
+        //      $level_for_bonus = \common\models\LevelPercentage::findOne(['level_id' => $level_id]);
+        //      $parent_level = $level_for_bonus['parent_id'];
+        //      $order = \common\models\Order::findOne(['id' => $order_id]);
+        //      if ($parent_level == 2 && $level_for_bonus['is_company_wide'] == true) {
+        //          $parent_users = \common\models\User::find()->where(['user_level_id' => $parent_level])->all();
+        //          $total_user = (int) count($parent_users);
+        //          $unit_price = (int) $level_for_bonus->percentage / $total_user;
+        //          $bonus_amount = $unit_price * (int) $order->quantity;
+        //          foreach ($parent_users as $parent_user) {
+        //              \common\models\Gl::create_gl(strval($bonus_amount), $parent_user->id, 1, $order_id, '1');
+        //          }
+        //      }
+
+        //      //Bonus Calculation for current user
+        //      $level_id = \common\models\User::findOne(['id' => $user_id]);
+        //      $level_id = $level_id->user_level_id;
+        //      $level_for_bonus_itself = \common\models\LevelPercentage::find()->where(['level_id' => $level_id])->andwhere(['parent_id' => $level_id])->one();
+        //      $account_id = \common\models\Account::findOne(['user_id' => $user_id]);
+        //      \common\models\Gl::create_gl($level_for_bonus_itself['percentage'], $user_id, 1, $order_id, '1');
+
     }
     public static function insert_quantity($product_id, $price, $quantity, $user_id)
     {
