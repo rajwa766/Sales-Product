@@ -10,13 +10,13 @@ return [
 'Post Code'=>'รหัสไปรษณีย์',
 'Super Admin'=>'ผู้ดูแลระบบขั้นสูง',
 'User Level'=>'ระดับผู้ใช้',
-'Total User'=>'ผู้ใช้ทั้งหมด',
+'Total Users'=>'ผู้ใช้ทั้งหมด',
 'Remaning User'=>'จำนวนผู้ใช้เหลือ',
 'Current Stock'=>'สต้อกปัจจุบัน',
 'PROFIT'=>'กำไร',
-'Total Orders'=>'คำสั่งซื้อทั้งหมด',
-'Pending Orders'=>'คำสั่งซื้อที่รอดำเนินการ',
-'Approved Orders'=>'ใบสั่งซื้อที่ได้รับอนุมัติแล้ว',
+'Total Processed Orders'=>'คำสั่งซื้อที่ดำเนินการทั้งหมด',
+'Total Pending Orders'=>'รวมคำสั่งซื้อที่รอดำเนินการ',
+'Total Approved Orders'=>'คำสั่งซื้อที่ได้รับอนุมัติทั้งหมด',
 'Web Developer'=>'นักพัฒนาเว็บ',
 'Orders / Sales'=>'ใบสั่งซื้อ / การขาย',
 'Loading'=>'กำลังโหลด',
@@ -126,7 +126,8 @@ return [
 'Last Month Rise by'=>'เดือนที่แล้วเพิ่มขึ้นโดย',
 'Create User'=>'สร้างผู้ใช้',
 'Transferred Units'=>'หน่วยที่โอนย้ายแล้ว',
-'Returned Units'=>'หน่วยที่ส่งคืนแล้ว'
+'Returned Units'=>'หน่วยที่ส่งคืนแล้ว',
+'User Creation Limit'=>'ขีด จำกัด การสร้างผู้ใช้'
 ];
 
 ?>
