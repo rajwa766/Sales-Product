@@ -293,6 +293,7 @@ class User extends ActiveRecord implements IdentityInterface {
             if ($photo !== null) {
                 $profile_save = User::profile_save($photo, $model);
             }
+         
             $current_level = \common\models\UsersLevel::findOne($model->user_level_id);
             if ($model->parent_user) {
                 $model->parent_id = $model->parent_user;
@@ -309,12 +310,14 @@ class User extends ActiveRecord implements IdentityInterface {
             }
 
             //   check the limit of user
-            $total_user_current_level = User::find()->where(['=', 'user_level_id', $model->user_level_id])->count();
+            $total_parent_user_current_level = User::find()->where(['=', 'parent_id', $model->parent_id])->count();
+           
             $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->getpassword();
+            
             //    check not company user and not seller and user space remain
-            if ($current_level->max_user != '-1' && $total_user_current_level > $current_level->max_user && $model->company_user != '1') {
+            if ($current_level->max_user != '-1' && $total_parent_user_current_level > $current_level->max_user && $model->company_user != '1') {
                 $result = "max_user_reached";
             } else {
 

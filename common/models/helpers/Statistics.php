@@ -27,7 +27,7 @@ class Statistics extends \yii\base\Model
     }
     public static function CurrentProfit($user_id) {
         $stock_in_remaning_price = (new Query())
-                ->select('SUM(initial_quantity * price) -  SUM(remaining_quantity *price) as stock_in_price')
+                ->select('SUM(initial_quantity * price) -  SUM(remaining_quantity * price) as stock_in_price')
                 ->from('stock_in')
                 ->where(['=', 'user_id', $user_id])
                 ->one();
@@ -55,8 +55,8 @@ class Statistics extends \yii\base\Model
                 ->andWhere(['=', 'order.status', '1'])
                 ->one();
         $total_price = floatval($total_buying_price['buying_price']) - floatval($total_return_price['return_price']);
-        $total_purcahse_price = $total_price - floatval($stock_in_remaning_price['stock_in_price']);
-        return $total_purcahse_price - floatval($total_sale_price);
+        $total_purcahse_price = $total_price;//- floatval($stock_in_remaning_price['stock_in_price']);
+        return floatval($total_sale_price)-$total_purcahse_price;
     }
     public static function CurrentUser($user_id) {
         return (new Query())
