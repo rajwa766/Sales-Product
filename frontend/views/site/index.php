@@ -34,7 +34,7 @@
                         <div class="r4_counter db_box">
                             <i class='pull-left fa fa-users fa-2x icon-md icon-rounded icon-purple'></i>
                             <div class="stats">
-                                <h4><strong><?= $all_status['user_remning'] ?></strong></h4>
+                                <h4><strong><?= $all_status['user_limit'] ?></strong></h4>
                                 <span> <?= Yii::t('app', 'User Creation Limit') ?></span>
                             </div>
                         </div>
@@ -54,8 +54,8 @@
                     <div class="r4_counter db_box">
                         <i class='pull-left fa fa-thumbs-up icon-md icon-rounded icon-primary'></i>
                         <div class="stats">
-                            <h4><strong><?= $all_status['current_profit'] ?></strong></h4>
-                            <span> <?= Yii::t('app', 'Profit') ?></span>
+                            <h4><strong><?php //$all_status['current_profit'] ?></strong></h4>
+                            <span> <?php // Yii::t('app', 'Profit') ?></span>
                         </div>
                     </div>
                 </div> -->
@@ -63,7 +63,7 @@
                     <div class="r4_counter db_box">
                         <i class='pull-left fa fa-exchange fa-2x icon-md icon-rounded icon-orange'></i>
                         <div class="stats">
-                            <h4><strong><?= $all_status['total_order'] ?></strong></h4>
+                            <h4><strong><?= $all_status['transfered_order'] ?></strong></h4>
                             <span><?= Yii::t('app', 'Transferred Units') ?></span>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                     <div class="r4_counter db_box">
                         <i class='pull-left fa fa-undo fa-2x icon-md icon-rounded icon-primary'></i>
                         <div class="stats">
-                            <h4><strong><?= $all_status['current_profit'] ?></strong></h4>
+                            <h4><strong><?= $all_status['returned_order'] ?></strong></h4>
                             <span> <?= Yii::t('app', 'Returned Units') ?></span>
                         </div>
                     </div>

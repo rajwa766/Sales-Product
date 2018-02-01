@@ -24,14 +24,7 @@ use yii\db\Query;
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <?= Yii::t('app', 'Additional Requirements') ?>
-    </div>
-    <div class="col-md-8">
-        <?= $form->field($model, 'additional_requirements')->textarea(['rows' => '3'])->label(false) ?>
-    </div>
-</div>
+
 <div class="row">
     <div class="col-md-4">
         <?= Yii::t('app', 'Payment Method') ?>

@@ -78,6 +78,7 @@ class User extends ActiveRecord implements IdentityInterface {
         return [
 
             [['username', 'password', 'email', 'first_name', 'last_name'], 'string', 'max' => 255],
+            [['username', 'password', 'email', 'first_name', 'last_name','quantity','parent_user','user_level_id'],'required'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
             [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id'], 'safe'],
@@ -231,18 +232,23 @@ class User extends ActiveRecord implements IdentityInterface {
         $user = new User();
         $user->isNewRecord = true;
         $user->id = null;
-        $user->setPassword($model->email);
+        $user->password='12345';
+        $user->setPassword($user->password);
         $user->generateAuthKey();
-        $user->username = $model->email;
+        $user->username = 'customer';
+        $user->first_name = 'customer';
+        $user->last_name = 'customer';
+        $user->user_level_id = '30';
+        $user->parent_id = NULL;
+        $user->parent_user = '1';
         $user->email = $model->email;
-        $user->phone_no = $model->phone_no;
-        $user->mobile_no = $model->mobile_no;
         $user->mobile_no = $model->mobile_no;
         $user->address = $model->address;
         $user->postal_code = $model->postal_code;
         $user->district = $model->district;
         $user->province = $model->province;
         $user->country = $model->country;
+        $user->quantity=0;
         if ($user->save()) {
             return $user;
         }
