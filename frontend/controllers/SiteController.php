@@ -71,7 +71,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $user_id = Yii::$app->user->getId();
-        $all_status = \common\models\Order::all_status_dashboard($user_id);
+        $all_status = \common\models\helpers\Statistics::allStatusDashboard($user_id);
         return $this->render('index', [
             'all_status' => $all_status,
         ]);
