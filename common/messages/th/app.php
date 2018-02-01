@@ -38,11 +38,11 @@ return [
 'PROFILE'=>'ข้อมูลส่วนตัว',
 'User'=>'USER',
 'Visit Profile'=>'เยี่ยมชมโปรไฟล์',
-'Update'=>'UPDATE',
+'Update'=>'ปรับปรุง',
 'Create'=>'สร้าง',
 'Order'=>'ใบสั่ง',
 'Orders'=>'คำสั่งซื้อ',
-'Returns Orders'=>'RETURN ORDERS',
+'Returns Orders'=>'คำสั่งซื้อที่ได้รับคืน',
 'Transfer Request'=>'คำขอโอน',
 'Pending Orders'=>'กำลังรอการสั่งซื้อ',
 'Approved Orders'=>'อนุมัติใบสั่งซื้อ',
@@ -52,7 +52,7 @@ return [
 'Stock Status'=>'STATUS STATUS',
 'New Notifications.'=>'การแจ้งเตือนใหม่',
 'You have'=>'คุณมี',
-'Your Remaining stock is'=>'สินค้าเหลือของคุณคือ',
+'Your remaining stock is'=>'สินค้าเหลือของคุณคือ',
 'Settings'=>'การตั้งค่า',
 'Help'=>'ช่วยเหลือ',
 'Logout'=>'ออกจากระบบ',
@@ -127,7 +127,11 @@ return [
 'Create User'=>'สร้างผู้ใช้',
 'Transferred Units'=>'หน่วยที่โอนย้ายแล้ว',
 'Returned Units'=>'หน่วยที่ส่งคืนแล้ว',
-'User Creation Limit'=>'ขีด จำกัด การสร้างผู้ใช้'
+'User Creation Limit'=>'ขีด จำกัด การสร้างผู้ใช้',
+'User'=>'ผู้ใช้งาน',
+'E-Franchise Innovative Co, Ltd All right reserved'=>'บริษัท อี - แฟรนไชส์อินโนเวชั่น จำกัด สงวนลิขสิทธิ์',
+'Update Profile'=>'อัปเดตโปรไฟล์',
+'Receivables / Payables'=>'ลูกหนี้ / เจ้าหนี้'
 ];
 
 ?>
