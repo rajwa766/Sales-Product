@@ -148,6 +148,14 @@ class Order extends \yii\db\ActiveRecord {
         return $all_status;
     }
 
+    public function beforeValidate() {
+        if (parent::beforeValidate()) {
+           $ref_no=(Order::find()->max('id'))+1;
+           $this->order_ref_no=''.$ref_no;
+           $this->requested_date =date('Y-m-d');
+           return true;
+        }
+    }
     public static function CurrentLevel($user_id) {
         $current_level = (new Query())
                 ->select('users_level.name as current_level')
@@ -244,16 +252,17 @@ class Order extends \yii\db\ActiveRecord {
         $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
         $photo->saveAs($path);
     }
-
     public static function CreateOrder($model) {
         $result = "";
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            $model->status  = array_search('Pending', \common\models\Lookup::$status);
             if ($model->order_type == "Order") {
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
                 $check_user_already_exist = \common\models\User::find()->where([ 'email' => $model->email])->one();
+                
                 if ($check_user_already_exist) {
                     $model->user_id = $check_user_already_exist->id;
                 } else {
@@ -264,6 +273,14 @@ class Order extends \yii\db\ActiveRecord {
                     $model->user_id = $customer_user->id;
                 }
             } else {
+                if($model->order_type == "Return")
+                {
+                    $model->status  = array_search('Return Request', \common\models\Lookup::$status);
+                }
+                else if($model->order_type == "Transfer")
+                {
+                    $model->status  = array_search('Transfer Request', \common\models\Lookup::$status);
+                }
                 $model->order_request_id = $model->parent_user;
                 $model->user_id = $model->child_user;
             }
@@ -281,32 +298,17 @@ class Order extends \yii\db\ActiveRecord {
                 $transaction->commit();
                 $result = "transaction_complete";
             }
+            else
+            {
+                var_dump($model->getErrors());
+                exit();
+            }
         } catch (Exception $e) {
             $transaction->rollBack();
             $result = "transaction_failed";
         }
         return $result;
     }
-public static function CreateOrderReturn($model){
-       if ($model->order_type == "Order") {
-                $model->order_request_id = $model->request_agent_name;
-                $model->user_id = $model->rquest_customer;
-            } else {
-                $model->order_request_id = $model->parent_user;
-                $model->user_id = $model->child_user;
-            }
-            if ($model->save()) {
-                $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
-            }
-}
-public static function CreateOrderTransfer($model){
-        $model->order_request_id = $model->parent_user;
-            $model->user_id = $model->child_user;
-            $model->status  = array_search('Transfer Request', \common\models\Lookup::$status);
-            if ($model->save()) {
-                $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
-            }
-}
     public static function insertOrder($user_model, $approve_order = false, $is_bonus = false) {
         $order = new Order();
         $order->isNewRecord = true;

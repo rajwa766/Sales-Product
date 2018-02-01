@@ -93,8 +93,8 @@ use yii\db\Query;
             </div>
             <!-- customer section ends here-->
             <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
-
-
+            <?= $form->field($model, 'order_type')->hiddenInput(['value' => $type])->label(false);?>
+            
             <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
             </div>
@@ -103,6 +103,7 @@ use yii\db\Query;
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
+        var type = '<?= $type ?>';
         <?php
         if(!empty($referral_user))
         {
@@ -111,9 +112,19 @@ use yii\db\Query;
         <?php  
         }
         ?>
-        $('#order-request_agent_name').on('change', function () {
+        if(type=="Return")
+        {
+            $('#order-child_user').on('change', function () {
                 GetUserStock($(this).val());
          });
+        }
+        else
+        {
+            $('#order-request_agent_name,#order-parent_user').on('change', function () {
+                GetUserStock($(this).val());
+         });
+        }
+        
          $('#order-postal_code').on('change', function () {
                 var data = $('#order-postal_code').select2('data');
                 var postal_data=data[0].text;
@@ -125,9 +136,9 @@ use yii\db\Query;
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            var type = '<?= $type ?>';
-            if (type == 'Request'){
-            $.post("../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val(), function (data) {
+            var url="../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            if (type == "Request"){
+            $.post(url, function (data) {
                 var json = $.parseJSON(data);
                     if (json.price){
                     $(".noproduct").hide();
@@ -140,11 +151,22 @@ use yii\db\Query;
                 }
             });
         } else{
-                $.post("../product/get-product?id=1", function (data) {
-               
+                if(type!="Return")
+                {
+                    url="../product/get-product?id=1";    
+                }
+                else
+                {
+                    url+="&type=Return";
+                }
+                $.post(url, function (data) {
                 <?php if (!Yii::$app->user->isGuest) { ?>
                     if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
                         if ($('#order-quantity').val()){
+                            if(type=="Return")
+                            {
+                                 data = $.parseJSON(data);
+                            }
                             $(".noproduct").hide();
                             $('#order-single_price').val(data.price);
                             $('#order-total_price').val($('#order-quantity').val() * data.price);
@@ -189,7 +211,7 @@ use yii\db\Query;
     function TypeChange()
         {
             var value = "<?= $type ?>";
-            if (value == "Request")
+            if (value == "Request" || value == "Return" || value == "Transfer")
             {
                 jQuery(".shipping-address").hide();
                 jQuery(".order-details").hide();

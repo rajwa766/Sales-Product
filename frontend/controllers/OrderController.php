@@ -167,6 +167,7 @@ class OrderController extends Controller
         }
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
+           
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -178,18 +179,17 @@ class OrderController extends Controller
         ]);
     }
 
-    public function actionCreatereturn()
+    public function actionCreateReturn()
     {
+        $type="Return";
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
-            var_dump($model);
-            exit();
-            $orderCreate = \common\models\Order::CreateOrderReturn($model);
+            $orderCreate = \common\models\Order::CreateOrder($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        return $this->render('create_return', [
+        return $this->render('create', [
             'model' => $model,
+            'type'=>$type,
         ]);
     }
 

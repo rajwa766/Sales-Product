@@ -80,7 +80,7 @@ use kartik\time\TimePicker;
 				<div class="col-md-8">
                 <?php
     echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-        'data' => common\models\UsersLevel::getalllevel(),
+        'data' => common\models\UsersLevel::getAllLevels(),
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Level  ...'],
         //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
@@ -108,9 +108,9 @@ use kartik\time\TimePicker;
                       'allowClear' => true,
                       //'autocomplete' => true,
                       'ajax' => [
-                          'url' => '../order/parentuser',
+                        'url' => '../user/get-users',
                           'dataType' => 'json',
-                          'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
+                          'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
                       ],
                   ],
                   ])->label(false);

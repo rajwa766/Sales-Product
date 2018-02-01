@@ -53,7 +53,10 @@ use yii\db\Query;
     <div class="noproduct"></div>
     <?php if (Yii::$app->user->isGuest) { ?>
         <?php
-        echo $form->field($model, 'request_agent_name')->hiddenInput(['value' => $_GET['id']])->label(false);
+        if(isset( $_GET['id']))
+        {
+            echo $form->field($model, 'request_agent_name')->hiddenInput(['value' => $_GET['id']])->label(false);
+        }
         echo $form->field($model, 'order_type')->hiddenInput(['value' => 'Order'])->label(false);
     }
     ?>

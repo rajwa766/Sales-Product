@@ -189,16 +189,23 @@ public function actionGetunits($id){
     $detai_item['price']=$one_unit->price;
     return json_encode($detai_item);
 }
-public function actionGetunitsprice($id,$user_level,$product_id){
+public function actionGetunitsprice($id,$user_level,$product_id,$type=null){
+    if($type!=null)
+    {
+        if($type=="Return")
+        {
+          $unit_price= UserProductLevel::find()->select(['max(price) as price'])->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->groupby(['user_level_id','product_id'])->one();
+          $detai_item['price']=$unit_price['price'];
+          return json_encode($detai_item);
+        }
+    }
     $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->andWhere(['<=','units',$id])->one();
 
   if($one_unit){
     $detai_item['price']=$one_unit->price;
-  
     return json_encode($detai_item);
   }else{
     $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->min('units');
-  
     $detai_item['units']=$one_unit;
     return json_encode($detai_item);
   }
