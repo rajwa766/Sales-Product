@@ -17,13 +17,16 @@ use kartik\time\TimePicker;
     margin-right: 0px;
 }
 </style>
-    <?php
+<?php
+  $user_id = Yii::$app->user->getId();
+  $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+?>
+   		    <?php
     $form = ActiveForm::begin(['id' => 'form-order-report','enableClientValidation' => true, 'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],
                 'action' => ['order/ajaxreport'],
                     ]
     );
      ?>
-   		
    		<div class="filter">
            <h1><?= Yii::t('app', 'Inventory Report') ?></h1>
 		<div class="row">
@@ -68,8 +71,7 @@ use kartik\time\TimePicker;
 			</div>
 		</div>
         <?php
-    $user_id = Yii::$app->user->getId();
-    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+  
     if(isset($Role['super_admin'])){
     ?>
         <div class="row" style="padding-top: 20px;">
@@ -94,7 +96,32 @@ use kartik\time\TimePicker;
     ?>
 				</div>
 			</div>
+    <?php }else{ ?>
+        <div class="row" style="padding-top: 20px;">
+			<div class="col-md-6">
+				<div class="col-md-4">
+             <?= Yii::t('app', 'User Levels') ?>
+				</div>
+				<div class="col-md-8">
+                <?php
+    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
+        'data' => common\models\UsersLevel::getAllLevels(),
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Level  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+    
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
 
+    ])->label(false);
+    ?>
+				</div>
+			</div>
+    <?php }
+      if(isset($Role['super_admin'])){
+    ?>
 			  <div class="col-md-6">
 				<div class="col-md-4">
            <?= Yii::t('app', 'All users') ?>
@@ -118,7 +145,31 @@ use kartik\time\TimePicker;
 				</div>
 			</div>
 		</div>
-                <?php } ?>
+                <?php } else{?>
+                    <div class="col-md-6">
+				<div class="col-md-4">
+           <?= Yii::t('app', 'All users') ?>
+				</div>
+				<div class="col-md-8">
+					<?php
+				 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'options' => ['placeholder' => 'Select a  User ...','value' => Yii::$app->user->identity],
+                    'pluginOptions' => [
+                      'allowClear' => true,
+                      //'autocomplete' => true,
+                      'ajax' => [
+                          'url' => '../user/get-users',
+                          'dataType' => 'json',
+                          'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
+                      ],
+                  ],
+                  ])->label(false);
+					?>
+				</div>
+			</div>
+		</div>
+                <?php }?>
 		<div class="row" style="padding-top: 20px;">
 
         <div class="col-md-6">
@@ -129,7 +180,7 @@ use kartik\time\TimePicker;
      </div>
  </div>
 </div>
-     <?php ActiveForm::end(); ?>
+   
 
      <div class="row view-report">
      	
