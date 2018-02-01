@@ -65,7 +65,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <li><i class="fa fa-envelope"></i><?php echo $model->email; ?></li>
                                                 <li><i class='fa fa-home'></i><?php echo $model->address; ?></li>
                                                 <li><i class='fa fa-user'></i><?= $model->city.''.$model->country; ?></li>
-                                                <li><i class="fa fa-external-link" aria-hidden="true"></i><a target="_blank" href="<?= Yii::$app->getUrlManager()->getBaseUrl(); ?>/order/customer-create?id=<?= $model->id ?>"> Generate Customer Link </a></li>
+                                                <?php 
+                                                $user_id = Yii::$app->user->getId();
+                                                $Role = Yii::$app->authManager->getRolesByUser($user_id);
+                                                if(!isset($Role['super_admin'])){
+                                                ?>
+                                                    <li><i class="fa fa-external-link" aria-hidden="true"></i><a target="_blank" href="<?= Yii::$app->getUrlManager()->getBaseUrl(); ?>/order/customer-create?id=<?= $model->id ?>"> Generate Customer Link </a></li>
+                                                <?php
+                                                    }
+                                                ?>
                                                 <li><i class='fa fa-suitcase'></i><?php echo $model->phone_no; ?></li>
                                             </ul>
                                         </div>
