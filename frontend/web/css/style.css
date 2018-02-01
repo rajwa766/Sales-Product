@@ -517,7 +517,7 @@ a:focus {
 
 .page-topbar .logo-area {
     width: 300px;
-    background-color: #222;
+    background-color: #121212;
     display: block;
     min-height: 70px;
     float: left;
@@ -881,6 +881,7 @@ a:focus {
     }
     .page-topbar .quick-area .info-menu li.profile img {
         right: 0px;
+        border: 1px solid #c8c5c5;
     }
     .page-topbar .quick-area .pull-left ul.info-menu {
         padding-right: 0px;
@@ -958,7 +959,7 @@ a:focus {
     width: 300px;
     position: fixed;
     padding: 0px;
-    background-color: #121212;
+    background-color: #222;
     margin-top: 60px;
     overflow: hidden;
 }
@@ -5562,7 +5563,7 @@ a.cke_button_disabled:hover,
 
 .loginpage form .input,
 .loginpage input[type=text] {
-    font-size: 19px;
+    font-size: 18px;
     width: 100%;
     padding: 9px;
     line-height: 25px;
@@ -5573,8 +5574,8 @@ a.cke_button_disabled:hover,
 .loginpage form .input,
 .loginpage form input[type=checkbox],
 .loginpage input[type=text] {
-    color: rgba(250, 133, 100, 1)
-    /*#fa8564*/
+    /* color: rgba(250, 133, 100, 1)
+   #fa8564*/
     ;
     background: #fbfbfb;
 }
@@ -6596,8 +6597,9 @@ border-left: 3px solid transparent;
     float: left;
     padding-left: 15px;
     width: 240px;
-    background: #1fb5ac;
+    background: #e1b451;
     display: inline-block !important;
+    border-left: 1px solid #99814d;
 }
 
 .page-sidebar.chat_shift .wraplist li:hover .sub-menu .title,
@@ -6663,7 +6665,7 @@ border-left: 3px solid transparent;
 .page-sidebar.collapseit #main-menu-wrapper .wraplist li.open .sub-menu a:hover,
 .page-sidebar.collapseit #main-menu-wrapper .wraplist li .sub-menu a:hover {
     background-color: #212026;
-    border-left: 3px solid #1fb5ac;
+    border-left: 3px solid #e1b451;
     color: rgba(174, 178, 183, 1.0);
 }
 
@@ -9976,6 +9978,7 @@ h1,
     }
     .page-topbar.sidebar_shift .logo-area {
         background-position: left top;
+        background-image: url('../images/logo-folded.png');
     }
     .page-topbar .quick-area .info-menu li.sidebar-toggle-wrap {
         position: fixed;
@@ -9986,7 +9989,11 @@ h1,
     .page-topbar .quick-area .info-menu li.message-toggle-wrapper a,
     .page-topbar .quick-area .info-menu li a.toggle_chat,
     .page-topbar .quick-area .info-menu li.sidebar-toggle-wrap a.sidebar_toggle {
-        color: #ffffff;
+        color: #86827b;
+    }
+    .languageDropdown {color: #86827b;}
+    .page-topbar .quick-area .info-menu li.sidebar-toggle-wrap a.sidebar_toggle {
+        display: none; /*hiding sliding box on mobile resolution*/
     }
     .page-topbar .quick-area .pull-right {
         position: fixed;
@@ -10052,14 +10059,16 @@ h1,
         background-position: left top;
     }
     .page-topbar .quick-area .info-menu li .dropdown-menu {
-        width: 280px;
-        left: -120px;
+        /* width: 280px;
+        left: -120px; */
+        width: 150px;
+        left: 0;
     }
     .page-topbar .quick-area .info-menu li.open {
         background-color: #ffffff;
     }
     .page-topbar .quick-area .info-menu li.open a {
-        color: #1fb5ac;
+        color: #404240;
     }
     .page-topbar .quick-area .info-menu li .dropdown-menu:before,
     .page-topbar .quick-area .info-menu li .dropdown-menu:after {
