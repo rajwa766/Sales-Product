@@ -75,7 +75,15 @@ class Statistics extends \yii\base\Model
                 ->one();
         return $total_user['max_user'] - $urent_users;
     }
-
+public static function CurrentUserLimit($user_id){
+        $level_id = \common\models\User::findOne(['id'=>$user_id]);
+        $level_limit = \common\models\UsersLevel::find()->where(['parent_id'=>$level_id->user_level_id])->andWhere(['!=','max_user','-1'])->one();
+        if($level_limit){
+            return  $level_limit->max_user;
+        }else{
+return 'infinite';
+        }
+}
     public static function allStatusDashboard($user_id) {
         $all_status = array();
         $return_approved = array_search('Return Approved', \common\models\Lookup::$status);
@@ -86,13 +94,14 @@ class Statistics extends \yii\base\Model
         $all_status['current_stock'] = Statistics::CurrentStock($user_id);
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
         $all_status['current_user'] = Statistics::CurrentUser($user_id);
+        $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id);
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
-        $all_status['total_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->count();
-        $all_status['pending_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $pending])->count();
-        $all_status['approved_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $approved])->count();
-        $all_status['transfered_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $transfer_approved])->count();
-        $all_status['returned_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $return_approved])->count();
-
+        $all_status['total_order'] = \common\models\Order::find()->where(['user_id' => $user_id])->count();
+        $all_status['pending_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $pending])->count();
+        $all_status['approved_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $approved])->count();
+        $all_status['transfered_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $transfer_approved])->count();
+        $all_status['returned_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $return_approved])->count();
+        
         return $all_status;
     }
 	

@@ -37,6 +37,7 @@ class ShippingAddress extends \yii\db\ActiveRecord
         return [
             [['order_id'], 'required'],
             [['order_id'], 'integer'],
+            [['name'], 'integer'],
             [['email', 'phone_no', 'mobile_no', 'postal_code', 'district', 'province', 'country'], 'string', 'max' => 100],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
@@ -72,8 +73,9 @@ class ShippingAddress extends \yii\db\ActiveRecord
         $shipping_address->isNewRecord = true;
         $shipping_address->id = null;
         $shipping_address->order_id = $order_id;
-        $shipping_address->email = $model->email; 
-        $shipping_address->phone_no =$model->phone_no; 
+        // $shipping_address->email = $model->email; 
+        $shipping_address->phone_no =$model->phone_no;
+        $shipping_address->name =$model->name;  
         $shipping_address->mobile_no =$model->mobile_no; 
         $shipping_address->postal_code = $model->postal_code; 
         $shipping_address->district =$model->district; 

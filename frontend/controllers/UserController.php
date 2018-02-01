@@ -62,8 +62,7 @@ class UserController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
-        $user_id = Yii::$app->user->getId();
-        $all_status = \common\models\helpers\Statistics::allStatusDashboard($user_id);
+        $all_status = \common\models\helpers\Statistics::allStatusDashboard($id);
         return $this->render('view', [
                     'model' => $this->findModel($id),
                     'all_status' => $all_status,
@@ -165,11 +164,7 @@ class UserController extends Controller {
                             }
                         }
                     }
-                // } catch (\Exception $e) {
-                //     var_dump($e);
-                //     exit();
-                //     continue;
-                // }
+             
             }
         }
         return $this->render('user_upload', [

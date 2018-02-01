@@ -48,12 +48,20 @@ class Order extends \yii\db\ActiveRecord
     public $province;
     public $country;
     public $email;
+    public $name;
     // stored value
     public $customer_id;
     public $single_price;
     public $total_price;
     public $product_id;
     public $quantity;
+    public $username;
+    public $password;
+    public $first_name;
+    public $last_name;
+   
+    public $user_level_id;
+    
 
     const SCENARIO_ORDER = 'order';
     const SCENARIO_REQUEST = 'request';
@@ -85,20 +93,19 @@ class Order extends \yii\db\ActiveRecord
 
     public function scenarios()
     {
-
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
         $scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
         return $scenarios;
     }
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['user_id', 'order_request_id'], 'required'],
+            [['quantity','postal_code', 'order_request_id'], 'required'],
+
             [['all_level', 'parent_user', 'child_level', 'child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
             [['email', 'request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
             [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
@@ -188,12 +195,17 @@ class Order extends \yii\db\ActiveRecord
             if ($model->order_type == "Order") {
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
+                if(!$model->email){
+                    $model->email = 'customer@gmail.com';
+                }
                 $check_user_already_exist = \common\models\User::find()->where(['email' => $model->email])->one();
 
                 if ($check_user_already_exist) {
                     $model->user_id = $check_user_already_exist->id;
                 } else {
+                  
                     $customer_user = \common\models\User::insert_user($model);
+                    
                     $auth = \Yii::$app->authManager;
                     $role = $auth->getRole('customer');
                     $auth->assign($role, $customer_user->id);
@@ -221,10 +233,7 @@ class Order extends \yii\db\ActiveRecord
                 $shipping_address = \common\models\ShippingAddress::insertShippingAddress($model, $model->id);
                 $transaction->commit();
                 $result = "transaction_complete";
-            } else {
-                var_dump($model->getErrors());
-                exit();
-            }
+            } 
         } catch (Exception $e) {
             $transaction->rollBack();
             $result = "transaction_failed";

@@ -16,10 +16,10 @@ use yii\db\Query;
 
 <div class="row first-row">
     <div class="col-md-4">
-        <?= Yii::t('app', 'Email') ?>
+        <?= Yii::t('app', 'Name') ?>
     </div>
     <div class="col-md-8">
-        <?= $form->field($model, 'email')->textInput()->label(false) ?>
+        <?= $form->field($model, 'name')->textInput()->label(false) ?>
     </div>
 </div>
 
