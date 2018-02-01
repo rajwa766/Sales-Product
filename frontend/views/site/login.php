@@ -13,9 +13,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <style>
 body
 {
-	background-image:url('../images/login.jpg');
-	background-repeat:no-repeat;
-	background-size:cover;
+    background-color: rgb(81, 81, 70);
+    background-image: url('../images/login-bg.png');
+    background-attachment: fixed;
+    height: 100%;
+    max-height: 100%;
+    min-height: 99%;
+    overflow: hidden;
+    width: 100%;
 }
 .white-text
 {
@@ -23,34 +28,30 @@ body
 	text-color:white;
 }
 </style>
-<div class="col-md-12">
-<div class="col-md-8">
-    <h2 class="white-text"><?= Html::encode($this->title) ?></h2>
 
-    <p class="white-text">Please fill out the following fields to login:</p>
+<div class="login-wrapper">
+    <div id="login" class="login loginpage col-lg-offset-4 col-lg-4 col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6 col-xs-offset-0 col-xs-12">    
+              
+        <div style="text-align: center;">
+            <img src="../images/logo-white.png"/>
+        </div>
 
-  
-        <div class="">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
+        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <p>
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('username',['class'=>'white-text']) ?>
+            </p>
 
+            <p>
                 <?= $form->field($model, 'password')->passwordInput()->label('password',['class'=>'white-text']) ?>
+            </p>
 
+            <p>
                 <?= $form->field($model, 'rememberMe')->checkbox()->label('remember me',['class'=>'white-text']) ?>
-
-                <div style="color:#fff;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                    <?= Html::a('Signup', ['/site/signup'], ['class'=>'btn btn-success']) ?>
-
-                </div>
-
-            <?php ActiveForm::end(); ?>
+            </p>
         
+            <p class="submit">
+                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
+            </p>
+        <?php ActiveForm::end(); ?>
     </div>
-</div>
 </div>
