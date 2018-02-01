@@ -18,8 +18,7 @@ use kartik\time\TimePicker;
 }
 </style>
 <?php
-  $user_id = Yii::$app->user->getId();
-  $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+ 
 ?>
    		    <?php
     $form = ActiveForm::begin(['id' => 'form-order-report','enableClientValidation' => true, 'enableAjaxValidation' => false,'options' => ['enctype' => 'multipart/form-data'],
@@ -70,61 +69,33 @@ use kartik\time\TimePicker;
 				</div>
 			</div>
 		</div>
-        <?php
+
+        <div class="row" style="padding-top: 20px;">
+			<div class="col-md-6">
+				<div class="col-md-4">
+             <?= Yii::t('app', 'User Levels') ?>
+				</div>
+				<div class="col-md-8">
+                <?php
+    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
+        'data' => common\models\UsersLevel::getAllLevels(),
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Level  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+    
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
+
+    ])->label(false);
+    ?>
+				</div>
+			</div>
   
-    if(isset($Role['super_admin'])){
-    ?>
-        <div class="row" style="padding-top: 20px;">
-			<div class="col-md-6">
+		<div class="col-md-6">
 				<div class="col-md-4">
-             <?= Yii::t('app', 'User Levels') ?>
-				</div>
-				<div class="col-md-8">
-                <?php
-    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-        'data' => common\models\UsersLevel::getAllLevels(),
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Level  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-    
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => [
-            'allowClear' => true,
-        ],
-
-    ])->label(false);
-    ?>
-				</div>
-			</div>
-    <?php }else{ ?>
-        <div class="row" style="padding-top: 20px;">
-			<div class="col-md-6">
-				<div class="col-md-4">
-             <?= Yii::t('app', 'User Levels') ?>
-				</div>
-				<div class="col-md-8">
-                <?php
-    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-        'data' => common\models\UsersLevel::getAllLevels(),
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Level  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-    
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'pluginOptions' => [
-            'allowClear' => true,
-        ],
-
-    ])->label(false);
-    ?>
-				</div>
-			</div>
-    <?php }
-      if(isset($Role['super_admin'])){
-    ?>
-			  <div class="col-md-6">
-				<div class="col-md-4">
-           <?= Yii::t('app', 'All users') ?>
+                <?= Yii::t('app', 'All users') ?>
 				</div>
 				<div class="col-md-8">
 					<?php
@@ -137,7 +108,9 @@ use kartik\time\TimePicker;
                       'ajax' => [
                           'url' => '../user/get-users',
                           'dataType' => 'json',
-                          'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
+                          'data' => new \yii\web\JsExpression('function(params) {  var user_level = $("#order-all_level").val();
+                            var parent_id = '.Yii::$app->user->identity->id.';
+                            return {q:params.term,user_level:user_level,parent_id:parent_id,include_parent:true}; }')
                       ],
                   ],
                   ])->label(false);
@@ -145,31 +118,9 @@ use kartik\time\TimePicker;
 				</div>
 			</div>
 		</div>
-                <?php } else{?>
-                    <div class="col-md-6">
-				<div class="col-md-4">
-           <?= Yii::t('app', 'All users') ?>
-				</div>
-				<div class="col-md-8">
-					<?php
-				 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'options' => ['placeholder' => 'Select a  User ...','value' => Yii::$app->user->identity],
-                    'pluginOptions' => [
-                      'allowClear' => true,
-                      //'autocomplete' => true,
-                      'ajax' => [
-                          'url' => '../user/get-users',
-                          'dataType' => 'json',
-                          'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
-                      ],
-                  ],
-                  ])->label(false);
-					?>
-				</div>
-			</div>
-		</div>
-                <?php }?>
+             
+
+            </div>
 		<div class="row" style="padding-top: 20px;">
 
         <div class="col-md-6">
@@ -180,8 +131,7 @@ use kartik\time\TimePicker;
      </div>
  </div>
 </div>
-   
-
+<?php ActiveForm::end(); ?>
      <div class="row view-report">
      	
      </div>
@@ -211,30 +161,3 @@ $("body").delegate("#form-order-report .submit_button", "click", function (e) {
 });
 
 </script> 
-    
-  <!-- <script>
-  $('#form-order-report .submit_button').on('click', function(e) {
- 
-
-  
-    var form = $(this);
-    var formData = form.serialize();
-    dataType:"json",
-    $.ajax({
-        url: form.attr("action"),
-        type: form.attr("method"),
-        data: formData,
-        success: function (data) {
-            alert(data);
-        	// $('.filter').hide();
-        	$('.view-report').html(data);
-            
-        },
-        error: function () {
-            alert("Something went wrong");
-        }
-    });
-}).on('submit', function(e){
-    e.preventDefault();
-});
-</script> -->

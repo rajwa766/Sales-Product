@@ -1,55 +1,51 @@
 <?php
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use yii\models\order;
-use kartik\file\FileInput;
-use yii\db\Query;
+use yii\widgets\ActiveForm;
 ?>
 <!-- Agent order starts from here-->
-<div class="request-setting">
-    <div class="admin">
-    <div class="row first-row">
+<div class="transfer-setting">
+    <div class="first-row">
+    <div class="row first-row admin">
                             <?php
-                            if (isset($Role['super_admin'])) {
-                                ?>
+if (isset($Role['super_admin'])) {
+    ?>
                                 <div class="col-md-4">
                                     User Level
                                 </div>
                                 <div class="col-md-8">
                                     <?php
-                                    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-                                        'data' => common\models\UsersLevel::getAlllevels(),
-                                        'theme' => Select2::THEME_BOOTSTRAP,
-                                        'options' => ['placeholder' => 'Select a Level  ...'],
-                                        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-                                        'theme' => Select2::THEME_BOOTSTRAP,
-                                        'pluginOptions' => [
-                                            'allowClear' => true,
-                                        ],
-                                    ])->label(false);
-                                    ?>
+echo $form->field($model, 'all_level')->widget(Select2::classname(), [
+        'data' => common\models\UsersLevel::getAlllevels(),
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'options' => ['placeholder' => 'Select a Level  ...'],
+        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+        'theme' => Select2::THEME_BOOTSTRAP,
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
+    ])->label(false);
+    ?>
                                 </div>
-                            
+
                                     <?php
-                                } else {
-                                    echo $form->field($model, 'all_level')->hiddenInput(['value' => Yii::$app->user->identity->user_level_id])->label(false);
-                                }
-                                ?>
+} else {
+    echo $form->field($model, 'all_level')->hiddenInput(['value' => Yii::$app->user->identity->user_level_id])->label(false);
+}
+?>
                     </div>
 
                         <?php
-                        $user_id = Yii::$app->user->getId();
-                        $Role = Yii::$app->authManager->getRolesByUser($user_id);
-                        if (isset($Role['super_admin'])) {
-                            ?>
+$user_id = Yii::$app->user->getId();
+$Role = Yii::$app->authManager->getRolesByUser($user_id);
+if (isset($Role['super_admin'])) {
+    ?>
                         <div class="row">
                             <div class="col-md-4">
                                 Transfer From
                             </div>
                             <div class="col-md-8">
     <?php
-    echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Parent User ...'],
         'pluginOptions' => [
@@ -58,7 +54,7 @@ use yii\db\Query;
             'ajax' => [
                 'url' => '../user/get-users',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
+                'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
             ],
         ],
     ])->label(false);
@@ -66,10 +62,10 @@ use yii\db\Query;
                             </div>
                         </div>
                                 <?php
-                            } else {
-                                echo $form->field($model, 'parent_user')->hiddenInput(['value' => Yii::$app->user->identity->parent_id])->label(false);
-                            }
-                            ?>
+} else {
+    echo $form->field($model, 'parent_user')->hiddenInput(['value' => Yii::$app->user->identity->parent_id])->label(false);
+}
+?>
 
 
                     <div class="row">
@@ -88,10 +84,10 @@ if (isset($Role['super_admin'])) {
             'ajax' => [
                 'url' => '../user/get-users',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { 
+                'data' => new \yii\web\JsExpression('function(params) {
                           var parent_id = $("#parent_sected_user").val();
                           var user_level = $("#order-all_level").val();
-                          return {q:params.term,user_level:user_level,parent_id:parent_id}; }')
+                          return {q:params.term,user_level:user_level,parent_id:parent_id}; }'),
             ],
         ],
     ])->label(false);
@@ -103,12 +99,12 @@ if (isset($Role['super_admin'])) {
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' =>'../user/get-users',
+                'url' => '../user/get-users',
                 'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { 
+                'data' => new \yii\web\JsExpression('function(params) {
                     var parent_id = $("#order-parent_user").val();
                     var user_level = $("#order-all_level").val();
-                    return {q:params.term,user_level:user_level,parent_id:parent_id}; }')
+                    return {q:params.term,user_level:user_level,parent_id:parent_id}; }'),
             ],
         ],
     ])->label(false);
@@ -117,8 +113,7 @@ if (isset($Role['super_admin'])) {
                         </div>
                     </div>
 
- 
 
-    
+
     </div>
 </div>

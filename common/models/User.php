@@ -248,7 +248,7 @@ class User extends ActiveRecord implements IdentityInterface {
         }
     }
 
-    public static function getUsers($q, $parent_id=null,$user_level=null,$company_user=null) {
+    public static function getUsers($q, $parent_id=null,$user_level=null,$company_user=null,$include_parent=false) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, username AS text')
@@ -256,8 +256,13 @@ class User extends ActiveRecord implements IdentityInterface {
                 ->where('true');
         if (!is_null($q))
             $query->andWhere(['like', 'username', $q]);
-        if (!is_null($parent_id))
-            $query->andWhere(['=', 'parent_id', $parent_id]);
+            if (!is_null($parent_id))
+            {
+                if($include_parent)
+                    $query->andWhere(['or',['parent_id'=>$parent_id],['id'=>$parent_id]]);
+                else
+                    $query->andWhere(['=', 'parent_id', $parent_id]);
+            }
         if (!is_null($user_level))
             $query->andWhere(['=', 'user_level_id', $user_level]);
         if (!is_null($company_user))

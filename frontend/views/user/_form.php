@@ -279,7 +279,13 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
     </div>
 </div>
 </div>  
-<?php } ?>
+<?php }
+else
+{?>
+    <input type="hidden" value="<?=Yii::$app->user->identity->user_level_id;?>" id="user-all_level">
+<?php }?>
+
+?>
     <div class="row no-margin">
         <div class="col-md-6">
             <div class="col-md-4">
@@ -296,10 +302,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
             User Level
         </div>
         <div class="col-md-8">
-    <?php
-    $user_id = Yii::$app->user->getId();
-    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-    if(isset($Role['super_admin'])){ ?>
+    
    <?php
 echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
   'theme' => Select2::THEME_BOOTSTRAP,
@@ -323,26 +326,6 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 ])->label(false);
          
             ?>
-
-
-    <?php }else{?>
-    <label>Use Level</label>
-                <?php
-echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-    'data' => common\models\UsersLevel::getlevel(),
-    'theme' => Select2::THEME_BOOTSTRAP,
-    'options' => ['placeholder' => 'Select a current user Level ...'],
-    'pluginOptions' => [
-      'allowClear' => true,
-      //'autocomplete' => true,
-  
-  ],
-  ])->label(false);
-
-              ?>
-          </div>
-    </div>
-    <?php  } ?>
     </div>
     <?php } ?>
     
