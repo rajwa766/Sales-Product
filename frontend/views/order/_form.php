@@ -198,12 +198,17 @@ use yii\db\Query;
         {
             $('.admin').show();
             $('.order-setting-panel').show();
+            $('.order-settings').show();
         }
         else if (role == 'general')
         {
             $('.admin').hide();
             $('.agent').show();
-            $('.order-setting-panel').show();
+            if(type!="Transfer")
+            {
+                $('.order-setting-panel').hide();
+                $('.order-settings').hide();
+            }
         }
        
        <?php } ?>

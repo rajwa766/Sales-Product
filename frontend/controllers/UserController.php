@@ -250,8 +250,13 @@ class UserController extends Controller {
         $user_level = Yii::$app->request->get('user_level');
         $company_user = Yii::$app->request->get('company_user');
         $parent_id = Yii::$app->request->get('parent_id');
+        $include_parent = Yii::$app->request->get('include_parent');
+        if(empty($include_parent))
+        {
+            $include_parent=false;
+        }
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user);
+        return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user,$include_parent);
     }
 //child user of selected user
 public function actionChildusers() {
@@ -265,8 +270,14 @@ public function actionChildusers() {
         $q = Yii::$app->request->get('q');
         $parent_id = Yii::$app->request->get('parent_id');
         $max_user = Yii::$app->request->get('max_user');
+        $include_parent = Yii::$app->request->get('include_parent');
+        if(empty($include_parent))
+        {
+            $include_parent=false;
+        }
+        $id = Yii::$app->request->get('id');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user);
+        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user,$include_parent);
     }
 
 

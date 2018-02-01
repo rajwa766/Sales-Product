@@ -53,12 +53,24 @@ class UsersLevel extends \yii\db\ActiveRecord {
     }
 
     public static function getAllLevels() {
-        $data = UsersLevel::find()->where(['!=', 'max_user', '-1'])->all();
+        $user_id = Yii::$app->user->getId();
+        $user_level_id = Yii::$app->user->identity->user_level_id;
+        $data=null;
+        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        if(isset($Role['super_admin']))
+        {
+            $data = UsersLevel::find()->all();
+        }
+        else
+        {
+            $data = UsersLevel::find()->where(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
+        }
+        
         $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
         return $value;
     }
 
-    public static function getLevels($q,$parent_id=null,$max_user=null) {
+    public static function getLevels($q,$parent_id=null,$max_user=null,$include_parent=false) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, name AS text')
@@ -69,7 +81,12 @@ class UsersLevel extends \yii\db\ActiveRecord {
         if (!is_null($max_user))
             $query->andWhere(['=', 'max_user', $max_user]);
         if (!is_null($parent_id))
-            $query->andWhere(['=', 'parent_id', $parent_id]);
+            {
+                if($include_parent)
+                    $query->andWhere(['or',['parent_id'=>$parent_id],['id'=>$parent_id]]);
+                else
+                    $query->andWhere(['=', 'parent_id', $parent_id]);
+            }
         $query->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();

@@ -67,12 +67,7 @@ use kartik\time\TimePicker;
 				</div>
 			</div>
 		</div>
-        <?php
-    $user_id = Yii::$app->user->getId();
-    $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-    if(isset($Role['super_admin'])){
-    ?>
-        <div class="row" style="padding-top: 20px;">
+<div class="row" style="padding-top: 20px;">
 			<div class="col-md-6">
 				<div class="col-md-4">
                 User Levels
@@ -110,7 +105,9 @@ use kartik\time\TimePicker;
                       'ajax' => [
                         'url' => '../user/get-users',
                           'dataType' => 'json',
-                          'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }')
+                          'data' => new \yii\web\JsExpression('function(params) {  var user_level = $("#order-all_level").val();
+                            var parent_id = '.Yii::$app->user->identity->id.';
+                            return {q:params.term,user_level:user_level,parent_id:parent_id,include_parent:true}; }')
                       ],
                   ],
                   ])->label(false);
@@ -119,7 +116,7 @@ use kartik\time\TimePicker;
             </div>
             
 		</div>
-                <?php } ?>
+               
         <div class="row">
              <div class="col-md-6">
 				<div class="col-md-4">

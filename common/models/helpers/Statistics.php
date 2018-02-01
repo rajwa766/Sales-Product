@@ -3,6 +3,7 @@
 namespace common\models\helpers;
 
 use Yii;
+use yii\db\Query;
 
 class Statistics extends \yii\base\Model
 {
@@ -86,11 +87,11 @@ class Statistics extends \yii\base\Model
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
         $all_status['current_user'] = Statistics::CurrentUser($user_id);
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
-        $all_status['total_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->count();
-        $all_status['pending_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $pending])->count();
-        $all_status['approved_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $approved])->count();
-        $all_status['transfered_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $transfer_approved])->count();
-        $all_status['returned_order'] = Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $return_approved])->count();
+        $all_status['total_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->count();
+        $all_status['pending_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $pending])->count();
+        $all_status['approved_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $approved])->count();
+        $all_status['transfered_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $transfer_approved])->count();
+        $all_status['returned_order'] = \common\models\Order::find()->where(['order_request_id' => Yii::$app->user->identity->id])->andWhere(['status' => $return_approved])->count();
 
         return $all_status;
     }
