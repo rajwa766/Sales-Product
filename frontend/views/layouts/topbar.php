@@ -72,11 +72,11 @@
                                                 <div>
                                                 <?php if($remaning_percent) { ?>
                                                     <span class="name">
-                                                        <strong><?= Yii::t('app', 'Your Remaning stock is');?> <?php echo $remaning_percent ?>%</strong>
+                                                        <strong><?= Yii::t('app', 'Your remaining stock is');?> <?php echo $remaning_percent; ?>%</strong>
                                                         
                                                     </span>
                                     <?php  }else{ ?>
-                                        <strong><?= Yii::t('app', 'Your Remaning stock is');?> <?php echo $remaning_percent ?>%</strong>
+                                        <strong><?= Yii::t('app', 'Your remaining stock is');?> <?php echo $remaning_percent ?>%</strong>
 
                                      <?php }
                                         ?>
@@ -134,7 +134,7 @@
                                 <li>
                                     <a href="<?= Yii::$app->homeUrl;?>user/view/<?= Yii::$app->user->identity->id?>">
                                         <i class="fa fa-user"></i>
-                                        <?= Yii::t('app', 'Profile');?>
+                                        <?= Yii::t('app', 'PROFILE');?>
                                     </a>
                                 </li>
                                

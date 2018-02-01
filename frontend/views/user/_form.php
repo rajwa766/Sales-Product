@@ -35,7 +35,7 @@ use kartik\file\FileInput;
     <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-            First Name
+            <?= Yii::t('app','First Name') ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label(false)  ?>
@@ -44,7 +44,7 @@ use kartik\file\FileInput;
     </div>
     <div class="col-md-6">
         <div class="col-md-4">
-            Last Name
+            <?= Yii::t('app','Last Name'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true])->label(false)  ?>
@@ -54,7 +54,7 @@ use kartik\file\FileInput;
     <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-            Username
+            <?= Yii::t('app','Username'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord])->label(false)   ?>
@@ -62,7 +62,7 @@ use kartik\file\FileInput;
     </div>
     <div class="col-md-6">
         <div class="col-md-4">
-            Password
+        <?= Yii::t('app','Password'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'password')->textInput(['maxlength' => true])->label(false) ?>
@@ -75,7 +75,7 @@ use kartik\file\FileInput;
     <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-            Email
+        <?= Yii::t('app','Email'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'email')->textInput(['maxlength' => true])->label(false) ?>
@@ -83,7 +83,7 @@ use kartik\file\FileInput;
     </div>
     <div class="col-md-6">
         <div class="col-md-4">
-            Phone
+            <?= Yii::t('app','Phone'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true])->label(false) ?>
@@ -94,7 +94,7 @@ use kartik\file\FileInput;
      <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-            Address
+            <?= Yii::t('app','Address'); ?>
         </div>
         <div class="col-md-8">
     <?= $form->field($model, 'address')->textInput(['maxlength' => true])->label(false) ?>
@@ -102,7 +102,7 @@ use kartik\file\FileInput;
     </div>
     <div class="col-md-6">
         <div class="col-md-4">
-            City
+            <?= Yii::t('app','City'); ?>
         </div>
         <div class="col-md-8">
          <?= $form->field($model, 'city')->textInput()->label(false) ?>
@@ -112,7 +112,7 @@ use kartik\file\FileInput;
 <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-            Upload Profile 
+            <?= Yii::t('app','Upload Profile'); ?> 
         </div>
         <div class="col-md-8">
         <?=

@@ -82,8 +82,10 @@ use yii\models\users_level;
                         <?php  
                          $user_id = Yii::$app->user->getId();
                          $Role =   Yii::$app->authManager->getRolesByUser($user_id);
- if(!isset($Role['customer'])){
-    
+                        $vip_level_id = array_search('VIP Team', \common\models\Lookup::$user_levels);
+                       $user_level_id =  Yii::$app->user->identity->user_level_id;
+        if(!isset($Role['seller']) &&  $user_level_id <= $vip_level_id){
+        
                         ?>
                         <li class=""> 
                             <a href="javascript:;">
@@ -103,7 +105,8 @@ use yii\models\users_level;
                                 
                             </ul>
                         </li>
- <?php  }  ?>
+        <?php }
+        if(!isset($Role['seller'])){ ?>
                      <!-- order -->
                      <li class=""> 
                             <a href="javascript:;">
@@ -117,12 +120,8 @@ use yii\models\users_level;
 
                                 </li>
                              
-                                <?php
-
- if(!isset($Role['customer'])){
-                                ?>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'RETURN ORDERS');?>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'Returns Orders');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
                                 
                                 </a>
@@ -163,7 +162,10 @@ use yii\models\users_level;
             
               
                      <!-- order ends -->
-              <?php       if(!isset($Role['customer'])){ ?>
+              <?php       if(!isset($Role['seller'])){ 
+                       if(isset($Role['super_admin'])){ ?>
+                  
+                    
                      <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-users"></i>
@@ -179,7 +181,7 @@ use yii\models\users_level;
                                 
                             </ul>
                         </li>
-
+                       <?php } ?>
                         <!-- reports starts here -->
                         <li class=""> 
                             <a href="javascript:;">
@@ -197,27 +199,13 @@ use yii\models\users_level;
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables/Payables');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables / Payables');?></a>
 
                                 </li>
                             </ul>
                         </li>
                      <?php } ?>
-                     <li class="" style="display:none;"> 
-                            <a href="javascript:;">
-                                <i class="fa fa-users"></i>
-                                <span class="title"><?= Yii::t('app','Stock Status'); ?></span>
-                                <span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu" >
-                                <li>
-                                <a class="" href="<?= Yii::$app->homeUrl; ?>stock-status"><?= Yii::t('app', 'Stock Status');?></a>
-                                </li>
-                            
-                                
-                                
-                            </ul>
-                        </li>
+                    
                         <!-- reports ends here -->
                     </ul>
 
