@@ -19,103 +19,105 @@ use kartik\file\FileInput;
 </style>
 
 <section class="box">
-<header class="panel_header">
-    <h1 class="title pull-left"><?= Html::encode($this->title) ?></h1>
-    <div class="actions panel_actions pull-right">
-        <i class="box_toggle fa fa-chevron-down"></i>
-    </div>
-</header>
-<div class="content-body">
-    <?php 
-        $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
-        $user_id = Yii::$app->user->getId();
-        $Role =   Yii::$app->authManager->getRolesByUser($user_id);
-    ?>
-    
-    <div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-            First Name
+    <header class="panel_header">
+        <h1 class="title pull-left"><?= Html::encode($this->title) ?></h1>
+        <div class="actions panel_actions pull-right">
+            <i class="box_toggle fa fa-chevron-down"></i>
         </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label(false)  ?>
-  <?php  echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false); ?>
-    </div>
-    </div>
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Last Name
+    </header>
+    <div class="content-body">
+        <?php 
+            $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
+            $user_id = Yii::$app->user->getId();
+            $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+        ?>
+        
+        <div class="row no-margin">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <?= Yii::t('app','First Name') ?>
+                </div>
+                <div class="col-md-8">
+                <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label(false)  ?>
+                <?php  echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false); ?>
+            </div>
         </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'last_name')->textInput(['maxlength' => true])->label(false)  ?>
-    </div>
-    </div>
-</div>   
-    <div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Username
-        </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord])->label(false)   ?>
-    </div>
-    </div>
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Password
-        </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'password')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-    </div>
-</div>    
 
-
-  
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Last Name'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'last_name')->textInput(['maxlength' => true])->label(false)  ?>
+            </div>
+        </div>
+    </div>   
     <div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Email
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Username'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord])->label(false)   ?>
+            </div>
         </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-    </div>
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Phone
+
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Password'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'password')->textInput(['maxlength' => true])->label(false) ?>
+            </div>
         </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true])->label(false) ?>
-</div>
-    </div>
-</div>   
+    </div>    
+
+    <div class="row no-margin">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Email'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'email')->textInput(['maxlength' => true])->label(false) ?>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Phone'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'phone_no')->textInput(['maxlength' => true])->label(false) ?>
+            </div>
+        </div>
+    </div>   
     
      <div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Address
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Address'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'address')->textInput(['maxlength' => true])->label(false) ?>
+            </div>
+         </div>
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','City'); ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'city')->textInput()->label(false) ?>
+            </div>
         </div>
-        <div class="col-md-8">
-    <?= $form->field($model, 'address')->textInput(['maxlength' => true])->label(false) ?>
-    </div>
-    </div>
-    <div class="col-md-6">
-        <div class="col-md-4">
-            City
-        </div>
-        <div class="col-md-8">
-         <?= $form->field($model, 'city')->textInput()->label(false) ?>
-        </div>
-    </div>
-</div> 
-<div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Upload Profile 
-        </div>
-        <div class="col-md-8">
-        <?=
+    </div> 
+
+    <div class="row no-margin">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app','Upload Profile'); ?> 
+            </div>
+            <div class="col-md-8">
+                <?=
                 $form->field($model, 'profile')->widget(FileInput::classname(), [
                     
                     'pluginOptions' => [
@@ -127,84 +129,84 @@ use kartik\file\FileInput;
                     ],
                 ])->label(false);
                 ?>
+            </div>
+        </div>
+        <div class="col-md-6">
+        
+        </div>
     </div>
-    </div>
-    <div class="col-md-6">
-    
-    </div>
-</div>
-<?php if(!$model->isNewRecord  && $Role['super_admin'] && $user_id != $model->id){
-$user_level_name =(new Query())
-->select('users_level.name,users_level.id')
-->from('user')
-->innerJoin('users_level', 'user.user_level_id = users_level.id')
-->where(['=', 'user.id', $model->id])
-->one();
-$parent_user = \common\models\User::findOne(['id'=>$model->parent_id]);
-
+    <?php 
+        if(!$model->isNewRecord  && $Role['super_admin'] && $user_id != $model->id){
+        $user_level_name =(new Query())
+        ->select('users_level.name,users_level.id')
+        ->from('user')
+        ->innerJoin('users_level', 'user.user_level_id = users_level.id')
+        ->where(['=', 'user.id', $model->id])
+        ->one();
+        $parent_user = \common\models\User::findOne(['id'=>$model->parent_id]);
     ?>
-       <div class="row no-margin">
-    <div class="col-md-6">
-        <div class="col-md-4">
-        User Level
+    
+    <div class="row no-margin">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                User Level
+            </div>
+            <div class="col-md-8">
+                <?php
+                echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
+                    'data' => common\models\UsersLevel::getAllLevels(),
+                    'value' =>$user_level_name['id'],
+                    'initValueText' => $user_level_name['name'],
+                    'theme' => Select2::THEME_BOOTSTRAP,
+                    'options' => ['placeholder' => 'Select a current user Level ...'],
+                    'pluginOptions' => [
+                    'allowClear' => true,
+                    //'autocomplete' => true,
+                
+                ],
+                ])->label(false);
+                ?>
+            </div>
+         </div>
+        <div class="col-md-6">
+            <div class="col-md-4">
+                Parent User
+            </div>
+            <div class="col-md-8">
+                <?php
+                    echo $form->field($model, 'parent_id')->widget(Select2::classname(), [
+                        'value' =>$model->parent_id,
+                        'initValueText' =>$parent_user->username,
+                        'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['placeholder' => 'Select a Parent User ...'],
+                        'pluginOptions' => [
+                        'allowClear' => true,
+                        //'autocomplete' => true,
+                        'ajax' => [
+                            'url' => '../parentusersOnupdate',
+                            'dataType' => 'json',
+                            'data' => new \yii\web\JsExpression('function(params) {
+                                //   if($("#user-company_user").is(":checked")){
+                                //       var company_user = 1;
+                                //   }else{
+                                //       var company_user = 0;
+                                    
+                                //   }
+                                var type = $("#user-user_level_id").val();
+                                return {
+                                    q:params.term,type:type}; 
+                                }')
+                        ],
+                    ],
+                    ])->label(false);
+                ?>
+            </div>
         </div>
-        <div class="col-md-8">
-<?php
-echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-    'data' => common\models\UsersLevel::getAllLevels(),
-     'value' =>$user_level_name['id'],
-    'initValueText' => $user_level_name['name'],
-    'theme' => Select2::THEME_BOOTSTRAP,
-    'options' => ['placeholder' => 'Select a current user Level ...'],
-    'pluginOptions' => [
-      'allowClear' => true,
-      //'autocomplete' => true,
-  
-  ],
-  ])->label(false);
-?>
-    </div>
-    </div>
-    <div class="col-md-6">
-        <div class="col-md-4">
-            Parent User
-        </div>
-        <div class="col-md-8">
-        <?php
-
-  echo $form->field($model, 'parent_id')->widget(Select2::classname(), [
-    'value' =>$model->parent_id,
-    'initValueText' =>$parent_user->username,
-    'theme' => Select2::THEME_BOOTSTRAP,
-    'options' => ['placeholder' => 'Select a Parent User ...'],
-    'pluginOptions' => [
-      'allowClear' => true,
-      //'autocomplete' => true,
-      'ajax' => [
-          'url' => '../parentusersOnupdate',
-          'dataType' => 'json',
-          'data' => new \yii\web\JsExpression('function(params) {
-            //   if($("#user-company_user").is(":checked")){
-            //       var company_user = 1;
-            //   }else{
-            //       var company_user = 0;
-                  
-            //   }
-               var type = $("#user-user_level_id").val();
-              return {
-                  q:params.term,type:type}; 
-              }')
-      ],
-  ],
-  ])->label(false);
-?>
-    </div>
-    </div>
-</div> 
+    </div> 
        
-          </div>
+</div>
     </div>
-    <?php }?>
+    <?php } ?>
 <?php if ($model->isNewRecord) {?>
 <div class="row no-margin">
     <div class="col-md-6">
@@ -285,7 +287,6 @@ else
     <input type="hidden" value="<?=Yii::$app->user->identity->user_level_id;?>" id="user-all_level">
 <?php }?>
 
-?>
     <div class="row no-margin">
         <div class="col-md-6">
             <div class="col-md-4">

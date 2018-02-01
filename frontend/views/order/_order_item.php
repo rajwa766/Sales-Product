@@ -14,10 +14,10 @@ use yii\db\Query;
 
 <h3>Order Items</h3>
 <div class="row first-row">
+</div>
     <?php
-                    $user_id = Yii::$app->user->getId();
-                    
-    echo $form->field($model, 'product_id')->hiddenInput(['value' => '1'])->label(false);
+        $user_id = Yii::$app->user->getId();
+        echo $form->field($model, 'product_id')->hiddenInput(['value' => '1'])->label(false);
     ?>
     <div class="stock_field">
         <?php if (!Yii::$app->user->isGuest) { ?>
@@ -61,8 +61,5 @@ use yii\db\Query;
     }
     ?>
 
-
-
-</div>
 
 

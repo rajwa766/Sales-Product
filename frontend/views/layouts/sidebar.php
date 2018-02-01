@@ -121,7 +121,7 @@ use yii\models\users_level;
                                 </li>
                              
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'RETURN ORDERS');?>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'Returns Orders');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
                                 
                                 </a>
@@ -199,7 +199,7 @@ use yii\models\users_level;
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables/Payables');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables / Payables');?></a>
 
                                 </li>
                             </ul>
