@@ -166,6 +166,7 @@ class OrderController extends Controller
             $type="Order";
         }
         $model = new Order();
+        $product=\common\models\Product::findOne(['id'=>'1']);
         if ($model->load(Yii::$app->request->post())) {
            
             $orderCreate = \common\models\Order::CreateOrder($model);
@@ -176,6 +177,7 @@ class OrderController extends Controller
         return $this->render('create', [
             'model' => $model,
             'type'=>$type,
+            'product'=>$product,
         ]);
     }
 
