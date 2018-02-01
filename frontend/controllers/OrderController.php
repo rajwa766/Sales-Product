@@ -195,14 +195,15 @@ class OrderController extends Controller
 
     public function actionCreatetransfer()
     {
+        $type="Transfer";
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
-            $orderTransfer = \common\models\Order::CreateOrderTransfer($model);
+            $orderTransfer = \common\models\Order::CreateOrder($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        return $this->render('create_transfer', [
+        return $this->render('create', [
             'model' => $model,
+            'type'=>$type,
         ]);
     }
 
