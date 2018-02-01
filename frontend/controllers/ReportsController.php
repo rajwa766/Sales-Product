@@ -141,6 +141,7 @@ public function actionOrderReport()
         ]);
 }
 public function actionOrderReportResult(){
+         $model = new Order(); 
          $fromDate = Yii::$app->request->post('from_date');
          $toDate = Yii::$app->request->post('to_date');
          $userId = Yii::$app->request->post('user_id');
@@ -152,6 +153,8 @@ public function actionOrderReportResult(){
          $order  = (new Query()) 
           ->select('*')
           ->from('order')
+          ->innerJoin('product_order', 'product_order.order_id = order.id')
+          ->innerJoin('product', 'product.id = product_order.product_id')
           ->where(['or',
              ['order_request_id'=>$userId],
              ['user_id'=>$userId]
