@@ -41,7 +41,7 @@ use yii\db\Query;
         //$model->payment_method_for_rent = '1';
         echo $form->field($model, 'payment_method')->radioList([
             '1' => 'Credit Card',
-            '2' => 'Cash on Delivery',
+            // '2' => 'Cash on Delivery',
             '3' => 'Bank Transfer',
         ])->label(false);
         ?>
@@ -74,7 +74,7 @@ use yii\db\Query;
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => '../postcode/all-code',
+                    'url' => '/postcode/all-code',
                     'dataType' => 'json',
                     'data' => new \yii\web\JsExpression('function(params) { ; return {q:params.term}; }')
                 ],

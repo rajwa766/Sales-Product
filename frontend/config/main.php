@@ -79,6 +79,8 @@ return [
              'site/*',
              'order/customer-create',
              'postcode/all-code',
+             'product/get-product',
+             'user-product-level/getunitsprice',
              'order/create',
              'order/view',
              

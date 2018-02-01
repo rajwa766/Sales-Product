@@ -19,7 +19,12 @@ use yii\db\Query;
     }
 </style>
  <?php
- 
+        if (Yii::$app->user->isGuest) {
+            $class="col-md-offset-1  col-md-10";
+        }
+        else{
+            $class="col-md-10";
+        }
         $referral_id = Yii::$app->request->get('id');// For Customers
         $referral_user=null;
         if(!empty($referral_id))
@@ -38,8 +43,8 @@ use yii\db\Query;
 <div class="order-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
             <?php if (!Yii::$app->user->isGuest) { ?>  
-                <div class="row">
-                    <div class="col-md-9 orders-panel order-settings">
+                <div class="row outer-container order-details">
+                    <div class="<?=$class;?> orders-panel order-settings">
                         <?=
                                 Yii::$app->controller->renderPartial('_order_setting', [
                                     'model' => $model,
@@ -53,8 +58,8 @@ use yii\db\Query;
                 </div>
             <?php } ?>
             <!-- this is order detail section -->
-            <div class="row order-details">
-                <div class="col-md-9 orders-panel">
+            <div class="row outer-container order-details">
+                <div class="<?=$class;?> orders-panel">
                     <?=
                     Yii::$app->controller->renderPartial('_order_detail', [
                         'model' => $model,
@@ -67,7 +72,7 @@ use yii\db\Query;
             </div>
             <!-- this is order items section -->
             <div class="row outer-container">
-                <div class="col-md-9 orders-panel">
+                <div class="<?=$class;?> orders-panel">
                     <?=
                     Yii::$app->controller->renderPartial('_order_item', [
                         'model' => $model,
@@ -78,9 +83,10 @@ use yii\db\Query;
                     ?>
                 </div>
             </div>
+            <!-- order items section end here-->
             <!-- this is customer section-->
             <div class="row outer-container shipping-address">
-                <div class="col-md-9 orders-panel">
+                <div class="<?=$class;?> orders-panel">
                     <?=
                     Yii::$app->controller->renderPartial('_shipping', [
                         'model' => $model,
@@ -94,9 +100,10 @@ use yii\db\Query;
             <!-- customer section ends here-->
             <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
             <?= $form->field($model, 'order_type')->hiddenInput(['value' => $type])->label(false);?>
-            
-            <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
+            <div class="<?=$class?>">
+                <div class="form-group">
+                <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
+                </div>
             </div>
     <?php ActiveForm::end(); ?>
 </div>
@@ -136,7 +143,7 @@ use yii\db\Query;
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            var url="../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            var url="/user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
             if (type == "Request"){
             $.post(url, function (data) {
                 var json = $.parseJSON(data);
@@ -153,7 +160,7 @@ use yii\db\Query;
         } else{
                 if(type!="Return")
                 {
-                    url="../product/get-product?id=1";    
+                    url="/product/get-product?id=1";    
                 }
                 else
                 {
