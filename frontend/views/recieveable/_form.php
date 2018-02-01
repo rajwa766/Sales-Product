@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Gl */
@@ -12,9 +13,10 @@ use kartik\select2\Select2;
 <div class="recieveable-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="col-md-6">
 <?php
 echo $form->field($model, 'user_level')->widget(Select2::classname(), [
-    'data' => common\models\UsersLevel::getalllevel(),
+    'data' => common\models\UsersLevel::getAlllevels(),
     'theme' => Select2::THEME_BOOTSTRAP,
     'options' => ['placeholder' => 'Select a current user Level ...'],
     'pluginOptions' => [
@@ -24,6 +26,8 @@ echo $form->field($model, 'user_level')->widget(Select2::classname(), [
   ],
   ]);
 ?>
+</div>
+<div class="col-md-6">
     <?php 
            echo $form->field($model, 'receivable_user')->widget(Select2::classname(), [
                                             'theme' => Select2::THEME_BOOTSTRAP,
@@ -32,13 +36,15 @@ echo $form->field($model, 'user_level')->widget(Select2::classname(), [
                                                 'allowClear' => true,
                                                 //'autocomplete' => true,
                                                 'ajax' => [
-                                                    'url' => '../user/parentuser',
+                                                    'url' => '../user/get-users',
                                                     'dataType' => 'json',
-                                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#gl-user_level").val();return {q:params.term,type:type}; }')
+                                                    'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#gl-user_level").val();return {q:params.term,user_level:user_level}; }')
                                                 ],
                                             ],
                                         ]);
     ?>
+    </div>
+<div class="col-md-6">
        <?php 
            echo $form->field($model, 'payable_user')->widget(Select2::classname(), [
                                             'theme' => Select2::THEME_BOOTSTRAP,
@@ -47,19 +53,43 @@ echo $form->field($model, 'user_level')->widget(Select2::classname(), [
                                                 'allowClear' => true,
                                                 //'autocomplete' => true,
                                                 'ajax' => [
-                                                    'url' => '../user/childusers',
+                                                    'url' => '../user/get-users',
                                                     'dataType' => 'json',
-                                                    'data' => new \yii\web\JsExpression('function(params) { var type = $("#gl-receivable_user").val();return {q:params.term,type:type}; }')
+                                                    'data' => new \yii\web\JsExpression('function(params) { var parent_id = $("#gl-receivable_user").val();return {q:params.term,parent_id:parent_id}; }')
                                                 ],
                                             ],
                                         ]);
     ?>
-        <?= $form->field($model, 'recieveable_amount')->textInput(['maxlength' => true]) ?>
+    </div>
+    
+<div class="col-md-6">
+    
+        <?= $form->field($model, 'recieveable_amount')->textInput(['maxlength' => true,'readOnly'=> true]) ?>
+        </div>
+<div class="col-md-6">
+        
     <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
+    </div>
+<div class="col-md-6">
+    
+    <?=
+                $form->field($model, 'payment_slip')->widget(FileInput::classname(), [
+                    
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                        'initialPreview' => [
+                            $model->payment_slip ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->payment_slip) : null, // checks the models to display the preview
+                        ],
+                        'overwriteInitial' => false,
+                    ],
+                ]);
+                ?>
+                </div>
+                <div class="col-md-6">
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
-
+</div>
     <?php ActiveForm::end(); ?>
 
 </div>

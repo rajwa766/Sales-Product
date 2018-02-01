@@ -12,204 +12,201 @@ use yii\db\Query;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-
+<style>
+    .order-setting-panel
+    {
+        display:none;
+    }
+</style>
+ <?php
+ 
+        $referral_id = Yii::$app->request->get('id');// For Customers
+        $referral_user=null;
+        if(!empty($referral_id))
+        {
+            $referral_user=\common\models\User::findOne(['id'=>$referral_id]);
+        }
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        $RoleName='';
+        if(!empty($Role))
+        {
+            $RoleName = array_keys($Role)[0];
+        }
+        $type = '';
+?>
 <div class="order-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-
-    <div class="row main-container">
-        <div class="row">
-            <div class="col-md-9 order-setting-panel top_row">
-
-
-                <?php
-                $user_id = Yii::$app->user->getId();
-                $Role = Yii::$app->authManager->getRolesByUser($user_id);
-                $RoleName = array_keys($Role)[0];
-                ?>
-
-                <!-- order starts from here-->
-                <div class="request-setting">
-                    <div class="">
-                        <div class="row">
-                            <?php
-                            $user_id = Yii::$app->user->getId();
-                            $Role = Yii::$app->authManager->getRolesByUser($user_id);
-                            if (isset($Role['super_admin'])) {
-                                ?>
-                                <div class="col-md-4">
-                                    User Level
-                                </div>
-                                <div class="col-md-8">
-                                    <?php
-                                    echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-                                        'data' => common\models\UsersLevel::getalllevel(),
-                                        'theme' => Select2::THEME_BOOTSTRAP,
-                                        'options' => ['placeholder' => 'Select a Level  ...'],
-                                        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-                                        'theme' => Select2::THEME_BOOTSTRAP,
-                                        'pluginOptions' => [
-                                            'allowClear' => true,
-                                        ],
-                                    ])->label(false);
-                                    ?>
-                                </div>
-                            </div>
-                                    <?php
-                                } else {
-                                    echo $form->field($model, 'all_level')->hiddenInput(['value' => Yii::$app->user->identity->user_level_id])->label(false);
-                                }
-                                ?>
+            <?php if (!Yii::$app->user->isGuest) { ?>  
+                <div class="row">
+                    <div class="col-md-9 orders-panel order-settings">
+                        <?=
+                                Yii::$app->controller->renderPartial('_order_setting', [
+                                    'model' => $model,
+                                    'form' => $form,
+                                    'user_id' => $user_id,
+                                    'Role' => $Role,
+                                    'type' => $type,
+                                ]);
+                        ?>
                     </div>
-
-                        <?php
-                        $user_id = Yii::$app->user->getId();
-                        $Role = Yii::$app->authManager->getRolesByUser($user_id);
-                        if (isset($Role['super_admin'])) {
-                            ?>
-                        <div class="row">
-                            <div class="col-md-4">
-                                Transfer From
-                            </div>
-                            <div class="col-md-8">
-    <?php
-    echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Parent User ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../user/parentuser',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var type = $("#order-all_level").val();return {q:params.term,type:type}; }')
-            ],
-        ],
-    ])->label(false);
-    ?>
-                            </div>
-                        </div>
-                                <?php
-                            } else {
-                                echo $form->field($model, 'parent_user')->hiddenInput(['value' => Yii::$app->user->identity->parent_id])->label(false);
-                            }
-                            ?>
-
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            Transfer to
-                        </div>
-                        <div class="col-md-8">
-<?php
-if (isset($Role['super_admin'])) {
-    echo $form->field($model, 'child_user')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a child user Level ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../order/parentuser',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { 
-                          var parent = $("#parent_sected_user").val();
-                          var type = $("#order-all_level").val();
-                          return {q:params.term,type:type,parent:parent}; }')
-            ],
-        ],
-    ])->label(false);
-} else {
-    echo $form->field($model, 'child_user')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a child user Level ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../order/parentuseradmin',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { 
-                    var parent = $("#order-parent_user").val();
-                    var type = $("#order-all_level").val();
-                    return {q:params.term,type:type,parent:parent}; }')
-            ],
-        ],
-    ])->label(false);
-}
-?>
-                        </div>
-                    </div>
-
+                </div>
+            <?php } ?>
+               <!-- this is order detail section -->
+               <div class="row order-details">
+                <div class="col-md-9 orders-panel">
+                    <?=
+                    Yii::$app->controller->renderPartial('_order_detail', [
+                        'model' => $model,
+                        'form' => $form,
+                        'user_id' => $user_id,
+                        'Role' => $Role,
+                    ]);
+                    ?>
                 </div>
             </div>
-
-        </div>
-
-        <!-- this is order detail section -->
-        <div class="row">
-            <div class="col-md-9 order-panel">
-<?=
-Yii::$app->controller->renderPartial('_order_detail', [
-    'model' => $model,
-    'form' => $form,
-]);
-?>
+            <!-- this is order items section -->
+            <div class="row outer-container">
+                <div class="col-md-9 orders-panel">
+                    <?=
+                    Yii::$app->controller->renderPartial('_order_item', [
+                        'model' => $model,
+                        'form' => $form,
+                        'user_id' => $user_id,
+                        'Role' => $Role,
+                    ]);
+                    ?>
+                </div>
             </div>
-        </div>
-        <!-- this is order items section -->
-        <div class="row ">
-            <div class="col-md-9 order-panel">
-<?=
-Yii::$app->controller->renderPartial('_order_item', [
-    'model' => $model,
-    'form' => $form,
-]);
-?>
+      
+            <!-- customer section ends here-->
+            <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
+
+
+            <div class="form-group">
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
             </div>
-        </div>
-        <input type="hidden" id="parent_sected_user" readonly="true" class="form-control"  maxlength="45">
+    <?php ActiveForm::end(); ?>
+</div>
 
-
-        <div class="form-group">
-<?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
-        </div>
-
-            <?php ActiveForm::end(); ?>
-    </div>
-
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-
-            $('#order-parent_user').on('change', function () {
-                var product_id = '1';
-                $.post("../stock-in/getunits?id=" + product_id + "&user_id=" + $(this).val(), function (data) {
-                    $('#order-orde').val(data);
-                });
-                $.post("../user/getparentid?id=" + $(this).val(), function (id_parent) {
-                    $("#order-child_user").select2('val', 'All');
-                    $('#parent_sected_user').val(id_parent);
-                });
-            });
-
-            $('#order-quantity').on('blur', function () {
-                if (parseInt($('#order-orde').val()) >= parseInt($('#order-quantity').val())) {
-                    if ($('#order-quantity').val()) {
-                        $(".noproduct").hide();
-                        $('#order-single_price').val('760');
-                        $('#order-total_price').val($('#order-quantity').val() * 760);
-
-                    } else {
-                        $(".noproduct").show();
-                        $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less then stock amount</h5>");
-                    }
-                } else {
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        <?php
+        if(!empty($referral_user))
+        {
+        ?>
+            $("#order-representative").val("<?= $referral_user['username'] ?>");
+        <?php  
+        }
+        ?>
+        $('#order-parent_user').on('change', function () {
+                GetUserStock($(this).val());
+         });
+         $('#order-postal_code').on('change', function () {
+                var data = $('#order-postal_code').select2('data');
+                var postal_data=data[0].text;
+                var province=postal_data.split('-')[0];
+                var district=postal_data.split('-')[1];
+                $("#order-district").val(district);
+                $("#order-province").val(province);
+         });
+        
+        //this code is to hidden the grid and show for order and request if user login
+        $('#order-quantity').on('blur', function () {
+            var type = '<?= $type ?>';
+            if (type == 'Request'){
+                if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
+            $.post("../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val(), function (data) {
+                var json = $.parseJSON(data);
+                    if (json.price){
+                    $(".noproduct").hide();
+                    $('#order-single_price').val(json.price);
+                    $('#order-total_price').val(parseFloat($('#order-quantity').val()) * parseFloat(json.price));
+                } else{
                     $(".noproduct").show();
-                    $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock</h5>");
+                    $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less than  " + json.units + " Units</h5>");
                     $('#order-quantity').val('');
-
                 }
+            
+        
+                
             });
+            }   else{
+                $(".noproduct").show();
+                        $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock </h5>");
+                        $('#order-quantity').val('');
+            }
+            
+        } else{
+                $.post("../product/get-product?id=1", function (data) {
+               
+                <?php if (!Yii::$app->user->isGuest) { ?>
+                    if (parseInt($('#available-stock').val()) >= parseInt($('#order-quantity').val())){
+                        if ($('#order-quantity').val()){
+                            $(".noproduct").hide();
+                            $('#order-single_price').val(data.price);
+                            $('#order-total_price').val($('#order-quantity').val() * data.price);
+                        } else{
+                        $(".noproduct").show();
+                            $(".noproduct").html("<h5 style='text-align:center;color:red;'>The value can not empty and must be less than stock.</h5>");
+                        }
+                    } else{
+                        $(".noproduct").show();
+                        $(".noproduct").html("<h5 style='text-align:center;color:red;'>Out of Stock </h5>");
+                        $('#order-quantity').val('');
+                    }
+                <?php }
+                else
+                {
+                ?>
+                    $('#order-single_price').val(data.price);
+                    $('#order-total_price').val($('#order-quantity').val() * data.price);
+                <?php
+                }
+                ?>
+            });
+        }
+    });
+    <?php if (!Yii::$app->user->isGuest) { ?>
+        TypeChange();
+        var role = "<?php echo array_keys($Role)[0]; ?>";
+        if (role == 'super_admin')
+        {
+            $('.admin').show();
+            $('.order-setting-panel').show();
+        }
+        else if (role == 'general')
+        {
+            $('.admin').hide();
+            $('.agent').show();
+            $('.order-setting-panel').show();
+        }
+       
+       <?php } ?>
+    });
+    function TypeChange()
+        {
+            var value = "<?= $type ?>";
+            if (value == "Request")
+            {
+                jQuery(".shipping-address").hide();
+                
+                
+            }
+            else
+            {
+                jQuery(".shipping-address").show();
+                jQuery(".order-details").show();
+            }
 
-        });
-
-    </script>
+        }
+        function GetUserStock(user_id)
+        {
+            $.post("../stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + user_id, function (data) {
+                $('#available-stock').val(data);
+                var data = $('#order-request_agent_name').select2('data');
+                var user_name=data[0].text;
+                $("#order-representative").val(user_name);
+            });
+        }
+</script>

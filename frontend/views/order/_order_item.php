@@ -15,6 +15,8 @@ use yii\db\Query;
 <h3>Order Items</h3>
 <div class="row first-row">
     <?php
+                    $user_id = Yii::$app->user->getId();
+                    
     echo $form->field($model, 'product_id')->hiddenInput(['value' => '1'])->label(false);
     ?>
     <div class="stock_field">

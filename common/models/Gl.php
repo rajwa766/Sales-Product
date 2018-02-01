@@ -62,7 +62,7 @@ public $recieveable_amount;
             [['created_by', 'updated_by', 'payment_detail_id', 'order_id', 'account_id'], 'integer'],
             [['payment_detail_id',  'account_id','hit_account_id'], 'required'],
             [['amount'], 'string', 'max' => 45],
-            [['created_at', 'updated_at','receivable_user','payable_user', ], 'safe'],
+            [['created_at', 'updated_at','receivable_user','payable_user','payment_slip' ], 'safe'],
             
             [['account_id'], 'exist', 'skipOnError' => true, 'targetClass' => Account::className(), 'targetAttribute' => ['account_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
@@ -111,7 +111,16 @@ public $recieveable_amount;
     {
         return $this->hasOne(PaymentDetail::className(), ['id' => 'payment_detail_id']);
     }
-    public static function create_gl($amount,$user_id,$resquester_id,$order_id,$payment_method){
+    public static function slipSave($photo, $model){
+        $model->payment_slip = $photo->name;
+        $array = explode(".", $photo->name);
+        $ext = end($array);
+        $model->payment_slip = Yii::$app->security->generateRandomString() . ".{$ext}";
+        $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
+        $photo->saveAs($path);
+        return $model;
+    }
+    public static function create_gl($amount,$user_id,$resquester_id,$order_id,$payment_method,$payment_slip = null){
         $receivable_account=\common\models\Account::findOne(['user_id'=>$user_id,'account_type'=>1]);
         $payable_account=\common\models\Account::findOne(['user_id'=>$resquester_id,'account_type'=>2]);
         
@@ -135,6 +144,7 @@ public $recieveable_amount;
                     $gl->hit_account_id = $receivable_account->id;
                 }
                 $gl->payment_detail_id = $payment_method;
+                $gl->payment_slip = $payment_slip ;
                 $gl->save();
                 
                   if($i==0)

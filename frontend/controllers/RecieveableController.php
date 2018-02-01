@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
+use yii\web\UploadedFile;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -34,9 +35,13 @@ class RecieveableController extends Controller
     {
         $searchModel = new GlSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+         if (!isset($Role['super_admin'])) {
 $dataProvider->query->where(['account_id' => Yii::$app->user->identity->id]);
-       
-       
+         }
+$dataProvider->query->where(['order_id' =>Null]);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -46,7 +51,12 @@ $dataProvider->query->where(['account_id' => Yii::$app->user->identity->id]);
         $model = new Gl();
 
         if ($model->load(Yii::$app->request->post())) {
-            $createRecieveable = Gl::create_gl($model->amount,$model->receivable_user,$model->payable_user,'','1');
+            $photo = UploadedFile::getInstance($model, 'payment_slip');
+            if ($photo !== null ) {
+              $model = Gl::slipSave($photo, $model);
+            }
+            $payment_method  = array_search('Cash on Delivery', \common\models\Lookup::$order_status);
+            $createRecieveable = Gl::create_gl($model->amount * -1,$model->receivable_user,$model->payable_user,'',$payment_method,$model->payment_slip);
             return $this->redirect(['//gl/view', 'id' => $createRecieveable]);
         }
 

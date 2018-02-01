@@ -8,13 +8,20 @@ if ($type == "Order") {
         'Role' => $Role,
     ]);
 
-} else {
+} elseif($type == "Request") {
     echo Yii::$app->controller->renderPartial('_agent_request', [
         'model' => $model,
         'form' => $form,
         'user_id' => $user_id,
         'Role' => $Role,
     ]);
+}else{
+    echo Yii::$app->controller->renderPartial('_transfer_request', [
+        'model' => $model,
+        'form' => $form,
+        'user_id' => $user_id,
+        'Role' => $Role,
+    ]); 
 }
 ?>
 

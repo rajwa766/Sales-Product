@@ -182,6 +182,8 @@ class OrderController extends Controller
     {
         $model = new Order();
         if ($model->load(Yii::$app->request->post())) {
+            var_dump($model);
+            exit();
             $orderCreate = \common\models\Order::CreateOrderReturn($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -194,8 +196,8 @@ class OrderController extends Controller
     public function actionCreatetransfer()
     {
         $model = new Order();
-
         if ($model->load(Yii::$app->request->post())) {
+            $orderTransfer = \common\models\Order::CreateOrderTransfer($model);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
