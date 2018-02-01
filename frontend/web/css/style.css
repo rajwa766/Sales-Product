@@ -1991,7 +1991,7 @@ textarea,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-    background: rgba(1, 151, 142, 1.0);
+    background:rgb(230, 185, 71, 1.0);
     color: #ffffff;
 }
 
@@ -8231,7 +8231,7 @@ border-left: 3px solid transparent;
     width: 100%;
     z-index: 10;
     padding: 30px;
-    color: #f5f55;
+    color: #f5f5f5;
     text-align: left;
     text-shadow: none;
 }
