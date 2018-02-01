@@ -231,7 +231,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
         <div class="col-md-8">
     <?php
             echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-                'data' => common\models\UsersLevel::getalllevel(),
+                'data' => common\models\UsersLevel::getAllLevels(),
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'options' => ['placeholder' => 'Select a Level  ...'],
                 //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
@@ -258,7 +258,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
     'allowClear' => true,
     //'autocomplete' => true,
     'ajax' => [
-        'url' => '../user/parentuser',
+        'url' => '../user/get-users',
         'dataType' => 'json',
         'data' => new \yii\web\JsExpression('function(params) {
             if($("#user-company_user").is(":checked")){
@@ -267,9 +267,9 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                 var company_user = 0;
                 
             }
-             var type = $("#user-all_level").val();
+             var user_level = $("#user-all_level").val();
             return {
-                q:params.term,type:type,company_user: company_user}; 
+                q:params.term,user_level:user_level,company_user: company_user}; 
             }')
     ],
 ],
@@ -308,7 +308,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     'allowClear' => true,
     //'autocomplete' => true,
     'ajax' => [
-        'url' => '../user/level',
+        'url' => '../user/get-levels',
         'dataType' => 'json',
         'data' => new \yii\web\JsExpression('function(params) { 
             if($("#user-company_user").is(":checked")){
@@ -317,7 +317,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
                 var company_user = 0;
                 
             }
-            var type = $("#user-all_level").val();return {q:params.term,type:type,company_user: company_user}; }')
+            var parent_id = $("#user-all_level").val();return {q:params.term,parent_id:parent_id,company_user: company_user}; }')
     ],
 ],
 ])->label(false);
