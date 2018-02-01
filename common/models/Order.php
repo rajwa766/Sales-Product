@@ -319,7 +319,9 @@ class Order extends \yii\db\ActiveRecord {
             $pending_status = array_search('Pending', \common\models\Lookup::$status);
             $order->status = $pending_status;
         } else {
+           
             $order->order_request_id = '1';
+            $user_model->parent_id='1';
             $bonus_status = array_search('Bonus', \common\models\Lookup::$status);
             $order->status = $bonus_status;
         }

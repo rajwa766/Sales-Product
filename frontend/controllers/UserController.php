@@ -74,6 +74,7 @@ class UserController extends Controller {
         $model = new \common\models\Upload();
         $data = "";
         $count = 0;
+        $result=0;
         if ($model->load(Yii::$app->request->post())) {
 
             $array_MR = array();
@@ -83,7 +84,7 @@ class UserController extends Controller {
             $data = \common\components\Excel::import($file->tempName, ['setFirstRecordAsKeys' => true]);
 
             foreach ($data as $entry) {
-                try {
+                // try {
                     if ($entry['Level'] != "อื่นๆ") {
                         $user_model = new User();
                         $user_model->isNewRecord = true;
@@ -153,6 +154,7 @@ class UserController extends Controller {
                             $user_model->unit_price = '630';
                         }
                         if (!empty($user_model) && !empty($user_model->email)) {
+                            $user_model->parent_user=$user_model->parent_id;
                             $result = \common\models\User::CreateUser($user_model);
                             if (strpos($entry['Level'], 'MR') !== false) {
                                 $array_MR[] = array('id' => $result, 'quantity' => 5000);
@@ -163,11 +165,11 @@ class UserController extends Controller {
                             }
                         }
                     }
-                } catch (\Exception $e) {
-                    var_dump($e);
-                    exit();
-                    continue;
-                }
+                // } catch (\Exception $e) {
+                //     var_dump($e);
+                //     exit();
+                //     continue;
+                // }
             }
         }
         return $this->render('user_upload', [
