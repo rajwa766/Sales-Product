@@ -80,18 +80,15 @@ class UsersLevel extends \yii\db\ActiveRecord {
             $query->andWhere(['like', 'name', $q]);
         if (!is_null($max_user))
             $query->andWhere(['=', 'max_user', $max_user]);
-        if (!is_null($parent_id) && is_null($include_all_child))
+        if (!is_null($parent_id) && $include_all_child == false)
             {
-              
                 if($include_parent)
                     $query->andWhere(['or',['parent_id'=>$parent_id],['id'=>$parent_id]]);
                 else
                     $query->andWhere(['=', 'parent_id', $parent_id]);
-                  
             }
             if (!is_null($include_all_child))
             {
-               
                   $query->andWhere(['>', 'id', $parent_id]);
             }
         $query->limit(20);

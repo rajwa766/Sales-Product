@@ -362,7 +362,19 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
             Status
         </div>
         <div class="col-md-8">
-        <?= $form->field($model, 'status')->dropdownList(['1' => 'Active', '0' => 'In Active'], ['prompt' => '---Select Status---'])->label(false); ?>
+        <?php
+            echo $form->field($model, 'status')->widget(Select2::classname(), [
+                'data' => common\models\Lookup::$user_status,
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select a Status  ...'],
+                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'pluginOptions' => [
+                'allowClear' => true,
+                ],
+
+            ])->label(false);
+            ?>
         </div>
     </div>
 
