@@ -59,18 +59,18 @@ class UsersLevel extends \yii\db\ActiveRecord {
         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
         if(isset($Role['super_admin']))
         {
-            $data = UsersLevel::find()->all();
+            $data = UsersLevel::find()->where(['!=','max_user','-1'])->all();
         }
         else
         {
-            $data = UsersLevel::find()->where(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
+            $data = UsersLevel::find()->where(['!=','max_user','-1'])->andWhere(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
         }
         
         $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
         return $value;
     }
 
-    public static function getLevels($q,$parent_id=null,$max_user=null,$include_parent=false) {
+    public static function getLevels($q,$parent_id=null,$max_user=null,$include_parent=false,$include_all_child = false) {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
         $query->select('id as id, name AS text')
@@ -80,12 +80,16 @@ class UsersLevel extends \yii\db\ActiveRecord {
             $query->andWhere(['like', 'name', $q]);
         if (!is_null($max_user))
             $query->andWhere(['=', 'max_user', $max_user]);
-        if (!is_null($parent_id))
+        if (!is_null($parent_id) && $include_all_child == false)
             {
                 if($include_parent)
                     $query->andWhere(['or',['parent_id'=>$parent_id],['id'=>$parent_id]]);
                 else
                     $query->andWhere(['=', 'parent_id', $parent_id]);
+            }
+            if (!is_null($include_all_child))
+            {
+                  $query->andWhere(['>', 'id', $parent_id]);
             }
         $query->limit(20);
         $command = $query->createCommand();

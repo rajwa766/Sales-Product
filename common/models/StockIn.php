@@ -164,7 +164,7 @@ class StockIn extends \yii\db\ActiveRecord
             echo true;
         }
     }
-    public static function CreateUser($model)
+    public static function CreateStock($model)
     {
         $model->remaining_quantity = $model->initial_quantity;
         $model->user_id = Yii::$app->user->identity->id;

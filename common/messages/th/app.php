@@ -142,6 +142,7 @@ return [
 'City'=>'เมือง',
 'Username'=>'ชื่อผู้ใช้',
 'Save'=>'บันทึก',
+'UPDATE USER'=>'ปรับปรุงผู้ใช้',
 '(not set)' => '(ไม่ได้ตั้ง)',
 'An internal server error occurred.' => 'เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์',
 'Are you sure you want to delete this item?' => 'คุณแน่ใจหรือไม่ที่จะลบรายการนี้?',

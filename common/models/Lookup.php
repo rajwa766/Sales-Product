@@ -49,6 +49,10 @@ class Lookup
         '2' => 'Cash on Delivery',
         '3' => 'Bank Transfer',
     ];
+    public static $user_status = [
+        '1' => 'Active',
+        '2' => 'In Active',
+    ];
     public static $user_levels = [
         '1' => 'Super Admin',
         '2' => 'Management Team',

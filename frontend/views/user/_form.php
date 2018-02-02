@@ -228,7 +228,7 @@ use kartik\file\FileInput;
     
     <div class="col-md-6">
         <div class="col-md-4">
-            All Level
+          <b>  All Level </b>
         </div>
         <div class="col-md-8">
     <?php
@@ -357,16 +357,24 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     </div>
     </div>
     <div class="col-md-6">
-    <?php
-        if ($model->isNewRecord) {
-            $model->status = '1';
-        }
-    ?>
+
         <div class="col-md-4">
             Status
         </div>
         <div class="col-md-8">
-        <?= $form->field($model, 'status')->checkbox(['label' => null]) ?>
+        <?php
+            echo $form->field($model, 'status')->widget(Select2::classname(), [
+                'data' => common\models\Lookup::$user_status,
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select a Status  ...'],
+                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'pluginOptions' => [
+                'allowClear' => true,
+                ],
+
+            ])->label(false);
+            ?>
         </div>
     </div>
 
