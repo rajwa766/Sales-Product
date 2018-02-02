@@ -228,7 +228,7 @@ use kartik\file\FileInput;
     
     <div class="col-md-6">
         <div class="col-md-4">
-            All Level
+          <b>  All Level </b>
         </div>
         <div class="col-md-8">
     <?php
