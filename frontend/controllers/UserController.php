@@ -249,6 +249,10 @@ class UserController extends Controller {
         {
             $include_parent=false;
         }
+        $super_vip_level = array_search('Super Admin', \common\models\Lookup::$user_levels);
+        if($user_level == $super_vip_level){
+            $company_user = false;
+        }
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user,$include_parent);
     }
@@ -265,13 +269,20 @@ public function actionChildusers() {
         $parent_id = Yii::$app->request->get('parent_id');
         $max_user = Yii::$app->request->get('max_user');
         $include_parent = Yii::$app->request->get('include_parent');
+        $company_user = Yii::$app->request->get('company_user');
+        $include_all_child= false;
+         if(!empty($company_user))
+        {
+           
+            $include_all_child= true;
+        }
         if(empty($include_parent))
         {
             $include_parent=false;
         }
         $id = Yii::$app->request->get('id');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user,$include_parent);
+        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user,$include_parent,$include_all_child);
     }
 
 

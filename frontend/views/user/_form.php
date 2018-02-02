@@ -357,16 +357,12 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     </div>
     </div>
     <div class="col-md-6">
-    <?php
-        if ($model->isNewRecord) {
-            $model->status = '1';
-        }
-    ?>
+
         <div class="col-md-4">
             Status
         </div>
         <div class="col-md-8">
-        <?= $form->field($model, 'status')->checkbox(['label' => null]) ?>
+        <?= $form->field($model, 'status')->dropdownList(['1' => 'Active', '0' => 'In Active'], ['prompt' => '---Select Status---'])->label(false); ?>
         </div>
     </div>
 
