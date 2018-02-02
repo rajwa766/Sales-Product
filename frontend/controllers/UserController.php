@@ -91,7 +91,6 @@ class UserController extends Controller
 
             foreach ($data as $entry) {
                 // try {
-<<<<<<< HEAD
                 if ($entry['Level'] != "อื่นๆ") {
                     $user_model = new User();
                     $user_model->isNewRecord = true;
@@ -163,21 +162,6 @@ class UserController extends Controller
                     if (!empty($user_model) && !empty($user_model->email)) {
                         $user_model->parent_user = $user_model->parent_id;
                         $result = \common\models\User::CreateUser($user_model);
-=======
-                    if ($entry['Level'] != "อื่นๆ") {
-                        $user_model = new User();
-                        $user_model->isNewRecord = true;
-                        $user_model->id = null;
-                        $user_model->username = '' . $entry['User'];
-                        $user_model->email = '' . $entry['Email'];
-                        $user_model->phone_no = '' . $entry['Phone'];
-                        $user_model->address = '' . $entry['Address'];
-                        $user_model->province = '' . $entry['Province'];
-                        $user_model->first_name = '' . $entry['Name'];
-                        $user_model->password = '' . $entry['Password'];
-                        $user_model->setPassword($user_model->password);
-                        $user_model->generateAuthKey();
->>>>>>> 47bbf1382468a89bec1944eeaa039606c5bdf563
                         if (strpos($entry['Level'], 'MR') !== false) {
                             $array_MR[] = array('id' => $result, 'quantity' => 5000);
                         } elseif (strpos($entry['Level'], 'Super VIP') !== false) {
@@ -361,19 +345,10 @@ class UserController extends Controller
         $parent_id = Yii::$app->request->get('parent_id');
         $max_user = Yii::$app->request->get('max_user');
         $include_parent = Yii::$app->request->get('include_parent');
-<<<<<<< HEAD
-        if (empty($include_parent)) {
-            $include_parent = false;
-        }
-        $id = Yii::$app->request->get('id');
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user, $include_parent);
-=======
         $company_user = Yii::$app->request->get('company_user');
         $include_all_child= false;
          if(!empty($company_user))
         {
-         
             $include_all_child= true;
         }
         if(empty($include_parent))
@@ -383,7 +358,6 @@ class UserController extends Controller
         $id = Yii::$app->request->get('id');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user,$include_parent,$include_all_child);
->>>>>>> 47bbf1382468a89bec1944eeaa039606c5bdf563
     }
 
     /**
