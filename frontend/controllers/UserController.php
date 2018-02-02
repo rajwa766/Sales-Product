@@ -95,7 +95,6 @@ class UserController extends Controller {
                         $user_model->province = '' . $entry['Province'];
                         $user_model->first_name = '' . $entry['Name'];
                         $user_model->password = '' . $entry['Password'];
-
                         $user_model->setPassword($user_model->password);
                         $user_model->generateAuthKey();
                         if (strpos($entry['Level'], 'MR') !== false) {
