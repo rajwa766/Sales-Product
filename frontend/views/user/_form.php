@@ -58,7 +58,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Username'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord,'required'=>true])->label(false)   ?>
+                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => $model->isNewRecord,'required'=>true])->label(false)   ?>
             </div>
         </div>
 
@@ -67,7 +67,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Password'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'password')->textInput(['maxlength' => true,'required'=>!$model->isNewRecord])->label(false) ?>
+                <?= $form->field($model, 'password')->textInput(['maxlength' => true,'required'=>$model->isNewRecord])->label(false) ?>
             </div>
         </div>
     </div>    
@@ -136,7 +136,7 @@ use kartik\file\FileInput;
         </div>
     </div>
     <?php 
-        if(!$model->isNewRecord  && $Role['super_admin'] && $user_id != $model->id){
+        if(!$model->isNewRecord  && isset($Role['super_admin']) && $user_id != $model->id){
         $user_level_name =(new Query())
         ->select('users_level.name,users_level.id')
         ->from('user')
