@@ -115,7 +115,6 @@ use yii\db\Query;
         if(!empty($referral_user))
         {
         ?>
-        alert();
             $("#order-representative").val("<?= $referral_user['username'] ?>");
         <?php  
         }

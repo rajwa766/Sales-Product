@@ -13,6 +13,8 @@ use yii\db\Query;
 ?>
 
 <h3>Order Detail</h3>
+<div class="first-row"></div>
+<?php if (Yii::$app->user->isGuest) { ?>
 <div class="row first-row">
     <div class="col-md-4">
         <?= Yii::t('app', 'Representative') ?>
@@ -23,6 +25,7 @@ use yii\db\Query;
         </div>
     </div>
 </div>
+<?php } ?>
 
 
 <div class="row">
