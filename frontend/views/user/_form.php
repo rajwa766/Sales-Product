@@ -58,7 +58,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Username'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => $model->isNewRecord,'required'=>true])->label(false)   ?>
+                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord,'required'=>true])->label(false)   ?>
             </div>
         </div>
 
