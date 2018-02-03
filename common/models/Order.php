@@ -59,9 +59,8 @@ class Order extends \yii\db\ActiveRecord
     public $password;
     public $first_name;
     public $last_name;
-   
+
     public $user_level_id;
-    
 
     const SCENARIO_ORDER = 'order';
     const SCENARIO_REQUEST = 'request';
@@ -91,29 +90,27 @@ class Order extends \yii\db\ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
-        $scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
-        return $scenarios;
-    }
+    // public function scenarios()
+    // {
+
+    //     $scenarios = parent::scenarios();
+    //     //$scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
+    //     //$scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
+    //     return $scenarios;
+    // }
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['order_request_id'], 'required'],
-
-            [['all_level', 'parent_user', 'child_level', 'child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
-            [['email', 'request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
             [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
             [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method'], 'safe'],
             [['payment_slip'], 'file'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['payment_slip'], 'string', 'max' => 250],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['quantity', 'postal_code', 'name', 'all_level', 'parent_user', 'child_level', 'child_user', 'request_agent_name', 'request_user_level'], 'validate_order', 'skipOnEmpty' => false],
         ];
     }
 
@@ -195,7 +192,7 @@ class Order extends \yii\db\ActiveRecord
             if ($model->order_type == "Order") {
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
-                if(!$model->email){
+                if (!$model->email) {
                     $model->email = 'customer@gmail.com';
                 }
                 $check_user_already_exist = \common\models\User::find()->where(['email' => $model->email])->one();
@@ -203,9 +200,9 @@ class Order extends \yii\db\ActiveRecord
                 if ($check_user_already_exist) {
                     $model->user_id = $check_user_already_exist->id;
                 } else {
-                  
+
                     $customer_user = \common\models\User::insert_user($model);
-                    
+
                     $auth = \Yii::$app->authManager;
                     $role = $auth->getRole('customer');
                     $auth->assign($role, $customer_user->id);
@@ -233,7 +230,7 @@ class Order extends \yii\db\ActiveRecord
                 $shipping_address = \common\models\ShippingAddress::insertShippingAddress($model, $model->id);
                 $transaction->commit();
                 $result = "transaction_complete";
-            } 
+            }
         } catch (Exception $e) {
             $transaction->rollBack();
             $result = "transaction_failed";
@@ -330,6 +327,98 @@ class Order extends \yii\db\ActiveRecord
             $i++;
         }
         return $product_order_data;
+    }
+    public function validate_order($attribute, $params)
+    {
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        if (empty($this->quantity)) {
+            $this->addError('quantity', 'Quanity must be greater than 0.');
+        }
+        // Customer Order Validations
+        if ($this->order_type == "Order") {
+            $this->OrderTypeValidation($Role);
+        }
+        // Agent Request Validations
+        if ($this->order_type == "Request")
+        {
+            $this->RequestTypeValidation($Role);
+        }
+         // Transfer Request Validations
+         if ($this->order_type == "Return")
+         {
+             $this->ReturnTypeValidation($Role);
+         }
+          // Return Request Validations
+        if ($this->order_type == "Transfer")
+        {
+            $this->TransferTypeValidation($Role);
+        }
+
+    }
+    public function OrderTypeValidation($Role)
+    {
+
+        if (empty($this->postal_code)) {
+            $this->addError('postal_code', 'Postal Code is required.');
+        }
+        if (empty($this->name)) {
+            $this->addError('name', 'Name is required.');
+        }
+        if (isset($Role['super_admin'])) {
+            if (empty($this->request_user_level)) {
+                $this->addError('request_user_level', 'User level is required.');
+            }
+            if (empty($this->request_agent_name)) {
+                $this->addError('request_agent_name', 'Agent name is required.');
+            }
+        }
+
+    }
+    public function RequestTypeValidation($Role)
+    {
+        if (isset($Role['super_admin'])) {
+            if (empty($this->all_level)) {
+                $this->addError('all_level', 'User level is required.');
+            }
+            if (empty($this->parent_user)) {
+                $this->addError('parent_user', 'Parent user is required.');
+            }
+            if (empty($this->child_level)) {
+                $this->addError('child_level', 'Child level is required.');
+            }
+            if (empty($this->child_user)) {
+                $this->addError('child_user', 'Child name is required.');
+            }
+        }
+    }
+    public function TransferTypeValidation($Role)
+    {
+        if (empty($this->child_user)) {
+            $this->addError('child_user', 'Transfer to is required.');
+        }
+        if (isset($Role['super_admin'])) {
+            if (empty($this->all_level)) {
+                $this->addError('all_level', 'User level is required.');
+            }
+            if (empty($this->parent_user)) {
+                $this->addError('parent_user', 'Transfer from is required.');
+            }
+        }
+    }
+    public function ReturnTypeValidation($Role)
+    {
+        if (isset($Role['super_admin'])) {
+            if (empty($this->all_level)) {
+                $this->addError('all_level', 'User level is required.');
+            }
+            if (empty($this->parent_user)) {
+                $this->addError('parent_user', 'Transfer from is required.');
+            }
+            if (empty($this->child_user)) {
+                $this->addError('child_user', 'Transfer to is required.');
+            }
+        }
     }
 
 }

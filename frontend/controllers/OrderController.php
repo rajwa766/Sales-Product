@@ -150,13 +150,6 @@ class OrderController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCustomerCreate()
-    {
-        $model = new Order();
-        return $this->render('customer_create', [
-            'model' => $model,
-        ]);
-    }
 
     public function actionCreate()
     {
@@ -168,7 +161,6 @@ class OrderController extends Controller
         $model = new Order();
         $product=\common\models\Product::findOne(['id'=>'1']);
         if ($model->load(Yii::$app->request->post())) {
-           
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -178,34 +170,6 @@ class OrderController extends Controller
             'model' => $model,
             'type'=>$type,
             'product'=>$product,
-        ]);
-    }
-
-    public function actionCreateReturn()
-    {
-        $type="Return";
-        $model = new Order();
-        if ($model->load(Yii::$app->request->post())) {
-            $orderCreate = \common\models\Order::CreateOrder($model);
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        return $this->render('create', [
-            'model' => $model,
-            'type'=>$type,
-        ]);
-    }
-
-    public function actionCreatetransfer()
-    {
-        $type="Transfer";
-        $model = new Order();
-        if ($model->load(Yii::$app->request->post())) {
-            $orderTransfer = \common\models\Order::CreateOrder($model);
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        return $this->render('create', [
-            'model' => $model,
-            'type'=>$type,
         ]);
     }
 

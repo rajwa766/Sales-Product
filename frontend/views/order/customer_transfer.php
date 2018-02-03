@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
      ?>
 
 <p>
-        <?= Html::a(Yii::t('app', 'Create Order'), ['createtransfer'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Transfer'), ['create?type=Transfer'], ['class' => 'btn btn-success']) ?>
     </p>
  
     <?= GridView::widget([
