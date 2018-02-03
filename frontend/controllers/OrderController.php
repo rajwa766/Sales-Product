@@ -173,34 +173,6 @@ class OrderController extends Controller
         ]);
     }
 
-    public function actionCreateReturn()
-    {
-        $type="Return";
-        $model = new Order();
-        if ($model->load(Yii::$app->request->post())) {
-            $orderCreate = \common\models\Order::CreateOrder($model);
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        return $this->render('create', [
-            'model' => $model,
-            'type'=>$type,
-        ]);
-    }
-
-    public function actionCreatetransfer()
-    {
-        $type="Transfer";
-        $model = new Order();
-        if ($model->load(Yii::$app->request->post())) {
-            $orderTransfer = \common\models\Order::CreateOrder($model);
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        return $this->render('create', [
-            'model' => $model,
-            'type'=>$type,
-        ]);
-    }
-
     /**
      * Updates an existing Order model.
      * If update is successful, the browser will be redirected to the 'view' page.
