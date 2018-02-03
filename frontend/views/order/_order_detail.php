@@ -67,7 +67,7 @@ use yii\db\Query;
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => '/postcode/all-code',
+                    'url' => '../postcode/all-code',
                     'dataType' => 'json',
                     'data' => new \yii\web\JsExpression('function(params) { ; return {q:params.term}; }')
                 ],

@@ -115,6 +115,7 @@ use yii\db\Query;
         if(!empty($referral_user))
         {
         ?>
+        alert();
             $("#order-representative").val("<?= $referral_user['username'] ?>");
         <?php  
         }
@@ -143,7 +144,7 @@ use yii\db\Query;
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            var url="/user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            var url="../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
             if (type == "Request"){
             $.post(url, function (data) {
                 var json = $.parseJSON(data);
@@ -199,8 +200,9 @@ use yii\db\Query;
         }
     });
     <?php if (!Yii::$app->user->isGuest) { ?>
-        TypeChange();
+        
         var role = "<?php echo array_keys($Role)[0]; ?>";
+        TypeChange(role);
         if (role == 'super_admin')
         {
             $('.admin').show();
@@ -219,10 +221,12 @@ use yii\db\Query;
         }
        
        <?php } ?>
+
     });
-    function TypeChange()
+    function TypeChange(role)
         {
             var value = "<?= $type ?>";
+           
             if (value == "Request" || value == "Return" || value == "Transfer")
             {
                 jQuery(".shipping-address").hide();
@@ -234,7 +238,12 @@ use yii\db\Query;
                 jQuery(".shipping-address").show();
                 jQuery(".order-details").show();
             }
-
+            //change by sajid where order fetail  not show in agent rewwquest
+if(role == "super_admin" && value == "Request"){
+    jQuery(".shipping-address").show();
+                jQuery(".order-details").show();
+                jQuery(".order-details").show();
+}
         }
         function GetUserStock(user_id)
         {
