@@ -111,6 +111,7 @@ class Order extends \yii\db\ActiveRecord
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['payment_slip'], 'string', 'max' => 250],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            ['quantity', 'validate_order'],
         ];
     }
 
@@ -328,5 +329,15 @@ class Order extends \yii\db\ActiveRecord
         }
         return $product_order_data;
     }
+    public function validate_order($attribute, $params) {
+        if ($this->order_type=="Request") {
+          
+            if (empty($this->quantity)) {
+                $this->addError('quantity', 'Quanity must be greater than 0');
+            }
+           
+        }
+    }
+
 
 }

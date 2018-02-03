@@ -150,13 +150,6 @@ class OrderController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCustomerCreate()
-    {
-        $model = new Order();
-        return $this->render('customer_create', [
-            'model' => $model,
-        ]);
-    }
 
     public function actionCreate()
     {
