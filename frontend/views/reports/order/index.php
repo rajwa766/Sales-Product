@@ -76,7 +76,7 @@ use kartik\time\TimePicker;
 				<div class="col-md-8">
                 <?php
     echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-        'data' => common\models\UsersLevel::getAllLevels(),
+        'data' => \common\models\UsersLevel::getAllLevels(),
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Level  ...'],
         //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
@@ -126,7 +126,7 @@ use kartik\time\TimePicker;
 				<div class="col-md-8">
                 <?php
    echo $form->field($model, 'status')->widget(Select2::classname(), [
-       'data' => common\models\LookUp::$status,
+       'data' => \common\models\Lookup::$status,
        'theme' => Select2::THEME_BOOTSTRAP,
        'options' => ['placeholder' => 'Select a Level  ...'],
        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
