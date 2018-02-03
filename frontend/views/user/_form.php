@@ -278,7 +278,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
 ],
 ])->label(false);
          
-            ?>;
+            ?>
     </div>
 </div>
 </div>  
