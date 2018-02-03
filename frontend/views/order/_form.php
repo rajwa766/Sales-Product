@@ -161,7 +161,7 @@ use yii\db\Query;
         } else{
                 if(type!="Return")
                 {
-                    url="/product/get-product?id=1";    
+                    url="../product/get-product?id=1";    
                 }
                 else
                 {

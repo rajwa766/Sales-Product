@@ -38,7 +38,7 @@ use kartik\file\FileInput;
                     <?= Yii::t('app','First Name') ?>
                 </div>
                 <div class="col-md-8">
-                <?= $form->field($model, 'first_name')->textInput(['maxlength' => true])->label(false)  ?>
+                <?= $form->field($model, 'first_name')->textInput(['maxlength' => true,'required'=>true])->label(false)  ?>
                 <?php  echo $form->field($model, 'product_id')->hiddenInput(['value'=> '1'])->label(false); ?>
             </div>
         </div>
@@ -48,7 +48,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Last Name'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'last_name')->textInput(['maxlength' => true])->label(false)  ?>
+                <?= $form->field($model, 'last_name')->textInput(['maxlength' => true,'required'=>true])->label(false)  ?>
             </div>
         </div>
     </div>   
@@ -58,7 +58,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Username'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord])->label(false)   ?>
+                <?= $form->field($model, 'username')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord,'required'=>true])->label(false)   ?>
             </div>
         </div>
 
@@ -67,7 +67,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Password'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'password')->textInput(['maxlength' => true])->label(false) ?>
+                <?= $form->field($model, 'password')->textInput(['maxlength' => true,'required'=>!$model->isNewRecord])->label(false) ?>
             </div>
         </div>
     </div>    
@@ -78,7 +78,7 @@ use kartik\file\FileInput;
                 <?= Yii::t('app','Email'); ?>
             </div>
             <div class="col-md-8">
-                <?= $form->field($model, 'email')->textInput(['maxlength' => true])->label(false) ?>
+                <?= $form->field($model, 'email')->textInput(['maxlength' => true,'required'=>true])->label(false) ?>
             </div>
         </div>
 
@@ -161,6 +161,7 @@ use kartik\file\FileInput;
                     'options' => ['placeholder' => 'Select a current user Level ...'],
                     'pluginOptions' => [
                     'allowClear' => true,
+                    'required'=>true,
                     //'autocomplete' => true,
                 
                 ],
@@ -240,6 +241,7 @@ use kartik\file\FileInput;
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'pluginOptions' => [
                 'allowClear' => true,
+                
                 ],
 
             ])->label(false);
@@ -382,7 +384,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
  <div class="col-md-12 order-panel">
     <h3>Order Items</h3>
     <div class=" col-md-12 first-row">
-    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true]); ?></div>
+    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true,'required'=>true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'unit_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
       <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
       <div class="noproduct"></div>
