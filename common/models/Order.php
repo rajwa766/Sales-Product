@@ -91,23 +91,20 @@ class Order extends \yii\db\ActiveRecord
         ];
     }
 
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
-        $scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
-        return $scenarios;
-    }
+    // public function scenarios()
+    // {
+       
+    //     $scenarios = parent::scenarios();
+    //     //$scenarios[self::SCENARIO_ORDER] = ['email', 'request_user_level', 'request_agent_name'];
+    //     //$scenarios[self::SCENARIO_REQUEST] = ['all_level', 'parent_user', 'child_level', 'child_user'];
+    //     return $scenarios;
+    // }
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['order_request_id'], 'required'],
-
-            [['all_level', 'parent_user', 'child_level', 'child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
-            [['email', 'request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],
             [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
             [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method'], 'safe'],
             [['payment_slip'], 'file'],

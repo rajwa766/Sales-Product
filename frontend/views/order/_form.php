@@ -43,7 +43,7 @@ use yii\db\Query;
 <div class="order-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
             <?php if (!Yii::$app->user->isGuest) { ?>  
-                <div class="row outer-container order-details">
+                <div class="row outer-container">
                     <div class="<?=$class;?> orders-panel order-settings">
                         <?=
                                 Yii::$app->controller->renderPartial('_order_setting', [
@@ -212,6 +212,7 @@ use yii\db\Query;
         {
             $('.admin').hide();
             $('.agent').show();
+           
             if(type!="Transfer")
             {
                 $('.order-setting-panel').hide();
@@ -237,12 +238,7 @@ use yii\db\Query;
                 jQuery(".shipping-address").show();
                 jQuery(".order-details").show();
             }
-            //change by sajid where order fetail  not show in agent rewwquest
-if(role == "super_admin" && value == "Request"){
-    jQuery(".shipping-address").show();
-                jQuery(".order-details").show();
-                jQuery(".order-details").show();
-}
+           
         }
         function GetUserStock(user_id)
         {

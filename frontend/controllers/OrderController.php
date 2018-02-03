@@ -168,7 +168,6 @@ class OrderController extends Controller
         $model = new Order();
         $product=\common\models\Product::findOne(['id'=>'1']);
         if ($model->load(Yii::$app->request->post())) {
-           
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
