@@ -19,7 +19,7 @@ use yii\db\Query;
         <?= Yii::t('app', 'Name') ?>
     </div>
     <div class="col-md-8">
-        <?= $form->field($model, 'name')->textInput(['required'=>true])->label(false) ?>
+        <?= $form->field($model, 'name')->textInput([])->label(false) ?>
     </div>
 </div>
 
