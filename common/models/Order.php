@@ -104,7 +104,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantity','postal_code', 'order_request_id'], 'required'],
+            [['order_request_id'], 'required'],
 
             [['all_level', 'parent_user', 'child_level', 'child_user'], 'required', 'on' => self::SCENARIO_REQUEST],
             [['email', 'request_user_level', 'request_agent_name'], 'required', 'on' => self::SCENARIO_ORDER],

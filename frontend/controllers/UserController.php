@@ -67,8 +67,8 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        $user_id = Yii::$app->user->getId();
-        $all_status = \common\models\helpers\Statistics::allStatusDashboard($user_id);
+        
+        $all_status = \common\models\helpers\Statistics::allStatusDashboard($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
             'all_status' => $all_status,

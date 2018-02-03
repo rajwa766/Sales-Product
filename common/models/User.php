@@ -47,6 +47,7 @@ class User extends ActiveRecord implements IdentityInterface {
     public $unit_price;
     public $total_price;
     public $product_id;
+    public $name;
 
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
@@ -78,10 +79,10 @@ class User extends ActiveRecord implements IdentityInterface {
         return [
 
             [['username', 'password', 'email', 'first_name', 'last_name'], 'string', 'max' => 255],
-            [['username', 'password', 'email', 'first_name', 'last_name','quantity','parent_user','user_level_id'],'required'],
+            [['username', 'password', 'email', 'first_name', 'last_name','user_level_id'],'required'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id','name'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['profile'], 'file'],
@@ -299,7 +300,7 @@ class User extends ActiveRecord implements IdentityInterface {
             if ($photo !== null) {
                 $profile_save = User::profile_save($photo, $model);
             }
-         
+       
             $current_level = \common\models\UsersLevel::findOne($model->user_level_id);
             if ($model->parent_user) {
                 $model->parent_id = $model->parent_user;
@@ -326,8 +327,9 @@ class User extends ActiveRecord implements IdentityInterface {
             if ($current_level->max_user != '-1' && $total_parent_user_current_level > $current_level->max_user && $model->company_user != '1') {
                 $result = "max_user_reached";
             } else {
-
+               
                 if ($model->save()) {
+                   
                     \common\models\StockStatus::set_minimum_stock_level($model->id);
                     \common\models\Account::create_accounts($model);
                     $order = \common\models\Order::insertOrder($model, true);
@@ -348,6 +350,8 @@ class User extends ActiveRecord implements IdentityInterface {
                     $auth->assign($role, $model->id);
                     $transaction->commit();
                     $result = $model->id;
+                  
+                      
                 } else {
                     $result = "transaction_failed";
                 }
@@ -374,6 +378,7 @@ public static function updateUser($model,$oldmodel){
         $profile_save = User::profile_save($photo, $model);
       }
     $changelog_entry = \common\models\ChangeLog::insertData($oldmodel);
+    
   $model->save();
 }
     public static function getParent($q, $type, $parent) {

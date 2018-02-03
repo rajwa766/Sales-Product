@@ -183,7 +183,7 @@ use kartik\file\FileInput;
                         'allowClear' => true,
                         //'autocomplete' => true,
                         'ajax' => [
-                            'url' => '../parentusersOnupdate',
+                            'url' => '../get-users',
                             'dataType' => 'json',
                             'data' => new \yii\web\JsExpression('function(params) {
                                 //   if($("#user-company_user").is(":checked")){
@@ -192,9 +192,9 @@ use kartik\file\FileInput;
                                 //       var company_user = 0;
                                     
                                 //   }
-                                var type = $("#user-user_level_id").val();
+                                var user_level = $("#user-user_level_id").val();
                                 return {
-                                    q:params.term,type:type}; 
+                                    q:params.term,user_level:user_level}; 
                                 }')
                         ],
                     ],
@@ -204,8 +204,7 @@ use kartik\file\FileInput;
         </div>
     </div> 
        
-</div>
-    </div>
+
     <?php } ?>
 <?php if ($model->isNewRecord) {?>
 <div class="row no-margin">
