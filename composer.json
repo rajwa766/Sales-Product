@@ -24,6 +24,7 @@
         "kartik-v/yii2-widget-fileinput": "@dev",
         "kartik-v/yii2-widget-datepicker": "@dev",
         "moonlandsoft/yii2-phpexcel": "@dev",
+		"yii2assets/yii2-printthis": "dev-master",
         "2amigos/yii2-gallery-widget": "~1.0"
     },
     "require-dev": {

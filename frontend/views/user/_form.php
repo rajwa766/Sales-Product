@@ -136,7 +136,14 @@ use kartik\file\FileInput;
         </div>
     </div>
     <?php 
-        if(!$model->isNewRecord  && isset($Role['super_admin']) && $user_id != $model->id){
+    $level_id = Yii::$app->user->identity->user_level_id;
+    $pro_level =  array_search('PRO Level', \common\models\Lookup::$user_levels);
+    $inter_level =  array_search('INTER Level', \common\models\Lookup::$user_levels);
+    $advanced_level =  array_search('ADVANCE Level', \common\models\Lookup::$user_levels);
+    $begin_level =  array_search('BEGIN Level', \common\models\Lookup::$user_levels);
+    
+        if(!$model->isNewRecord  && isset($Role['super_admin']) ){
+            if($model->user_level_id == $pro_level || $model->user_level_id == $inter_level || $model->user_level_id == $advanced_level || $model->user_level_id == $begin_level){
         $user_level_name =(new Query())
         ->select('users_level.name,users_level.id')
         ->from('user')
@@ -154,7 +161,7 @@ use kartik\file\FileInput;
             <div class="col-md-8">
                 <?php
                 echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-                    'data' => common\models\UsersLevel::getAllLevels(),
+                    'data' => common\models\UsersLevel::getVipChild(),
                     'value' =>$user_level_name['id'],
                     'initValueText' => $user_level_name['name'],
                     'theme' => Select2::THEME_BOOTSTRAP,
@@ -206,7 +213,9 @@ use kartik\file\FileInput;
     </div> 
        
 
-    <?php } ?>
+    <?php } 
+        }
+    ?>
 <?php if ($model->isNewRecord) {?>
 <div class="row no-margin">
     <div class="col-md-6">

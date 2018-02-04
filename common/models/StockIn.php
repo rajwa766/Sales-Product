@@ -196,7 +196,7 @@ class StockIn extends \yii\db\ActiveRecord
         $VIP_Comission = 3;
         $VIP = \common\models\User::find()->where(['user_level_id' => $VIP_Level_Id])->andWhere(['id' => $order_request_id])->one();
         if (!empty($VIP)) {
-            \common\models\Gl::create_gl(strval(($quantity * $VIP_Comission)), $VIP_Level_Id->id, 1, $order_id, '1');
+            \common\models\Gl::create_gl(strval(($quantity * $VIP_Comission)), $VIP->id, 1, $order_id, '1');
         }
         // Check If Super Vip is parent
         // Check If  Vip is parent

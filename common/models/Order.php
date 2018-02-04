@@ -332,9 +332,9 @@ class Order extends \yii\db\ActiveRecord
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        if (empty($this->quantity)) {
-            $this->addError('quantity', 'Quanity must be greater than 0.');
-        }
+        // if (empty($this->quantity)) {
+        //     $this->addError('quantity', 'Quanity must be greater than 0.');
+        // }
         // Customer Order Validations
         if ($this->order_type == "Order") {
             $this->OrderTypeValidation($Role);

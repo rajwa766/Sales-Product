@@ -666,7 +666,7 @@ a:focus {
     padding: 0 30px;
     overflow: hidden;
     max-height: 300px;
-    height: 80px;
+    height: auto;
 }
 
 .page-topbar li .dropdown-menu li li {
@@ -1992,7 +1992,7 @@ textarea,
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-    background:rgb(230, 185, 71, 1.0);
+    background: rgb(230, 185, 71, 1.0);
     color: #ffffff;
 }
 
@@ -9991,9 +9991,12 @@ h1,
     .page-topbar .quick-area .info-menu li.sidebar-toggle-wrap a.sidebar_toggle {
         color: #86827b;
     }
-    .languageDropdown {color: #86827b;}
+    .languageDropdown {
+        color: #86827b;
+    }
     .page-topbar .quick-area .info-menu li.sidebar-toggle-wrap a.sidebar_toggle {
-        display: none; /*hiding sliding box on mobile resolution*/
+        display: none;
+        /*hiding sliding box on mobile resolution*/
     }
     .page-topbar .quick-area .pull-right {
         position: fixed;

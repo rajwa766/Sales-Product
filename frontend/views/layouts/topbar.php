@@ -17,73 +17,61 @@
                         <?php 
                         $remaning_percent = '';
                         if (!Yii::$app->user->isGuest) {?>
-                            <?php $status_stock =  (new Query())
-                                ->select('SUM(remaining_quantity) as remaning_stock,SUM(initial_quantity) as initial_stock')
+                            <?php $status_stock_child =  (new Query())
+                                ->select('SUM(stock_in.remaining_quantity) as remaning_stock,SUM(stock_in.initial_quantity) as initial_stock,user.username as name,user.id as id')
                                 ->from('stock_in')
-                                ->where(['=','user_id',Yii::$app->user->identity->id])
-                                ->groupby(['product_id'])
-                                ->one();
-                                if($status_stock){
-                                $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
-                                $stock_remaning_percent = $stock_remaning_percent *100;
-                            $selected_percentage = \common\models\StockStatus::findOne(['user_id'=>Yii::$app->user->identity->id]);
-                            $remaning_percent  = '';
-                            if($selected_percentage){
-                            if($selected_percentage->below_percentage > $stock_remaning_percent ){
-                                $remaning_percent = round($stock_remaning_percent);
-                            }else{
-                                $remaning_percent  = '';
-                            }
-                            }
-                                                    }
+                                ->innerJoin('user', 'stock_in.user_id = user.id')
+                                ->where(['=','user.parent_id',Yii::$app->user->identity->id])
+                                ->groupby(['stock_in.product_id','user.id'])
+                                ->all();
+                             
                                 ?>
                         <li class="notify-toggle-wrapper">
                         <a href="#" data-toggle="dropdown" class="toggle">
                                 <i class="fa fa-bell"></i>
                                 <span class="badge badge-orange">
-                                <?php if($remaning_percent ) { ?>
-                                1
-                                     <?php }else{ ?>
-                                      0
-                                     <?php }
-                                        ?>
+                                <?php if($status_stock_child) {
+                                        $i = 0;    
+                                        $all_notification = '';                                    ?>
+<?php foreach($status_stock_child as $status_stock){
+    
+      $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
+      $stock_remaning_percent = $stock_remaning_percent *100;
+  $selected_percentage = \common\models\StockStatus::find()->where(['user_id'=>$status_stock['id']])->one();
+  $remaning_percent  = '';
+  if($selected_percentage){
+  if($selected_percentage->below_percentage > $stock_remaning_percent ){
+      $i++;
+      $remaning_percent = round($stock_remaning_percent);
+  $all_notification.=  ' <li class="unread available">   <a href="javascript:;">
+  <div class="notice-icon"> <i class="fa fa-check"></i> </div><div><span class="name">
+  '.$status_stock['name'].' has <strong> '.$remaning_percent.'%</strong>
+                                                     </span>   </div>
+                                                     </a>
+                                                 </li>';
+  }
+  }
+}
+echo $i;
+
+                                                    }
+                                                
+?>
                                 </span>
                             </a>
                             <ul class="dropdown-menu notifications animated fadeIn">
                                 <li class="total">
                                     <span class="small">
-                                    <?php if($remaning_percent ) { ?>
-                                        <?= Yii::t('app', 'You have');?> <strong>1</strong><?= Yii::t('app', 'New Notifications.');?>
-                                    <?php  }else{ ?>
-                                       <?= Yii::t('app', 'You have');?> <strong>1</strong><?= Yii::t('app', 'New Notifications.');?>
-
-                                     <?php }
-                                        ?>
-                                    </span>
+     <?= Yii::t('app', 'You have');?> <strong><?= $i; ?></strong><?= Yii::t('app', 'New Notifications.');?>
+         
+                              </span>
                                 </li>
                                 <li class="list">
 
                                     <ul class="dropdown-menu-list list-unstyled ps-scrollbar">
-                                        <li class="unread available"> <!-- available: success, warning, info, error -->
-                                            <a href="javascript:;">
-                                                <div class="notice-icon">
-                                                    <i class="fa fa-check"></i>
-                                                </div>
-                                                <div>
-                                                <?php if($remaning_percent) { ?>
-                                                    <span class="name">
-                                                        <strong><?= Yii::t('app', 'Your remaining stock is');?> <?php echo $remaning_percent; ?>%</strong>
-                                                        
-                                                    </span>
-                                    <?php  }else{ ?>
-                                        <strong><?= Yii::t('app', 'Your remaining stock is');?> <?php echo $remaning_percent ?>%</strong>
-
-                                     <?php }
-                                        ?>
-                                                   
-                                                </div>
-                                            </a>
-                                        </li>
+                                      
+                                                <?= $all_notification;?>
+                                          
                                  
 
                                     </ul>

@@ -51,7 +51,12 @@ class UsersLevel extends \yii\db\ActiveRecord {
     public function getUserProductLevels() {
         return $this->hasMany(UserProductLevel::className(), ['user_level_id' => 'id']);
     }
-
+    public static function getVipChild() {
+        $vip_level_id =  array_search('VIP Team', \common\models\Lookup::$user_levels);
+            $data = UsersLevel::find()->where(['=','parent_id',$vip_level_id])->all();
+       $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
+        return $value;
+    }
     public static function getAllLevels() {
         $user_id = Yii::$app->user->getId();
         $user_level_id = Yii::$app->user->identity->user_level_id;

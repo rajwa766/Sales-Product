@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\widgets\DetailView;
+use yii2assets\printthis\PrintThis;
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
 
@@ -31,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="clearfix"></div>
 
                     <div class="col-lg-12">
-                        <section class="box ">
+                        <section class="box " id="orderbtn">
                             <header class="panel_header">
                                 <h2 class="title pull-left"><?=Yii::t('app', 'Invoice')?></h2>
                                 <div class="actions panel_actions pull-right">
@@ -68,7 +69,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     <div class="col-md-3 col-sm-12 col-xs-12 invoice-head-info"><span class='text-muted'>Order #<?=$model->id;
 ?><br><?=$model->created_at?></span></div>
                                                     <div class="col-md-3 col-sm-12 col-xs-12 invoice-log col-md-offset-1">
-                                                        <img src="../images/logo.png" class="img-reponsive">
+                                                    <img style="padding-top:10px;" src="<?= \yii\helpers\Url::to('@web/images/logo.png', true) ?>">
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -167,7 +169,11 @@ foreach ($model->productOrders as $orders) {
 
                                         <div class="clearfix"></div><br>
 
-                                        <div class="row">
+                              
+                                </div>
+                            </div>
+                        </section>
+          <div class="row">
                                         <?php if (isset($model->payment_slip)) {?>
 
 
@@ -187,15 +193,28 @@ $items = array();
                                             <div class="col-md-12 col-sm-12 col-xs-12 text-center">
 
                                         <?php }?>
-                                                <a href="#" target="_blank" class="btn btn-purple btn-md"><i class="fa fa-print"></i> &nbsp; <?=Yii::t('app', 'Print')?> </a>
-                                                <a href="#" target="_blank" class="btn btn-orange btn-md"><i class="fa fa-send"></i> &nbsp; <?=Yii::t('app', 'Send')?> </a>
-                                                <?=Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-    'class' => 'btn btn-danger',
-    'data' => [
-        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-        'method' => 'post',
+                                                <?php
+echo PrintThis::widget([
+    'htmlOptions' => [
+        'id' => 'orderbtn',
+        'btnClass' => 'btn btn-primary',
+        'btnId' => 'btnmanifests',
+        'btnText' => 'Print',
+        'btnIcon' => 'fa fa-print'
     ],
-])?>
+    'options' => [
+        'debug' => false,
+        'importCSS' => true,
+        'importStyle' => false,
+       // / 'loadCSS' => "path/to/my.css",
+        'pageTitle' => "",
+        'removeInline' => false,
+        'printDelay' => 200,
+        'header' => null,
+        'formValues' => true,
+    ]
+]);
+?>
                                             </div>
                                         </div>
 
@@ -204,9 +223,7 @@ $items = array();
 
 
                                     </div>
-                                </div>
-                            </div>
-                        </section></div>
+                      </div>
 
 
 
