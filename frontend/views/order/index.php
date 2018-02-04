@@ -20,7 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
+    <?php
+    $user_id = Yii::$app->user->getId();
+   $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+if(!isset($Role['seller'])){ ?>
         <?= Html::a(Yii::t('app', 'Create Customer Order'), ['create?type=Order'], ['class' => 'btn btn-success']) ?>
+<?php
+}
+?>
         <?= Html::a(Yii::t('app', 'Create Agent Order'), ['create?type=Request'], ['class' => 'btn btn-success']) ?>
     </p>
 

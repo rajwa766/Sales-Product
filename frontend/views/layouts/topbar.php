@@ -1,6 +1,8 @@
 <!-- START TOPBAR -->
 <?php use yii\helpers\Url;
         use yii\db\Query;
+   $user_id = Yii::$app->user->getId();
+   $Role =   Yii::$app->authManager->getRolesByUser($user_id);
 ?>
         <div class='page-topbar '>
             <div class='logo-area'>
@@ -30,8 +32,7 @@
                             <ul class="dropdown-menu notifications animated fadeIn">
                                 <li class="total">
                                     <span class="small">
-     <?= Yii::t('app', 'You have');?> <strong><?= $notificationDetail['count']; ?></strong><?= Yii::t('app', 'New Notifications.');?>
-         
+     <?= Yii::t('app', 'You have');?> <strong><?= $notificationDetail['count']; ?>&nbsp;</strong><?= Yii::t('app', 'New Notifications.');?>
                               </span>
                                 </li>
                                 <li class="list">

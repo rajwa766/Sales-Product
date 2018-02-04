@@ -185,6 +185,7 @@ class StockIn extends \yii\db\ActiveRecord
         ->all();
         $notificationDetail = array();
         $notificationDetail['detail'] = '';
+        $notificationDetail['count'] = 0;
         $i = 0;
         if($status_stock_child){
         foreach($status_stock_child as $status_stock){

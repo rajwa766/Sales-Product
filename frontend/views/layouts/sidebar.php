@@ -9,7 +9,10 @@ use yii\models\users_level;
 
                 <!-- MAIN MENU - START -->
                 <div class="page-sidebar-wrapper" id="main-menu-wrapper"> 
-
+<?php 
+   $user_id = Yii::$app->user->getId();
+   $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+?>
                     <!-- USER INFO - START -->
                     <div class="profile-info row">
 
@@ -80,8 +83,7 @@ use yii\models\users_level;
                         </li>
                         <!-- end profile -->
                         <?php  
-                         $user_id = Yii::$app->user->getId();
-                         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
+                      
                         $vip_level_id = array_search('VIP Team', \common\models\Lookup::$user_levels);
                        $user_level_id =  Yii::$app->user->identity->user_level_id;
         if(!isset($Role['seller']) &&  $user_level_id <= $vip_level_id){
@@ -106,8 +108,8 @@ use yii\models\users_level;
                             </ul>
                         </li>
         <?php }
-        if(!isset($Role['seller'])){ ?>
-                     <!-- order -->
+   
+                   ?>
                      <li class=""> 
                             <a href="javascript:;">
                                 <i class="fa fa-pencil-square-o"></i>
@@ -119,7 +121,7 @@ use yii\models\users_level;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order"> <?= Yii::t('app', 'Order');?></a>
 
                                 </li>
-                             
+                             <?php      if(!isset($Role['seller'])){ ?>
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'Returns Orders');?>
                                     <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
