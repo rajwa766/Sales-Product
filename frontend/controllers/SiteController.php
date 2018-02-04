@@ -70,6 +70,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            $this->redirect('login');
+        }
         $user_id = Yii::$app->user->getId();
         $all_status = \common\models\helpers\Statistics::allStatusDashboard($user_id);
         return $this->render('index', [
@@ -107,8 +110,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        $this->redirect('login');
+        //return $this->goHome();
     }
 
     /**

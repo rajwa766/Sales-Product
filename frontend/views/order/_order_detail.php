@@ -6,6 +6,7 @@ use kartik\select2\Select2;
 use yii\models\order;
 use kartik\file\FileInput;
 use yii\db\Query;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
@@ -70,7 +71,7 @@ use yii\db\Query;
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => '../postcode/all-code',
+                    'url' => Url::base().'/postcode/all-code',
                     'dataType' => 'json',
                     'data' => new \yii\web\JsExpression('function(params) { ; return {q:params.term}; }')
                 ],

@@ -8,7 +8,7 @@ if ($type == "Order") {
         'Role' => $Role,
     ]);
 
-} else if($type == "Request"){
+} else if($type == "Request" || $type == "Return"){
     echo Yii::$app->controller->renderPartial('_agent_request', [
         'model' => $model,
         'form' => $form,

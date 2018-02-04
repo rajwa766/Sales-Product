@@ -413,10 +413,13 @@ class Order extends \yii\db\ActiveRecord
                 $this->addError('all_level', 'User level is required.');
             }
             if (empty($this->parent_user)) {
-                $this->addError('parent_user', 'Transfer from is required.');
+                $this->addError('parent_user', 'Parent user is required.');
+            }
+            if (empty($this->child_level)) {
+                $this->addError('child_level', 'Child level is required.');
             }
             if (empty($this->child_user)) {
-                $this->addError('child_user', 'Transfer to is required.');
+                $this->addError('child_user', 'Child name is required.');
             }
         }
     }
