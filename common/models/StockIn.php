@@ -175,6 +175,40 @@ class StockIn extends \yii\db\ActiveRecord
             return false;
         }
     }
+    public static function ChildStock($id){
+        $status_stock_child =  (new Query())
+        ->select('SUM(stock_in.remaining_quantity) as remaning_stock,SUM(stock_in.initial_quantity) as initial_stock,user.username as name,user.id as id')
+        ->from('stock_in')
+        ->innerJoin('user', 'stock_in.user_id = user.id')
+        ->where(['=','user.parent_id',Yii::$app->user->identity->id])
+        ->groupby(['stock_in.product_id','user.id'])
+        ->all();
+        $notificationDetail = array();
+        $notificationDetail['detail'] = '';
+        $i = 0;
+        if($status_stock_child){
+        foreach($status_stock_child as $status_stock){
+              $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
+              $stock_remaning_percent = $stock_remaning_percent *100;
+          $selected_percentage = \common\models\StockStatus::find()->where(['user_id'=>$status_stock['id']])->one();
+          $remaning_percent  = '';
+          if($selected_percentage){
+          if($selected_percentage->below_percentage > $stock_remaning_percent ){
+              $i++;
+              $remaning_percent = round($stock_remaning_percent);
+              $notificationDetail['detail'].=  ' <li class="unread available">   <a href="javascript:;">
+          <div class="notice-icon"> <i class="fa fa-check"></i> </div><div><span class="name">
+          '.$status_stock['name'].' has <strong> '.$remaning_percent.'%</strong>
+                                                             </span>   </div>
+                                                             </a>
+                                                         </li>';
+          }
+          }
+        }
+        $notificationDetail['count'] = $i;
+    }
+        return $notificationDetail;
+    }
     public static function CalculateBonus($order_request_id, $user_id, $order_id, $quantity)
     {
         $MR_Comission = 10;

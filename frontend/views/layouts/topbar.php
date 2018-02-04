@@ -17,67 +17,28 @@
                         <?php 
                         $remaning_percent = '';
                         if (!Yii::$app->user->isGuest) {?>
-                            <?php $status_stock_child =  (new Query())
-                                ->select('SUM(stock_in.remaining_quantity) as remaning_stock,SUM(stock_in.initial_quantity) as initial_stock,user.username as name,user.id as id')
-                                ->from('stock_in')
-                                ->innerJoin('user', 'stock_in.user_id = user.id')
-                                ->where(['=','user.parent_id',Yii::$app->user->identity->id])
-                                ->groupby(['stock_in.product_id','user.id'])
-                                ->all();
-                             
-                                ?>
+                            <?php
+                            $notificationDetail = \common\models\StockIn::ChildStock(Yii::$app->user->identity->id);
+                            ?>
                         <li class="notify-toggle-wrapper">
                         <a href="#" data-toggle="dropdown" class="toggle">
                                 <i class="fa fa-bell"></i>
                                 <span class="badge badge-orange">
-                                <?php if($status_stock_child) {
-                                        $i = 0;    
-                                        $all_notification = '';                                    ?>
-<?php foreach($status_stock_child as $status_stock){
-    
-      $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
-      $stock_remaning_percent = $stock_remaning_percent *100;
-  $selected_percentage = \common\models\StockStatus::find()->where(['user_id'=>$status_stock['id']])->one();
-  $remaning_percent  = '';
-  if($selected_percentage){
-  if($selected_percentage->below_percentage > $stock_remaning_percent ){
-      $i++;
-      $remaning_percent = round($stock_remaning_percent);
-  $all_notification.=  ' <li class="unread available">   <a href="javascript:;">
-  <div class="notice-icon"> <i class="fa fa-check"></i> </div><div><span class="name">
-  '.$status_stock['name'].' has <strong> '.$remaning_percent.'%</strong>
-                                                     </span>   </div>
-                                                     </a>
-                                                 </li>';
-  }
-  }
-}
-echo $i;
-
-                                                    }
-                                                
-?>
-                                </span>
+                               <?=  $notificationDetail['count']; ?>
+                            </span>
                             </a>
                             <ul class="dropdown-menu notifications animated fadeIn">
                                 <li class="total">
                                     <span class="small">
-     <?= Yii::t('app', 'You have');?> <strong><?= $i; ?></strong><?= Yii::t('app', 'New Notifications.');?>
+     <?= Yii::t('app', 'You have');?> <strong><?= $notificationDetail['count']; ?></strong><?= Yii::t('app', 'New Notifications.');?>
          
                               </span>
                                 </li>
                                 <li class="list">
-
                                     <ul class="dropdown-menu-list list-unstyled ps-scrollbar">
-                                      
-                                                <?= $all_notification;?>
-                                          
-                                 
-
+                                                <?= $notificationDetail['detail'];?>
                                     </ul>
-
                                 </li>
-
                                 <li class="external">
                                     <a href="javascript:;">
                                         <!-- <span>Read All Notifications</span> -->
@@ -85,11 +46,6 @@ echo $i;
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li class="hidden-sm hidden-xs searchform">
-                            <div class="input-group">
-                            
-                            </div>
-                        </li> -->
                         <li class="message-toggle-wrapper">
 								<a class="data-toggle" data-toggle="dropdown">
                                 <span class="languageDropdown"><i class="fa fa-globe"></i></span>
@@ -105,14 +61,10 @@ echo $i;
                     </ul>
                 </div>      
                 <div class='pull-right'>
-  
-  
                     <ul class="info-menu right-links list-inline list-unstyled">
                     <?php  if (Yii::$app->user->isGuest) {?>
-                       
                       <li><a data-method="POST" href="<?= Yii::$app->request->baseUrl;?>/site/login"><?= Yii::t('app', 'Login');?></a></li>
                       <?php }else{?>
-                                                   <?php // Yii::t('app','Tranfer from');?>
                         <li class="profile">
                             <a href="#" data-toggle="dropdown" class="toggle">
                                 <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" alt="user-image" class="img-circle img-inline">
