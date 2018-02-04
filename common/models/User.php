@@ -360,13 +360,21 @@ class User extends ActiveRecord implements IdentityInterface
             if ($current_level->max_user != '-1' && $total_parent_user_current_level > $current_level->max_user && $model->company_user != '1') {
                 $result = "max_user_reached";
             } else {
-
                 if ($model->save()) {
 
-                    \common\models\StockStatus::set_minimum_stock_level($model->id);
+                    
                     \common\models\Account::create_accounts($model);
-                    $order = \common\models\Order::insertOrder($model, true);
-
+                    
+                    \common\models\StockStatus::set_minimum_stock_level($model->id);
+                    $sellers = array_filter(\common\models\Lookup::$user_levels, function ($key) {
+                        if (strpos(\common\models\Lookup::$user_levels[$key], 'Seller') !== false) {
+                            return $key;
+                        }
+                    }, ARRAY_FILTER_USE_KEY);
+                    if(array_key_exists($model->user_level_id, $sellers))
+                    {
+                        $order = \common\models\Order::insertOrder($model, true);
+                    }
                     //bonus for super vip or vip
                     $super_vip_level = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                     $vip_level = array_search('VIP Team', \common\models\Lookup::$user_levels);

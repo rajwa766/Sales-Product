@@ -200,14 +200,23 @@ public function actionGetunitsprice($id,$user_level,$product_id,$type=null){
         }
     }
     $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->andWhere(['<=','units',$id])->one();
-
+   
   if($one_unit){
     $detai_item['price']=$one_unit->price;
     return json_encode($detai_item);
   }else{
     $one_unit = UserProductLevel::find()->where(['user_level_id'=>$user_level])->andWhere(['product_id'=>$product_id])->min('units');
-    $detai_item['units']=$one_unit;
-    return json_encode($detai_item);
+    if($one_unit)
+    {
+        $detai_item['units']=$one_unit;
+        return json_encode($detai_item);
+    }
+    else
+    {
+        $product = \common\models\Product::find()->where(['id'=>$product_id])->one();
+        $detai_item['price']=$product['price'];
+        return json_encode($detai_item);
+    }
   }
    
 }
