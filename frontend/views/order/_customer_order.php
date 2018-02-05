@@ -10,11 +10,11 @@ use yii\db\Query;
 <!-- customer part start here -->
 <div class="order-setting">
     <div class="admin">
-        <div class="row first-row">
-            <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-2">
                 <?= Yii::t('app', 'User Level') ?>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <?php
                     if (isset($Role['super_admin'])) {
                         echo $form->field($model, 'request_user_level')->widget(Select2::classname(), [
@@ -44,10 +44,10 @@ use yii\db\Query;
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <?= Yii::t('app', 'Agent Name') ?>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-10">
 
                 <?php
                 if (isset($Role['super_admin'])) {

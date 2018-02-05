@@ -12,18 +12,10 @@ use yii\db\Query;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<h3>Order Items</h3>
-<div class="row first-row">
-</div>
-    <?php
-        $user_id = Yii::$app->user->getId();
-        echo $form->field($model, 'product_id')->hiddenInput(['value' => '1'])->label(false);
-    ?>
-    <div class="stock_field">
+<!-- <h3>Order Items</h3> -->
         <?php if (!Yii::$app->user->isGuest) { ?>
-            <div class="col-md-2">Total Stock
-
-            </div>
+        <div class="row">
+            <div class="col-md-2">Total Stock </div>
             <div class="col-md-10" style="margin-bottom: 10px;">
                 <?php
                 if (!isset($Role['super_admin'])) {
@@ -44,13 +36,16 @@ use yii\db\Query;
                 <?php }
                 ?>
             </div>
-        </div>
+    </div>
     <?php } ?>   
-
     <div class="col-md-4"><?php echo $form->field($model, 'quantity')->textInput(['maxlength' => true]); ?></div>
     <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
     <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
     <div class="noproduct"></div>
+    <?php
+        $user_id = Yii::$app->user->getId();
+        echo $form->field($model, 'product_id')->hiddenInput(['value' => '1'])->label(false);
+    ?>
     <?php if (Yii::$app->user->isGuest) { ?>
         <?php
         if(isset( $_GET['id']))

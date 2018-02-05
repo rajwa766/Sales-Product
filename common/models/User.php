@@ -95,7 +95,6 @@ class User extends ActiveRecord implements IdentityInterface
             [['link'], 'string', 'max' => 450],
             [['phone_no'], 'string', 'max' => 45],
             [['address'], 'string', 'max' => 5000],
-            [['email'], 'unique'],
             [['username'], 'unique'],
             [['password_reset_token'], 'unique'],
         ];
@@ -324,7 +323,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function CreateUser($model)
     {
-        $result = "";
+        $result = "Success";
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
         try {
@@ -358,7 +357,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             //    check not company user and not seller and user space remain
             if ($current_level->max_user != '-1' && $total_parent_user_current_level > $current_level->max_user && $model->company_user != '1') {
-                $result = "max_user_reached";
+                $result = array("error"=>"Max users reached.");
             } else {
                 if ($model->save()) {
                     \common\models\Account::create_accounts($model);
@@ -390,12 +389,19 @@ class User extends ActiveRecord implements IdentityInterface
                     $result = $model->id;
 
                 } else {
-                    $result = "transaction_failed";
+                    if(isset($model->getErrors()['username']))
+                    {
+                        $result = array("username"=>$model->getErrors()['username']);
+                    }
+                    else
+                    {
+                        $result = array("error"=>"Some error occured, please try again later.");
+                    }
                 }
             }
         } catch (Exception $e) {
             $transaction->rollBack();
-            $result = "transaction_failed";
+            $result = array("error"=>"Some error occured, please try again later.");
         }
         return $result;
     }

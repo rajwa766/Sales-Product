@@ -38,76 +38,93 @@ use yii\db\Query;
         {
             $RoleName = array_keys($Role)[0];
         }
-        
+if (!Yii::$app->user->isGuest) {        
 ?>
-<div class="order-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-            <?php if (!Yii::$app->user->isGuest) { ?>  
-                <div class="row outer-container">
-                    <div class="<?=$class;?> orders-panel order-settings">
-                        <?=
-                                Yii::$app->controller->renderPartial('_order_setting', [
-                                    'model' => $model,
-                                    'form' => $form,
-                                    'user_id' => $user_id,
-                                    'Role' => $Role,
-                                    'type' => $type,
-                                ]);
-                        ?>
-                    </div>
-                </div>
-            <?php } ?>
-            <!-- this is order detail section -->
-            <div class="row outer-container order-details">
-                <div class="<?=$class;?> orders-panel">
-                    <?=
-                    Yii::$app->controller->renderPartial('_order_detail', [
-                        'model' => $model,
-                        'form' => $form,
-                        'user_id' => $user_id,
-                        'Role' => $Role,
-                    ]);
-                    ?>
-                </div>
-            </div>
-            <!-- this is order items section -->
-            <div class="row outer-container">
-                <div class="<?=$class;?> orders-panel">
-                    <?=
-                    Yii::$app->controller->renderPartial('_order_item', [
-                        'model' => $model,
-                        'form' => $form,
-                        'user_id' => $user_id,
-                        'Role' => $Role,
-                    ]);
-                    ?>
-                </div>
-            </div>
-            <!-- order items section end here-->
-            <!-- this is customer section-->
-            <div class="row outer-container shipping-address">
-                <div class="<?=$class;?> orders-panel">
-                    <?=
-                    Yii::$app->controller->renderPartial('_shipping', [
-                        'model' => $model,
-                        'form' => $form,
-                        'user_id' => $user_id,
-                        'Role' => $Role,
-                    ]);
-                    ?>
-                </div>
-            </div>
-            <!-- customer section ends here-->
-            <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
-            <?= $form->field($model, 'order_type')->hiddenInput(['value' => $type])->label(false);?>
-            <div class="<?=$class?>">
-                <div class="form-group">
-                <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
-                </div>
-            </div>
-    <?php ActiveForm::end(); ?>
-</div>
 
+<section class="box">
+    <header class="panel_header">
+        <h1 class="title pull-left"><?= Html::encode($this->title) ?></h1>
+        <div class="actions panel_actions pull-right">
+            <i class="box_toggle fa fa-chevron-down"></i>
+        </div>
+    </header>
+    <div class="content-body">
+<?php } ?>
+        <div class="order-form">
+            <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+                    <?php if (!Yii::$app->user->isGuest) { ?>  
+                        <div class="row">
+                            <div class="<?=$class;?> order-settings">
+                                <?=
+                                        Yii::$app->controller->renderPartial('_order_setting', [
+                                            'model' => $model,
+                                            'form' => $form,
+                                            'user_id' => $user_id,
+                                            'Role' => $Role,
+                                            'type' => $type,
+                                        ]);
+                                ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <!-- this is order detail section -->
+                    <div class="row order-details">
+                        <div class="<?=$class;?>">
+                            <?=
+                            Yii::$app->controller->renderPartial('_order_detail', [
+                                'model' => $model,
+                                'form' => $form,
+                                'user_id' => $user_id,
+                                'Role' => $Role,
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <!-- this is customer section-->
+                    <div class="row shipping-address">
+                        <div class="<?=$class;?>">
+                            <?=
+                            Yii::$app->controller->renderPartial('_shipping', [
+                                'model' => $model,
+                                'form' => $form,
+                                'user_id' => $user_id,
+                                'Role' => $Role,
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <!-- customer section ends here-->
+                    <!-- this is order items section -->
+                    <div class="row">
+                        <div class="<?=$class;?>">
+                            <?=
+                            Yii::$app->controller->renderPartial('_order_item', [
+                                'model' => $model,
+                                'form' => $form,
+                                'user_id' => $user_id,
+                                'Role' => $Role,
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <!-- order items section end here-->
+                    <div class="help-block help-block-error vehcle_not_found" style="color: #a94442;"></div>
+                    <?= $form->field($model, 'order_type')->hiddenInput(['value' => $type])->label(false);?>
+                    <div class="row no-margin">
+                        <div class="<?= $class ?>">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            <?php ActiveForm::end(); ?>
+        </div>
+<?php if (!Yii::$app->user->isGuest) { ?>     
+    </div>
+</section>
+<?php } ?>
 <script type="text/javascript">
     jQuery(document).ready(function() {
         var type = '<?= $type ?>';

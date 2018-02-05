@@ -74,6 +74,12 @@ class UserController extends Controller
             'all_status' => $all_status,
         ]);
     }
+    public function actionError($error)
+    {
+        return $this->render('error', [
+            'error' => $error,
+        ]);
+    }
 
     public function actionImport()
     {
@@ -255,12 +261,16 @@ class UserController extends Controller
     {
         $model = new User();
         if ($model->load(Yii::$app->request->post())) {
-            $error = \common\models\User::CreateUser($model);
-            if ($error == "transaction_failed") {
-                return $this->redirect(['error', 'model' => $model]);
-            } else if ($error == "max_user_reached") {
-                return $this->render('more_user', ['model' => $model]);
-            } else {
+            $result = \common\models\User::CreateUser($model);
+            if (isset($result["error"])) {
+                return $this->redirect(['error','error' => $result["error"]]);
+                
+            } else if (isset($result["username"])) {
+                return $this->render('create', 
+                [
+                    'model' => $model,
+                ]);
+            }  else {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {

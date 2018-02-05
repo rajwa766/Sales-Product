@@ -389,22 +389,13 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
     </div>
 
     </div> 
-<div class="outer-container">
- <div class="col-md-12 order-panel">
-    <h3>Order Items</h3>
-    <div class=" col-md-12 first-row">
-    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true,'required'=>true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'unit_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
-      <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
-      <div class="noproduct"></div>
-
-
-
-</div>
-
-       
-</div>
-
+<div class="row no-margin">
+    <div class="col-md-12">
+        <div class="col-md-4"><?php echo $form->field($model, 'quantity')->label('Quantity')->textInput(['maxlength' => true,'required'=>true]); ?></div>
+        <div class="col-md-4"><?php echo $form->field($model, 'unit_price')->label('Unit Price')->textInput(['readonly' => true]); ?></div>
+        <div class="col-md-4"><?php echo $form->field($model, 'total_price')->label('Total')->textInput(['readonly' => true]); ?></div>
+        <div class="noproduct"></div>
+    </div>
 </div>
     <?php  }?>
   
@@ -413,12 +404,11 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
 <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
-    <div class="form-group">
-    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
-
+            <div class="form-group">
+                <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
     <?php ActiveForm::end(); ?>
 </div>

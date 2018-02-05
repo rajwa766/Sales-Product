@@ -1,4 +1,4 @@
-<h3><?=Yii::t('app', 'ORDER SETTING');?></h3>
+<!-- <h3><?php //echo Yii::t('app', 'ORDER SETTING');?></h3> -->
 <?php
 if ($type == "Order") {
     echo  Yii::$app->controller->renderPartial('_customer_order', [

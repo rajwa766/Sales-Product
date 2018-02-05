@@ -4,8 +4,8 @@ use yii\widgets\ActiveForm;
 ?>
 <!-- Agent order starts from here-->
 <div class="transfer-setting">
-    <div class="first-row">
-    <div class="row first-row admin">
+    <div class="">
+    <div class="row">
                             <?php
 if (isset($Role['super_admin'])) {
     ?>

@@ -13,14 +13,13 @@ use yii\helpers\Url;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<h3>Order Detail</h3>
-<div class="first-row"></div>
+<!-- <h3>Order Detail</h3> -->
 <?php if (Yii::$app->user->isGuest) { ?>
-<div class="row first-row">
-    <div class="col-md-4">
+<div class="row">
+    <div class="col-md-2">
         <?= Yii::t('app', 'Representative') ?>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10">
         <div class="form-group">
             <input id="order-representative" class="form-control" readonly aria-invalid="false" type="text">
         </div>
@@ -30,10 +29,10 @@ use yii\helpers\Url;
 
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <?= Yii::t('app', 'Payment Method') ?>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10">
         <?php
         //$model->payment_method_for_rent = '1';
         echo $form->field($model, 'payment_method')->radioList([
@@ -59,10 +58,10 @@ use yii\helpers\Url;
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <?= Yii::t('app', 'Postal Code') ?>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10">
         <?php
         echo $form->field($model, 'postal_code')->widget(Select2::classname(), [
             'theme' => Select2::THEME_BOOTSTRAP,
