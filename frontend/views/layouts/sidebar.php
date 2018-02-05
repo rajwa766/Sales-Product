@@ -139,7 +139,14 @@ use yii\models\users_level;
                                 <?php }else{ ?>
                                     <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer"><?= Yii::t('app', 'Transfer Request');?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->andWhere(['user_id'=>Yii::$app->user->identity->id])->count(); ?></span>
+                                  <?php  if(isset($Role['super_admin'])){ ?>
+                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->count(); ?></span>
+                           <?php     } else {?>
+                            <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->andWhere(['or',
+                ['order_request_id' => Yii::$app->user->identity->id],
+                ['user_id' => Yii::$app->user->identity->id]])->count(); ?></span>
+
+                           <?php } ?>
                                 </a>
                                 </li>
                                 <?php } ?>

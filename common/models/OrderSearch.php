@@ -63,11 +63,11 @@ class OrderSearch extends Order
             'user_id' => $this->user_id,
             'o.status' => $this->status,
             'order_request_id' => $this->order_request_id,
-            'requested_date' => $this->requested_date,
+            // 'requested_date' => $this->requested_date,
         ]);
       
-        $query->andFilterWhere(['like', 'order_ref_no', $this->order_ref_no])
-            ->andFilterWhere(['like', 'shipper', $this->shipper])
+        //->andFilterWhere(['like', 'order_ref_no', $this->order_ref_no])
+        $query->andFilterWhere(['like', 'shipper', $this->shipper])
             ->andFilterWhere(['like', 'cod', $this->cod])
             ->andFilterWhere(['like', 'additional_requirements', $this->additional_requirements])
             ->andFilterWhere(['like', 'file', $this->file]);

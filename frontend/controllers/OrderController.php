@@ -55,8 +55,8 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-        $dataProvider->query->andWhere(['o.status' => '0']);
-
+        $pending_status = array_search('Pending', \common\models\Lookup::$status);
+        $dataProvider->query->andWhere(['o.status' => $pending_status]);
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -68,7 +68,8 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-        $dataProvider->query->andWhere(['o.status' => '2']);
+        $cancel_status = array_search('Request Canceled', \common\models\Lookup::$status);
+        $dataProvider->query->andWhere(['o.status' => $cancel_status]);
 
         return $this->render('pending', [
             'searchModel' => $searchModel,
@@ -81,7 +82,8 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-        $dataProvider->query->andWhere(['o.status' => '1']);
+        $approved_status = array_search('Approved', \common\models\Lookup::$status);
+        $dataProvider->query->andWhere(['o.status' => $approved_status]);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (isset($Role['super_admin'])) {
@@ -101,9 +103,8 @@ class OrderController extends Controller
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andFilterWhere(['or',
-            ['o.status' => '5'],
-            ['o.status' => '6']]);
+        $transfer_request_status = array_search('Transfer Request', \common\models\Lookup::$status);
+        $dataProvider->query->andWhere(['o.status' => $transfer_request_status]);
         if (isset($Role['super_admin'])) {
             $view = 'transfer';
         } else {
@@ -124,7 +125,8 @@ class OrderController extends Controller
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-        $dataProvider->query->andWhere(['o.status' => '3']);
+        $return_request_status = array_search('Return Request', \common\models\Lookup::$status);
+        $dataProvider->query->andWhere(['o.status' =>$return_request_status]);
 
         return $this->render('return', [
             'searchModel' => $searchModel,
