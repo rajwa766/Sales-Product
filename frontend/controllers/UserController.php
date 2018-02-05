@@ -67,7 +67,7 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        
+
         $all_status = \common\models\helpers\Statistics::allStatusDashboard($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -190,7 +190,7 @@ class UserController extends Controller
     }
     public function actionFullfillment()
     {
-       
+
         $curl = curl_init();
         $postal_code = '10300';
         $province = 'กรุงเทพมหานคร';
@@ -227,8 +227,7 @@ class UserController extends Controller
         $err = curl_error($curl);
 
         curl_close($curl);
-        
-       
+
         if ($err) {
             var_dump($err);
             exit();
@@ -251,7 +250,7 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionGetparentid($id)
+    public function actionGetParentId($id)
     {
         $parent_id = User::findOne(['id' => $id]);
         return $parent_id->parent_id;
@@ -263,14 +262,14 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $result = \common\models\User::CreateUser($model);
             if (isset($result["error"])) {
-                return $this->redirect(['error','error' => $result["error"]]);
-                
+                return $this->redirect(['error', 'error' => $result["error"]]);
+
             } else if (isset($result["username"])) {
-                return $this->render('create', 
-                [
-                    'model' => $model,
-                ]);
-            }  else {
+                return $this->render('create',
+                    [
+                        'model' => $model,
+                    ]);
+            } else {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -329,16 +328,30 @@ class UserController extends Controller
         $user_level = Yii::$app->request->get('user_level');
         $company_user = Yii::$app->request->get('company_user');
         $parent_id = Yii::$app->request->get('parent_id');
+        $user_id = Yii::$app->request->get('user_id');
         $include_parent = Yii::$app->request->get('include_parent');
+        $include_self = Yii::$app->request->get('include_self');
         if (empty($include_parent)) {
             $include_parent = false;
         }
+        else
+        {
+            $include_parent=filter_var($include_parent, FILTER_VALIDATE_BOOLEAN);
+        }
+        if (empty($include_self)) {
+            $include_self = true;
+        }
+        else
+        {
+            $include_self=filter_var($include_self, FILTER_VALIDATE_BOOLEAN);
+        }
+       
         $super_vip_level = array_search('Super Admin', \common\models\Lookup::$user_levels);
-        if($user_level == $super_vip_level){
+        if ($user_level == $super_vip_level) {
             $company_user = false;
         }
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\User::getUsers($q, $parent_id, $user_level, $company_user, $include_parent);
+        return \common\models\User::getUsers($q, $parent_id, $user_id, $user_level, $company_user, $include_parent, $include_self);
     }
 //child user of selected user
     public function actionChildusers()
@@ -356,18 +369,16 @@ class UserController extends Controller
         $max_user = Yii::$app->request->get('max_user');
         $include_parent = Yii::$app->request->get('include_parent');
         $company_user = Yii::$app->request->get('company_user');
-        $include_all_child= false;
-         if(!empty($company_user))
-        {
-            $include_all_child= true;
+        $include_all_child = false;
+        if (!empty($company_user)) {
+            $include_all_child = true;
         }
-        if(empty($include_parent))
-        {
-            $include_parent=false;
+        if (empty($include_parent)) {
+            $include_parent = false;
         }
         $id = Yii::$app->request->get('id');
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user,$include_parent,$include_all_child);
+        return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user, $include_parent, $include_all_child);
     }
 
     /**

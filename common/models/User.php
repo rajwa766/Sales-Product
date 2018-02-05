@@ -277,7 +277,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    public static function getUsers($q, $parent_id = null, $user_level = null, $company_user = null, $include_parent = false)
+    public static function getUsers($q, $parent_id = null, $user_id=null, $user_level = null, $company_user = null, $include_parent = false,$include_self=true)
     {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
@@ -287,7 +287,11 @@ class User extends ActiveRecord implements IdentityInterface
         if (!is_null($q)) {
             $query->andWhere(['like', 'username', $q]);
         }
-
+       
+        if(!$include_self)
+        {
+            $query->andWhere(['!=', 'id', $user_id]);
+        }
         if (!is_null($parent_id)) {
             if ($include_parent) {
                 $query->andWhere(['or', ['parent_id' => $parent_id], ['id' => $parent_id]]);
@@ -366,7 +370,7 @@ class User extends ActiveRecord implements IdentityInterface
                             return $key;
                         }
                     }, ARRAY_FILTER_USE_KEY);
-                    if(array_key_exists($model->user_level_id, $sellers))
+                    if(!array_key_exists($model->user_level_id, $sellers))
                     {
                         \common\models\StockStatus::set_minimum_stock_level($model->id);
                         $order = \common\models\Order::insertOrder($model, true);

@@ -44,30 +44,30 @@ if (isset($Role['super_admin'])) {
                                 Transfer From
                             </div>
                             <div class="col-md-10">
-    <?php
-echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
-        'theme' => Select2::THEME_BOOTSTRAP,
-        'options' => ['placeholder' => 'Select a Parent User ...'],
-        'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => '../user/get-users',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
-            ],
-        ],
-    ])->label(false);
-    ?>
+                             <?php
+                                echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
+                                        'theme' => Select2::THEME_BOOTSTRAP,
+                                        'options' => ['placeholder' => 'Select a Parent User ...'],
+                                        'pluginOptions' => [
+                                            'allowClear' => true,
+                                            //'autocomplete' => true,
+                                            'ajax' => [
+                                                'url' => '../user/get-users',
+                                                'dataType' => 'json',
+                                                'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
+                                            ],
+                                        ],
+                                    ])->label(false);
+                                    ?>
                             </div>
                         </div>
-                                <?php
+<?php
+    echo "<input type='hidden' id='transfer_parent' value='".Yii::$app->user->identity->parent_id."'>";
 } else {
-    echo $form->field($model, 'parent_user')->hiddenInput(['value' => Yii::$app->user->identity->parent_id])->label(false);
+    echo $form->field($model, 'parent_user')->hiddenInput(['value' => $user_id])->label(false);
+    echo "<input type='hidden' id='transfer_parent' value='".Yii::$app->user->identity->parent_id."'>";
 }
 ?>
-
-
                     <div class="row">
                         <div class="col-md-2">
                             Transfer to
@@ -85,9 +85,10 @@ if (isset($Role['super_admin'])) {
                 'url' => '../user/get-users',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
-                          var parent_id = $("#parent_sected_user").val();
+                          var user_id = $("#order-parent_user").val();
+                          var parent_id = $("#transfer_parent").val();
                           var user_level = $("#order-all_level").val();
-                          return {q:params.term,user_level:user_level,parent_id:parent_id}; }'),
+                          return {q:params.term,user_level:user_level,parent_id:parent_id,user_id:user_id,include_self:false}; }'),
             ],
         ],
     ])->label(false);
@@ -102,9 +103,10 @@ if (isset($Role['super_admin'])) {
                 'url' => '../user/get-users',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
-                    var parent_id = $("#order-parent_user").val();
+                    var user_id = $("#order-parent_user").val();
+                    var parent_id = $("#transfer_parent").val();
                     var user_level = $("#order-all_level").val();
-                    return {q:params.term,user_level:user_level,parent_id:parent_id}; }'),
+                    return {q:params.term,user_level:user_level,parent_id:parent_id,user_id:user_id,include_self:false}; }'),
             ],
         ],
     ])->label(false);
@@ -117,3 +119,15 @@ if (isset($Role['super_admin'])) {
 
     </div>
 </div>
+<script>
+jQuery(document).ready(function() {
+         $('#order-parent_user').on('change', function () {
+                var data = $('#order-parent_user').select2('data');
+                var user_id=data[0].id;
+                var url="/user/get-parent-id?id="+user_id;
+                $.post(url, function (data) {
+                    $("#transfer_parent").val(data);
+                });
+         });
+});
+</script>

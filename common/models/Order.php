@@ -332,26 +332,23 @@ class Order extends \yii\db\ActiveRecord
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        // if (empty($this->quantity)) {
-        //     $this->addError('quantity', 'Quanity must be greater than 0.');
-        // }
+        if (empty($this->quantity)) {
+            $this->addError('quantity', 'Quanity must be greater than 0.');
+        }
         // Customer Order Validations
         if ($this->order_type == "Order") {
             $this->OrderTypeValidation($Role);
         }
         // Agent Request Validations
-        if ($this->order_type == "Request")
-        {
+        if ($this->order_type == "Request") {
             $this->RequestTypeValidation($Role);
         }
-         // Transfer Request Validations
-         if ($this->order_type == "Return")
-         {
-             $this->ReturnTypeValidation($Role);
-         }
-          // Return Request Validations
-        if ($this->order_type == "Transfer")
-        {
+        // Transfer Request Validations
+        if ($this->order_type == "Return") {
+            $this->ReturnTypeValidation($Role);
+        }
+        // Return Request Validations
+        if ($this->order_type == "Transfer") {
             $this->TransferTypeValidation($Role);
         }
 

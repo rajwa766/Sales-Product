@@ -184,6 +184,7 @@ class OrderController extends Controller
      */
     public function actionUpdate($id)
     {
+        $type="Order";
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -192,6 +193,7 @@ class OrderController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'type'=>$type,
         ]);
     }
 
