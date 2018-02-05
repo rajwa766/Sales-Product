@@ -361,11 +361,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $result = "max_user_reached";
             } else {
                 if ($model->save()) {
-
-                    
                     \common\models\Account::create_accounts($model);
-                    
-                    \common\models\StockStatus::set_minimum_stock_level($model->id);
                     $sellers = array_filter(\common\models\Lookup::$user_levels, function ($key) {
                         if (strpos(\common\models\Lookup::$user_levels[$key], 'Seller') !== false) {
                             return $key;
@@ -373,6 +369,7 @@ class User extends ActiveRecord implements IdentityInterface
                     }, ARRAY_FILTER_USE_KEY);
                     if(array_key_exists($model->user_level_id, $sellers))
                     {
+                        \common\models\StockStatus::set_minimum_stock_level($model->id);
                         $order = \common\models\Order::insertOrder($model, true);
                     }
                     //bonus for super vip or vip
