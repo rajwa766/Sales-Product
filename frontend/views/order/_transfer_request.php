@@ -9,10 +9,10 @@ use yii\widgets\ActiveForm;
                             <?php
 if (isset($Role['super_admin'])) {
     ?>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     User Level
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <?php
 echo $form->field($model, 'all_level')->widget(Select2::classname(), [
         'data' => common\models\UsersLevel::getAlllevels(),
@@ -40,10 +40,10 @@ $Role = Yii::$app->authManager->getRolesByUser($user_id);
 if (isset($Role['super_admin'])) {
     ?>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 Transfer From
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-10">
     <?php
 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
@@ -69,10 +69,10 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
 
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             Transfer to
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-10">
 <?php
 if (isset($Role['super_admin'])) {
     echo $form->field($model, 'child_user')->widget(Select2::classname(), [
