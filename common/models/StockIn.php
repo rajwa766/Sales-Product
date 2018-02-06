@@ -108,12 +108,60 @@ class StockIn extends \yii\db\ActiveRecord
         $out['results'] = array_values($data);
         return $out;
     }
+    public static function Fullfillment($postal_code,$province,$district,$cust_name,$cust_addr,$mobile_no,$external_id,$amount,$quantity)
+    {
+
+        $curl = curl_init();
+        $sku = "ABSOLUT"; //BEYDEY1
+        if (preg_match('/^10.{3}$/', $postal_code) || preg_match('/^11.{3}$/', $postal_code) || preg_match('/^12.{3}$/', $postal_code)) {
+            $ship_method = "ALP";
+        } else {
+            $ship_method = "K2D";
+        }
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://oms.sokochan.com/api/1.0/orders",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => '{ 	"external_id":"' . $external_id . '","order_number":"' . $external_id . '", "shipping":"' . $ship_method . '","cod_amount":"' . $amount . '","customer":{ "name":"' . $cust_name . '","address":"' . $cust_addr . '", "province":"' . $province . '", "district":"' . $district . '","postal_code":"' . $postal_code . '","mobile_no":"' . $mobile_no . '"}, 	"order_items":[{"item_sku":"' . $sku . '","item_code":"","item_qty":' . $quantity . '}]}',
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Basic QWJzb2x1dGVBUEk6ODBlMTUxYWM4MWU1ZWQ1MGU4NTY0NDk5YWM3NmM1Mjk=",
+                "cache-control: no-cache",
+                "Content-Type: application/json",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          
+            return false;
+            die("cURL Error #:" . $err);
+        } else {
+            $resp = json_decode($response, true);
+           
+            if ($resp['code'] == 200) {
+                return $resp['order_code'];
+            } else {
+                return false;
+            }
+        }
+
+    }
     public static function approve($order_id, $user_id, $order_request_id)
     {
         $data = Yii::$app->request->post();
 
         $stock_available = true;
         $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
+        $order_detail = \common\models\Order::findOne(['id'=>$order_id]);
+        $shipping_detail = \common\models\ShippingAddress::findOne(['order_id'=>$order_id]);
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
         try
@@ -148,6 +196,15 @@ class StockIn extends \yii\db\ActiveRecord
 
                 }
                 \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
+                $fullfillmentApi = StockIn::Fullfillment($shipping_detail->postal_code,$shipping_detail->province,$shipping_detail->district,$shipping_detail->name,$shipping_detail->address,$shipping_detail->mobile_no,$order_id,$total_order_quantity[0]['total_price'],$total_order_quantity[0]['quantity']);
+                if($fullfillmentApi  != false){
+                    Yii::$app->db->createCommand()
+                    ->update('order', ['order_code' => $fullfillmentApi], 'id =' . $order_id)
+                    ->execute();
+                    $transaction_failed = true;
+                }else{
+            $transaction_failed = false;
+                }
             }
         } catch (Exception $e) {
             $transaction_failed = true;
@@ -158,10 +215,10 @@ class StockIn extends \yii\db\ActiveRecord
         } else {
             $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
             \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
-
-            $transaction->commit();
-            \common\models\Order::update_status($order_id);
-            echo true;
+                \common\models\Order::update_status($order_id);
+                echo true;
+            
+          
         }
     }
     public static function CreateStock($model)

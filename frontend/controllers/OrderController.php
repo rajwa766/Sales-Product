@@ -45,8 +45,7 @@ class OrderController extends Controller
         if (!isset($Role['super_admin'])) {
             $dataProvider->query->andwhere(['created_by' => Yii::$app->user->identity->id]);
         }
-        var_dump($dataProvider);
-        exit();
+       
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -75,11 +74,11 @@ class OrderController extends Controller
 
     public function actionCancel()
     {
+        $cancel_status = array_search('Request Canceled', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
+        $searchModel->status=$cancel_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-        $cancel_status = array_search('Request Canceled', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' => $cancel_status]);
 
         return $this->render('pending', [
             'searchModel' => $searchModel,
@@ -89,10 +88,10 @@ class OrderController extends Controller
 
     public function actionApproved()
     {
-        $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $approved_status = array_search('Approved', \common\models\Lookup::$status);
-        $dataProvider->query->where(['o.status' => $approved_status]);
+        $searchModel = new OrderSearch();
+        $searchModel->status=$approved_status;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (!isset($Role['super_admin'])) {
@@ -115,12 +114,12 @@ class OrderController extends Controller
 
     public function actionTransfer()
     {
+        $transfer_request_status = array_search('Transfer Request', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
+        $searchModel->status=$transfer_request_status;
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $transfer_request_status = array_search('Transfer Request', \common\models\Lookup::$status);
-        $dataProvider->query->where(['o.status' => $transfer_request_status]);
         if (isset($Role['super_admin'])) {
             $view = 'transfer';
         } else {
@@ -138,10 +137,10 @@ class OrderController extends Controller
 
     public function actionReturn()
     {
-        $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $return_request_status = array_search('Return Request', \common\models\Lookup::$status);
-        $dataProvider->query->where(['o.status' => $return_request_status]);
+        $searchModel = new OrderSearch();
+        $searchModel->status=$return_request_status;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (!isset($Role['super_admin'])) {

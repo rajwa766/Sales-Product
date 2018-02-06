@@ -199,7 +199,7 @@ class UserController extends Controller
         $cust_addr = "g5/2";
         $mobile_no = '1223232';
         $sku = "ABSOLUT"; //BEYDEY1
-        $external_id = 3;
+        $external_id = 567576;
         $amount = 780;
         $quantity = 1;
         if (preg_match('/^10.{3}$/', $postal_code) || preg_match('/^11.{3}$/', $postal_code) || preg_match('/^12.{3}$/', $postal_code)) {
@@ -229,18 +229,16 @@ class UserController extends Controller
         curl_close($curl);
 
         if ($err) {
-            var_dump($err);
-            exit();
+          
             return false;
             die("cURL Error #:" . $err);
         } else {
             $resp = json_decode($response, true);
-            var_dump($resp);
-            exit();
+           
             if ($resp['code'] == 200) {
-                return true;
+                return $resp['order_code'];
             } else {
-                return $resp;
+                return false;
             }
         }
 

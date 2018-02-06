@@ -76,23 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
     // ... other params
     ]),
     ], 
-    [
-        'label' => Yii::t('app', 'Status'),
-  'attribute' => 'status',
-  'format' => 'raw',
-  'value' => function ($model) {                      
-       return  $model->status == 0 ? "Pending" : ($model->status == 1 ? "Approved" : ($model->status == 2 ? "Request Canceled" :($model->status == 3 ? "Return Request" :($model->status == 4 ? "Return Approved" :($model->status == 5 ? " Transfer Request" :($model->status == 6 ? "Transfer Approved" :($model->status == 7 ? "Transfer Cancelled" :($model->status == 8 ? "Return  Cancelled " : "Unknown"))))))));
-  },
-   'filter'=>[  0 => "Pending",
-   1 => "Approved",
-   2 => "Request Canceled",
-   3 => "Return Request",
-   4 => "Return Approved",
-   5 => "Transfer Request",
-   6 => "Transfer Approved",
-   7 => "Transfer Canceled",
-   8 => "Return Canceled",],
-],
+
             'order_ref_no',
             [
                 'label' => 'Quantity and Price',
