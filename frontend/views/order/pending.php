@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -53,20 +54,14 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'productOrders.quantity',
             // 'productOrders.order_price',
             'additional_requirements',
-         
-
             [
-
                 'header' => 'Approve',
-
                 'format' => 'raw',
-
                 'value' => function($model) {
                     if($model->status == '0'){
-             return "<div class='payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
-                    }else{
-             return "<div class='payment_button_general_approved' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approved</a></div>";
-             
+                        return "<div class='payment_button_general_approve' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approve</a></div>";
+                                }else{
+                        return "<div class='payment_button_general_approved' ><a user_id='".$model->user_id."' ref_id='".$model->order_request_id."' class='" . $model->id . "' >Approved</a></div>";
                     }
                 }
             ],
@@ -75,25 +70,38 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
              
                 'value' => function($model) {
-      if($model->status == '0'){
-        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
-      }else{
-        return "<div class='payment_button_general_pending' ><a class='" . $model->id . "' >Completed</a></div>";
-        
-      }
+            if($model->status == '0'){
+                return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
+            }else{
+                return "<div class='payment_button_general_pending' ><a class='" . $model->id . "' >Completed</a></div>";
+                
+            }
     
                 }
             ],
-            //'file',
-            //'user_id',
-            //'status',
-            //'order_request_id',
-            //'entity_id',
-            //'entity_type',
-            //'requested_date',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}{edit}{delete}',
+            'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/'.$model->id);
+                    },
+                    'edit' => function ($url, $model) {
+                        $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
+                        if($model->status == array_search('Pending', \common\models\Lookup::$status) && isset($Role['customer'])){
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '/order/update/'.$model->id);
+                        }
+                    },
+                    // 'delete' => function ($url, $model) {
+                    //     if($model->status == array_search('Pending', \common\models\Lookup::$status)){
+                    //         return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/order/delete/'.$model->id);
+                    //     }
+                    
+                    // },
+                    
+                ],
+            ],
         ],
+        
     ]); ?>
     <?php Pjax::end(); ?>
 

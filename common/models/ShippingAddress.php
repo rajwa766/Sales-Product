@@ -37,8 +37,7 @@ class ShippingAddress extends \yii\db\ActiveRecord
         return [
             [['order_id'], 'required'],
             [['order_id'], 'integer'],
-            [['name'], 'integer'],
-            [['email', 'phone_no', 'mobile_no', 'postal_code', 'district', 'province', 'country'], 'string', 'max' => 100],
+            [['email', 'phone_no', 'mobile_no', 'postal_code', 'district', 'province', 'country', 'name'], 'string', 'max' => 100],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
@@ -68,23 +67,37 @@ class ShippingAddress extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
-    public static function insertShippingAddress($model,$order_id){
+    public static function insertShippingAddress($model, $order_id)
+    {
         $shipping_address = new ShippingAddress();
         $shipping_address->isNewRecord = true;
         $shipping_address->id = null;
         $shipping_address->order_id = $order_id;
-        // $shipping_address->email = $model->email; 
-        $shipping_address->phone_no =$model->phone_no;
-        $shipping_address->name =$model->name;  
-        $shipping_address->mobile_no =$model->mobile_no; 
-        $shipping_address->postal_code = $model->postal_code; 
-        $shipping_address->district =$model->district; 
-        $shipping_address->province =$model->province; 
-        $shipping_address->address =$model->address; 
+        // $shipping_address->email = $model->email;
+        $shipping_address->phone_no = $model->phone_no;
+        $shipping_address->name = $model->name;
+        $shipping_address->mobile_no = $model->mobile_no;
+        $shipping_address->postal_code = $model->postal_code;
+        $shipping_address->district = $model->district;
+        $shipping_address->province = $model->province;
+        $shipping_address->address = $model->address;
         $shipping_address->country = $model->country;
-       return $shipping_address->save();
-    
-       
-   }
+        return $shipping_address->save();
+
+    }
+    public static function updateShippingAddress($model)
+    {
+        $shipping = \common\models\ShippingAddress::findOne(['order_id' => $model->id]);
+        // $shipping_address->email = $model->email;
+        $shipping->phone_no = $model->phone_no;
+        $shipping->name = $model->name;
+        $shipping->mobile_no = $model->mobile_no;
+        $shipping->postal_code = $model->postal_code;
+        $shipping->district = $model->district;
+        $shipping->province = $model->province;
+        $shipping->address = $model->address;
+        $shipping->country = $model->country;
+        return $shipping->save();
+    }
 
 }

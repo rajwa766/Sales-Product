@@ -126,7 +126,7 @@ class OrderController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $return_request_status = array_search('Return Request', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' =>$return_request_status]);
+        $dataProvider->query->andWhere(['o.status' => $return_request_status]);
 
         return $this->render('return', [
             'searchModel' => $searchModel,
@@ -155,13 +155,12 @@ class OrderController extends Controller
 
     public function actionCreate()
     {
-        $type=Yii::$app->request->get('type');
-        if(empty($type))
-        {
-            $type="Order";
+        $type = Yii::$app->request->get('type');
+        if (empty($type)) {
+            $type = "Order";
         }
         $model = new Order();
-        $product=\common\models\Product::findOne(['id'=>'1']);
+        $product = \common\models\Product::findOne(['id' => '1']);
         if ($model->load(Yii::$app->request->post())) {
             var_dump($model);
             exit();
@@ -172,8 +171,8 @@ class OrderController extends Controller
         }
         return $this->render('create', [
             'model' => $model,
-            'type'=>$type,
-            'product'=>$product,
+            'type' => $type,
+            'product' => $product,
         ]);
     }
 
@@ -186,21 +185,30 @@ class OrderController extends Controller
      */
     public function actionUpdate($id)
     {
-        $type="Order";
+        $type = "Order";
         $model = $this->findModel($id);
         $model = Order::getShippingDetail($model);
-        $model =\common\models\User::RequestedUserDetail($model);
-        $model =\common\models\ProductOrder::productOrderDetail($model);
+        $model = \common\models\User::RequestedUserDetail($model);
+        $model = \common\models\ProductOrder::productOrderDetail($model);
         $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
         $model->total_stock = $currentStock;
-      
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $isSaved=\common\models\ShippingAddress::updateShippingAddress($model);
+            if($isSaved)
+            {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+            else
+            {
+                $result = array("error"=>"Some error occured, please try again later.");
+                return $this->redirect(['error', 'error' => $result["error"]]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'type'=>$type,
+            'type' => $type,
         ]);
     }
 
@@ -216,6 +224,12 @@ class OrderController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    public function actionError($error)
+    {
+        return $this->render('error', [
+            'error' => $error,
+        ]);
     }
 
     /**
@@ -234,5 +248,4 @@ class OrderController extends Controller
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 
-   
 }

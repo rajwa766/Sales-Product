@@ -79,8 +79,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <div class="col-xs-6 invoice-infoblock pull-left">
                                                 <h4><?=Yii::t('app', 'Billed To:')?></h4>
                                                 <address>
-                                                <?php $billed_to = \common\models\User::find()->where(['id' => $model->order_request_id])->one();?>
-                                                    <h3><?=$billed_to->first_name . ' ' . $billed_to->last_name;?></h3>
+                                                <?php $billed_to = \common\models\ShippingAddress::find()->where(['order_id' => $model->id])->one();?>
+                                                    <h3><?=$billed_to->name?></h3>
                                                     <p class='text-muted'><?=$billed_to->address;?></p>
                                                     <p class='text-muted'><?=$billed_to->district;?></p>
                                                     <p class='text-muted'><?=$billed_to->country . ' ' . $billed_to->postal_code;?></p>

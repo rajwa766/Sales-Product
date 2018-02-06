@@ -9614,8 +9614,8 @@ border-left: 3px solid transparent;
 }
 
 .report-view .table.table-bordered thead tr th {
-    background-color: #1fb5ac;
-    color: #fff;
+    background-color: #e1b451;
+    color: #222;
 }
 
 .filter h1,
