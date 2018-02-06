@@ -120,7 +120,7 @@ use kartik\time\TimePicker;
 		</div>
              
 
-            </div>
+        
 		<div class="row" style="padding-top: 20px;">
 
         <div class="col-md-6">
@@ -128,11 +128,11 @@ use kartik\time\TimePicker;
              <button type="submit" class="btn btn-success submit_button">Get Report</button>
            </div>
         </div>
-     </div>
- </div>
+     
+</div>
 </div>
 <?php ActiveForm::end(); ?>
-     <div class="row view-report">
+     <div class="row view-inventory-report">
      	
      </div>
      <script>
@@ -148,10 +148,11 @@ $("body").delegate("#form-order-report .submit_button", "click", function (e) {
         data:  {'from_date':from_date, 'to_date':to_date,'user_id':user_id },
        // data: "id="+id+"status+"+status,
         url: "<?php echo Yii::$app->getUrlManager()->createUrl('reports/inventory-report-result'); ?>",
-        success: function (test) {
+        success: function (result) {
+            
             $('.filter').hide(1000);
-            $('.view-report').html(test);
-            $('.view-report').show(1000);
+             $('.view-inventory-report').html(result);
+             $('.view-inventory-report').show(1000);
         },
         error: function (exception) {
             alert(exception);
