@@ -66,8 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         </span>
                                                     <?php }?>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-12 col-xs-12 invoice-head-info"><span class='text-muted'>Order #<?=$model->id;
-?><br><?=$model->created_at?></span></div>
+                                                    <div class="col-md-3 col-sm-12 col-xs-12 invoice-head-info"><span class='text-muted'>Order #<?=$model->id;?><br><?=$model->created_at?></span></div>
                                                     <div class="col-md-3 col-sm-12 col-xs-12 invoice-log col-md-offset-1">
                                                     <img style="padding-top:10px;" src="<?= \yii\helpers\Url::to('@web/images/logo.png', true) ?>">
 
@@ -77,7 +76,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <div class="clearfix"></div><br>
 
                                             <div class="col-xs-6 invoice-infoblock pull-left">
-                                                <h4><?=Yii::t('app', 'Billed To:')?></h4>
+                                            <h4>External Code: <?=$model->order_external_code?> </h4>
+                                               
+                                            </div>
+                                            <div class="col-xs-6 invoice-infoblock text-right">
+                                               
+                                                <h4>Tracking Code: <?=$model->order_tracking_code?> </h4>
+                                            </div>
+                                            <div class="clearfix"></div><br>
+                                            <div class="col-xs-6 invoice-infoblock pull-left">
+                                            <h4><?=Yii::t('app', 'Billed To:')?></h4>
                                                 <address>
                                                 <?php $billed_to = \common\models\ShippingAddress::find()->where(['order_id' => $model->id])->one();?>
                                                     <h3><?=$billed_to->name?></h3>

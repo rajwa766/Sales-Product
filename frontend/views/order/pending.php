@@ -76,9 +76,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ], 
   
             'order_ref_no',
-            //'shipper',
-            //'cod',
-            
             [
                 'label' => 'Quantity and Price',
                 'format' => 'raw',

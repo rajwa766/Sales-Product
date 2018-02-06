@@ -99,13 +99,6 @@ class OrderController extends Controller
                 ['order_request_id' => Yii::$app->user->identity->id],
                 ['user_id' => Yii::$app->user->identity->id]]);
         }
-        
-       
-        if (isset($Role['super_admin'])) {
-            $view = 'pending';
-        } else {
-            $view = 'index';
-        }
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

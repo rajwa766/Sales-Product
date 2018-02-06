@@ -136,14 +136,13 @@ class StockIn extends \yii\db\ActiveRecord
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
-
         curl_close($curl);
 
         if ($err) {
-
             return false;
             die("cURL Error #:" . $err);
         } else {
+            
             $resp = json_decode($response, true);
 
             if ($resp['code'] == 200) {
@@ -197,8 +196,9 @@ class StockIn extends \yii\db\ActiveRecord
                 }
                 \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
                 $Role = Yii::$app->authManager->getRolesByUser($user_id);
-                if (isset($Role['customer'])) {
-                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $total_order_quantity[0]['total_price'], $total_order_quantity[0]['quantity']);
+               
+                if (!$transaction_failed && isset($Role['customer'])) {
+                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id,$single_order['order_price'], $total_quantity);
                     if ($fullfillmentResult != false) {
                         Yii::$app->db->createCommand()
                             ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
@@ -208,6 +208,7 @@ class StockIn extends \yii\db\ActiveRecord
                         $transaction_failed = true;
                     }
                 }
+               
             }
         } catch (Exception $e) {
             $transaction_failed = true;
