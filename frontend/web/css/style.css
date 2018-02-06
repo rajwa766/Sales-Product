@@ -1653,6 +1653,17 @@ textarea,
     border: 1px solid rgba(31,181,172,1.0);
     border-right: 0px;
 }
+/*******Loader********/
+.pace .pace-progress {
+    background: #e1b451;
+}
+.pace .pace-progress-inner {
+    box-shadow: 0 0 10px #e1b451, 0 0 5px #e1b451;
+}
+.pace .pace-activity {
+    border-top-color: #e1b451;
+    border-left-color: #e1b451;
+}
 
 /******hidden portion*******/
 .payment_button_general_approved{
