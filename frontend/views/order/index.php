@@ -37,27 +37,25 @@ if(!isset($Role['seller'])){ ?>
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-           // 'id',
-           [
-            'attribute' => 'order_request_id',
-            'label'=>Yii::t('app', 'Transfer from'),
-            'value'=>function ($model, $key, $index, $widget) { 
-                return $model->username($model->order_request_id);
-            },
-            'filter'=>Select2::widget([
-            'model' => $searchModel,
-            'initValueText' => isset($model->order_request_id) ? $model->username($model->order_request_id) : "",
-            'attribute' => 'order_request_id',
-           'options' => ['placeholder' => 'Select User Name ...'],
-           'pluginOptions' => [
-            'allowClear' => true,
-            //'autocomplete' => true,
-            'ajax' => [
-                'url' => Url::base().'/user/get-users',
-                'dataType' => 'json',
-                'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
-            ],
+            [
+                'attribute' => 'order_request_id',
+                'label'=>Yii::t('app', 'Transfer from'),
+                'value'=>function ($model, $key, $index, $widget) { 
+                    return $model->username($model->order_request_id);
+                },
+                'filter'=>Select2::widget([
+                'model' => $searchModel,
+                'initValueText' => isset($model->order_request_id) ? $model->username($model->order_request_id) : "",
+                'attribute' => 'order_request_id',
+                'options' => ['placeholder' => 'Select User Name ...'],
+                'pluginOptions' => [
+                'allowClear' => true,
+                //'autocomplete' => true,
+                'ajax' => [
+                    'url' => Url::base().'/user/get-users',
+                    'dataType' => 'json',
+                    'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+                ],
         ],
     // ... other params
 ]),
@@ -105,21 +103,11 @@ if(!isset($Role['seller'])){ ?>
    ],
             'order_ref_no',
             'shipper',
-            // 'cod',
-            // 'additional_requirements',
-            //'file',
-            //'user_id',
-            //'status',
-            //'order_request_id',
-            //'entity_id',
-            //'entity_type',
-            //'requested_date',
-
             ['class' => 'yii\grid\ActionColumn',
             'template' => '{view}',
             'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/'.$model->id);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/view/'.$model->id);
                     },
                  
                     // 'delete' => function ($url, $model) {

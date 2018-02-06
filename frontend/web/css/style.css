@@ -9656,7 +9656,12 @@ h1,
     border-radius: 3px !important;
     cursor: pointer;
 }
-
+.pending_approval {
+    border: 1px solid #e1b451 !important;
+    padding: 5px !important;
+    border-radius: 3px !important;
+    cursor: pointer;
+}
 .jsgrid-insert-row,
 .vehicle-form .jsgrid-filter-row,
 .vehicle-form .jsgrid-edit-button,

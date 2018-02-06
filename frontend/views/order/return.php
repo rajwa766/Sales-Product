@@ -85,52 +85,45 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->productorder($model->id);
                 },
             ],
-            // 'productOrders.quantity',
-            // 'productOrders.order_price',
-         
-
             [
-
                 'header' => 'Approve',
-
                 'format' => 'raw',
-
                 'value' => function($model) {
-                    if($model->status == '3'){
-             return "<div class='payment_button_general_approve' ><a user_id='".$model->order_request_id."' ref_id='".$model->user_id."' class='" . $model->id . "' >Approve</a></div>";
-                    }else{
-             return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
-             
+                    $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+                    if ($model->order_request_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
+                        if($model->status == '3'){
+                            return "<div class='payment_button_general_approve' ><a user_id='".$model->order_request_id."' ref_id='".$model->user_id."' class='" . $model->id . "' >Approve</a></div>";
+                        }else{
+                            return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
+                        }
+                    }
+                    else {
+                        return "<div class='pending_approval'>Pending</div>";
                     }
                 }
             ],
             [
                 'header' => 'Reject',
                 'format' => 'raw',
-             
                 'value' => function($model) {
-      if($model->status == '3'){
-        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
-      }else{
-        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Completed</a></div>";
-        
-      }
-    
+                    $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+                    if ($model->order_request_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
+                        if($model->status == '3'){
+                            return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
+                        }else{
+                            return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Completed</a></div>";
+                        }
+                    }
+                    else {
+                        return "<div class='pending_approval'>Pending</div>";
+                    }
                 }
             ],
-            //'file',
-            //'user_id',
-            //'status',
-            //'order_request_id',
-            //'entity_id',
-            //'entity_type',
-            //'requested_date',
-
             ['class' => 'yii\grid\ActionColumn',
             'template' => '{view}',
             'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/'.$model->id);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/view/'.$model->id);
                     },
                  
                     // 'delete' => function ($url, $model) {

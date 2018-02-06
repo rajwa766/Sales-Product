@@ -120,16 +120,12 @@ class OrderController extends Controller
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        if (isset($Role['super_admin'])) {
-            $view = 'transfer';
-        } else {
+        if (!isset($Role['super_admin'])) {
             $dataProvider->query->andFilterWhere(['or',
                 ['order_request_id' => Yii::$app->user->identity->id],
                 ['user_id' => Yii::$app->user->identity->id]]);
-            $view = 'customer_transfer';
         }
-
-        return $this->render($view, [
+        return $this->render("transfer", [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
