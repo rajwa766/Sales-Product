@@ -80,14 +80,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <h4><?=Yii::t('app', 'Billed To:')?></h4>
                                                 <address>
                                                 <?php $billed_to = \common\models\User::find()->where(['id' => $model->order_request_id])->one();?>
-                                                    <h3><?=$billed_to->first_name . '&nbsp;' . $billed_to->last_name;?></h3>
-                                                    <span class='text-muted'><?=$billed_to->address;?><br><?=$billed_to->district . '&nbsp' . $billed_to->district;?><br>
-                                                    <?=$billed_to->country . '&nbsp' . $billed_to->postal_code;?></span>
+                                                    <h3><?=$billed_to->first_name . ' ' . $billed_to->last_name;?></h3>
+                                                    <p class='text-muted'><?=$billed_to->address;?></p>
+                                                    <p class='text-muted'><?=$billed_to->district;?></p>
+                                                    <p class='text-muted'><?=$billed_to->country . ' ' . $billed_to->postal_code;?></p>
                                                 </address>
                                             </div>
 
                                             <div class="col-xs-6 invoice-infoblock text-right">
-                                                <h4><?=Yii::t('app', 'Payment Method')?></h4>
+                                                <h4><?=Yii::t('app', 'Payment Method')?>:</h4>
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
                                                     <span class='text-muted'><?php if (isset($model->payment_method)) {\common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?><br>
@@ -102,7 +103,7 @@ foreach ($model->productOrders as $orders) {
 
     $order_sum += $orders->quantity * $orders->order_price;
 }?>
-                                                    <h3 class="text-muted"><?=Yii::t('app', 'Total Due:')?></h3> &nbsp; <h2 class="text-primary">$<?=$order_sum;?> </h2>
+                                                    <h3 class="text-muted"><?=Yii::t('app', 'Total Due:')?></h3> &nbsp; <h2 class="text-primary">฿<?=$order_sum;?> </h2>
                                                 </div>
 
                                             </div>
@@ -150,7 +151,7 @@ foreach ($model->productOrders as $orders) {
                                                                 <td class="no-line"></td>
                                                                 <td class="no-line"></td>
                                                                 <td class="no-line text-center"><h4><?=Yii::t('app', 'Shipping')?></h4></td>
-                                                                <td class="no-line text-right"><h4>$0</h4></td>
+                                                                <td class="no-line text-right"><h4>฿0</h4></td>
                                                             </tr>
 
                                                             <tr>
