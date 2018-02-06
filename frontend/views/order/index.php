@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use kartik\select2\Select2;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
@@ -46,13 +47,14 @@ if(!isset($Role['seller'])){ ?>
             },
             'filter'=>Select2::widget([
             'model' => $searchModel,
+            'initValueText' => isset($model->order_request_id) ? $model->username($model->order_request_id) : "",
             'attribute' => 'order_request_id',
            'options' => ['placeholder' => 'Select User Name ...'],
            'pluginOptions' => [
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => 'user/allusers',
+                'url' => Url::base().'/user/get-users',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
             ],
@@ -69,12 +71,13 @@ if(!isset($Role['seller'])){ ?>
     'filter'=>Select2::widget([
     'model' => $searchModel,
     'attribute' => 'user_id',
+    'initValueText' => isset($model->user_id) ? $model->username($model->user_id) : "",
    'options' => ['placeholder' => 'Select User Name ...'],
    'pluginOptions' => [
     'allowClear' => true,
     //'autocomplete' => true,
     'ajax' => [
-        'url' => 'user/allusers',
+        'url' => Url::base().'/user/get-users',
         'dataType' => 'json',
         'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
     ],

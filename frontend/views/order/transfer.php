@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\select2\Select2;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -27,36 +30,78 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+           
             [
-                'label' => Yii::t('app', 'Transfer from'),
                 'attribute' => 'order_request_id',
-                'value' => function($model) {
+                'label'=>Yii::t('app', 'Transfer from'),
+                'value'=>function ($model, $key, $index, $widget) { 
                     return $model->username($model->order_request_id);
                 },
+                'filter'=>Select2::widget([
+                'model' => $searchModel,
+                'initValueText' => isset($model->order_request_id) ? $model->username($model->order_request_id) : "",
+                'attribute' => 'order_request_id',
+               'options' => ['placeholder' => 'Select User Name ...'],
+               'pluginOptions' => [
+                'allowClear' => true,
+                //'autocomplete' => true,
+                'ajax' => [
+                    'url' => Url::base().'/user/get-users',
+                    'dataType' => 'json',
+                    'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+                ],
             ],
-            [
-                'label' => Yii::t('app', 'Transfer To'),
-                'attribute' => 'user_id',
-                'value' => function($model) {
-                    return $model->username($model->user_id);
-                },
-            ],
-         
+        // ... other params
+    ]),
+     ],
+     [
+        'attribute' => 'user_id',
+        'label'=>Yii::t('app', 'Transfer to'),
+        'value'=>function ($model, $key, $index, $widget) { 
+            return $model->username($model->user_id);
+        },
+        'filter'=>Select2::widget([
+        'model' => $searchModel,
+        'attribute' => 'user_id',
+        'initValueText' => isset($model->user_id) ? $model->username($model->user_id) : "",
+       'options' => ['placeholder' => 'Select User Name ...'],
+       'pluginOptions' => [
+        'allowClear' => true,
+        //'autocomplete' => true,
+        'ajax' => [
+            'url' => Url::base().'/user/get-users',
+            'dataType' => 'json',
+            'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+        ],
+    ],
+    // ... other params
+    ]),
+    ], 
+    [
+        'label' => Yii::t('app', 'Status'),
+  'attribute' => 'status',
+  'format' => 'raw',
+  'value' => function ($model) {                      
+       return  $model->status == 0 ? "Pending" : ($model->status == 1 ? "Approved" : ($model->status == 2 ? "Request Canceled" :($model->status == 3 ? "Return Request" :($model->status == 4 ? "Return Approved" :($model->status == 5 ? " Transfer Request" :($model->status == 6 ? "Transfer Approved" :($model->status == 7 ? "Transfer Cancelled" :($model->status == 8 ? "Return  Cancelled " : "Unknown"))))))));
+  },
+   'filter'=>[  0 => "Pending",
+   1 => "Approved",
+   2 => "Request Canceled",
+   3 => "Return Request",
+   4 => "Return Approved",
+   5 => "Transfer Request",
+   6 => "Transfer Approved",
+   7 => "Transfer Canceled",
+   8 => "Return Canceled",],
+],
             
             [
               'label'=> Yii::t('app', 'Order Ref No'),
               'attribute'=> 'order_ref_no'
             ],
             
-             [
-              'label'=> Yii::t('app', 'Shipper'),
-              'attribute'=> 'shipper'
-            ],
-            [
-              'label'=> Yii::t('app', 'COD'),
-              'attribute'=> 'cod'
-            ],
+           
+         
             [
                 'label' =>  Yii::t('app', 'Quantity and Price'),
                 'format' => 'raw',
@@ -67,10 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'productOrders.quantity',
             // 'productOrders.order_price',
             
-            [
-              'label'=> Yii::t('app', 'Additional Requirements'),
-              'attribute'=> 'additional_requirements'
-            ],
+            
          
 
             [
