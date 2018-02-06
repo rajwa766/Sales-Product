@@ -50,10 +50,17 @@ use yii\db\Query;
             <div class="col-md-10">
 
                 <?php
+                if(!$model->isNewRecord){
+                    $customerAgentNmae = \common\models\User::findOne(['id'=>$model->request_agent_name ]);
+                    $customerAgentNmae->username;
+                }else{
+                    $customerAgentNmae->username = ''; 
+                }
                 if (isset($Role['super_admin'])) {
                     echo $form->field($model, 'request_agent_name')->widget(Select2::classname(), [
                         'theme' => Select2::THEME_BOOTSTRAP,
                         'options' => ['placeholder' => 'Select a agent name ...'],
+                        'initValueText' => $customerAgentNmae->username,
                         'pluginOptions' => [
                             'allowClear' => true,
                             //'autocomplete' => true,

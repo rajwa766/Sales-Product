@@ -163,6 +163,8 @@ class OrderController extends Controller
         $model = new Order();
         $product=\common\models\Product::findOne(['id'=>'1']);
         if ($model->load(Yii::$app->request->post())) {
+            var_dump($model);
+            exit();
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -186,7 +188,12 @@ class OrderController extends Controller
     {
         $type="Order";
         $model = $this->findModel($id);
-
+        $model = Order::getShippingDetail($model);
+        $model =\common\models\User::RequestedUserDetail($model);
+        $model =\common\models\ProductOrder::productOrderDetail($model);
+        $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
+        $model->total_stock = $currentStock;
+      
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }

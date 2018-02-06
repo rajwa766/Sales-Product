@@ -470,5 +470,11 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
     }
+    public static function RequestedUserDetail($model){
+        $requstedUserDetail = User::findOne(['id'=>$model->order_request_id]);
+        $model->request_user_level = $requstedUserDetail->user_level_id;
+        $model->request_agent_name = $requstedUserDetail->id;
+        return $model;
+    }
 
 }

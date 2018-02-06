@@ -112,4 +112,12 @@ class ProductOrder extends \yii\db\ActiveRecord
             ->all();
 
     }
+    public static function productOrderDetail($model){
+        $productOrderrDetail = ProductOrder::findOne(['order_id'=>$model->id]);
+        $model->quantity = $productOrderrDetail->quantity;
+        $model->single_price = $productOrderrDetail->order_price;
+        $model->total_price = $productOrderrDetail->order_price * $model->quantity;
+        return $model;
+        
+    }
 }
