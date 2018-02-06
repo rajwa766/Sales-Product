@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'order_request_id',
                 'label'=>Yii::t('app', 'Transfer from'),
-                'value'=>function ($model, $key, $index, $widget) { 
+                'value'=>function ($model) { 
                     return $model->username($model->order_request_id);
                 },
                 'filter'=>Select2::widget([
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
      [
         'attribute' => 'user_id',
         'label'=>Yii::t('app', 'Transfer to'),
-        'value'=>function ($model, $key, $index, $widget) { 
+        'value'=>function ($model) { 
             return $model->username($model->user_id);
         },
         'filter'=>Select2::widget([

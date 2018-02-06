@@ -53,7 +53,7 @@ class OrderController extends Controller
     public function actionPending()
     {
         $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search([Yii::$app->request->queryParams]);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $pending_status = array_search('Pending', \common\models\Lookup::$status);
