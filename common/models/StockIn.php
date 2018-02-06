@@ -108,7 +108,7 @@ class StockIn extends \yii\db\ActiveRecord
         $out['results'] = array_values($data);
         return $out;
     }
-    public static function Fullfillment($postal_code,$province,$district,$cust_name,$cust_addr,$mobile_no,$external_id,$amount,$quantity)
+    public static function Fullfillment($postal_code, $province, $district, $cust_name, $cust_addr, $mobile_no, $external_id, $amount, $quantity)
     {
 
         $curl = curl_init();
@@ -140,12 +140,12 @@ class StockIn extends \yii\db\ActiveRecord
         curl_close($curl);
 
         if ($err) {
-          
+
             return false;
             die("cURL Error #:" . $err);
         } else {
             $resp = json_decode($response, true);
-           
+
             if ($resp['code'] == 200) {
                 return $resp['order_code'];
             } else {
@@ -160,8 +160,8 @@ class StockIn extends \yii\db\ActiveRecord
 
         $stock_available = true;
         $total_order_quantity = \common\models\ProductOrder::order_quantity($order_id);
-        $order_detail = \common\models\Order::findOne(['id'=>$order_id]);
-        $shipping_detail = \common\models\ShippingAddress::findOne(['order_id'=>$order_id]);
+        $order_detail = \common\models\Order::findOne(['id' => $order_id]);
+        $shipping_detail = \common\models\ShippingAddress::findOne(['order_id' => $order_id]);
         $transaction_failed = false;
         $transaction = Yii::$app->db->beginTransaction();
         try
@@ -196,14 +196,17 @@ class StockIn extends \yii\db\ActiveRecord
 
                 }
                 \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
-                $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code,$shipping_detail->province,$shipping_detail->district,$shipping_detail->name,$shipping_detail->address,$shipping_detail->mobile_no,$order_id,$total_order_quantity[0]['total_price'],$total_order_quantity[0]['quantity']);
-                if($fullfillmentResult  != false){
-                    Yii::$app->db->createCommand()
-                    ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
-                    ->execute();
-                    $transaction_failed = false;
-                }else{
-                    $transaction_failed = true;
+                $Role = Yii::$app->authManager->getRolesByUser($user_id);
+                if (isset($Role['customer'])) {
+                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $total_order_quantity[0]['total_price'], $total_order_quantity[0]['quantity']);
+                    if ($fullfillmentResult != false) {
+                        Yii::$app->db->createCommand()
+                            ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
+                            ->execute();
+                        $transaction_failed = false;
+                    } else {
+                        $transaction_failed = true;
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -213,13 +216,12 @@ class StockIn extends \yii\db\ActiveRecord
             $transaction->rollBack();
             echo false;
         } else {
-                $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
-                \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
-                \common\models\Order::update_status($order_id);
-                $transaction->commit();
-                echo true;
-            
-          
+            $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
+            \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
+            \common\models\Order::update_status($order_id);
+            $transaction->commit();
+            echo true;
+
         }
     }
     public static function CreateStock($model)
@@ -233,39 +235,40 @@ class StockIn extends \yii\db\ActiveRecord
             return false;
         }
     }
-    public static function ChildStock($id){
-        $status_stock_child =  (new Query())
-        ->select('SUM(stock_in.remaining_quantity) as remaning_stock,SUM(stock_in.initial_quantity) as initial_stock,user.username as name,user.id as id')
-        ->from('stock_in')
-        ->innerJoin('user', 'stock_in.user_id = user.id')
-        ->where(['=','user.parent_id',Yii::$app->user->identity->id])
-        ->groupby(['stock_in.product_id','user.id'])
-        ->all();
+    public static function ChildStock($id)
+    {
+        $status_stock_child = (new Query())
+            ->select('SUM(stock_in.remaining_quantity) as remaning_stock,SUM(stock_in.initial_quantity) as initial_stock,user.username as name,user.id as id')
+            ->from('stock_in')
+            ->innerJoin('user', 'stock_in.user_id = user.id')
+            ->where(['=', 'user.parent_id', Yii::$app->user->identity->id])
+            ->groupby(['stock_in.product_id', 'user.id'])
+            ->all();
         $notificationDetail = array();
         $notificationDetail['detail'] = '';
         $notificationDetail['count'] = 0;
         $i = 0;
-        if($status_stock_child){
-        foreach($status_stock_child as $status_stock){
-              $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
-              $stock_remaning_percent = $stock_remaning_percent *100;
-          $selected_percentage = \common\models\StockStatus::find()->where(['user_id'=>$status_stock['id']])->one();
-          $remaning_percent  = '';
-          if($selected_percentage){
-          if($selected_percentage->below_percentage > $stock_remaning_percent ){
-              $i++;
-              $remaning_percent = round($stock_remaning_percent);
-              $notificationDetail['detail'].=  ' <li class="unread available">   <a href="javascript:;">
+        if ($status_stock_child) {
+            foreach ($status_stock_child as $status_stock) {
+                $stock_remaning_percent = $status_stock['remaning_stock'] / $status_stock['initial_stock'];
+                $stock_remaning_percent = $stock_remaning_percent * 100;
+                $selected_percentage = \common\models\StockStatus::find()->where(['user_id' => $status_stock['id']])->one();
+                $remaning_percent = '';
+                if ($selected_percentage) {
+                    if ($selected_percentage->below_percentage > $stock_remaning_percent) {
+                        $i++;
+                        $remaning_percent = round($stock_remaning_percent);
+                        $notificationDetail['detail'] .= ' <li class="unread available">   <a href="javascript:;">
           <div class="notice-icon"> <i class="fa fa-check"></i> </div><div><span class="name">
-          '.$status_stock['name'].' has <strong> '.$remaning_percent.'%</strong>
+          ' . $status_stock['name'] . ' has <strong> ' . $remaning_percent . '%</strong>
                                                              </span>   </div>
                                                              </a>
                                                          </li>';
-          }
-          }
+                    }
+                }
+            }
+            $notificationDetail['count'] = $i;
         }
-        $notificationDetail['count'] = $i;
-    }
         return $notificationDetail;
     }
     public static function CalculateBonus($order_request_id, $user_id, $order_id, $quantity)
