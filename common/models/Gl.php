@@ -154,7 +154,7 @@ class Gl extends \yii\db\ActiveRecord
 
             }
 
-            return $recievable_id;
+            return true;
         }
         return null;
     }

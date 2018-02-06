@@ -196,14 +196,14 @@ class StockIn extends \yii\db\ActiveRecord
 
                 }
                 \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
-                $fullfillmentApi = StockIn::Fullfillment($shipping_detail->postal_code,$shipping_detail->province,$shipping_detail->district,$shipping_detail->name,$shipping_detail->address,$shipping_detail->mobile_no,$order_id,$total_order_quantity[0]['total_price'],$total_order_quantity[0]['quantity']);
-                if($fullfillmentApi  != false){
+                $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code,$shipping_detail->province,$shipping_detail->district,$shipping_detail->name,$shipping_detail->address,$shipping_detail->mobile_no,$order_id,$total_order_quantity[0]['total_price'],$total_order_quantity[0]['quantity']);
+                if($fullfillmentResult  != false){
                     Yii::$app->db->createCommand()
-                    ->update('order', ['order_code' => $fullfillmentApi], 'id =' . $order_id)
+                    ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
                     ->execute();
-                    $transaction_failed = true;
+                    $transaction_failed = false;
                 }else{
-            $transaction_failed = false;
+                    $transaction_failed = true;
                 }
             }
         } catch (Exception $e) {
@@ -213,9 +213,10 @@ class StockIn extends \yii\db\ActiveRecord
             $transaction->rollBack();
             echo false;
         } else {
-            $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
-            \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
+                $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
+                \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
                 \common\models\Order::update_status($order_id);
+                $transaction->commit();
                 echo true;
             
           
