@@ -107,12 +107,12 @@ if(!isset($Role['seller'])){ ?>
             'template' => '{view}',
             'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/view/'.$model->id);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl.'order/view/'.$model->id);
                     },
                  
                     // 'delete' => function ($url, $model) {
                     //     if($model->status == array_search('Pending', \common\models\Lookup::$status)){
-                    //         return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/order/delete/'.$model->id);
+                    //         return Html::a('<span class="glyphicon glyphicon-trash"></span>', Yii::$app->homeUrl.'order/delete/'.$model->id);
                     //     }
                     
                     // },

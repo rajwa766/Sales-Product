@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => '{view}',
             'buttons' => [
                 'view' => function ($url, $model) {
-                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/view/' . $model->id);
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl.'order/view/' . $model->id);
                 },
             ],
         ],

@@ -103,6 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     else {
                         return "<div class='pending_approval'>Pending</div>";
                     }
+                },
             ],
             [
                 'header' => 'Reject',
@@ -126,12 +127,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => '{view}{edit}',//{delete}
             'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl.'/order/view/'.$model->id);
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl.'order/view/'.$model->id);
                     },
                     'edit' => function ($url, $model) {
                         $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
                         if($model->status == array_search('Pending', \common\models\Lookup::$status) && isset($Role['customer'])){
-                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Yii::$app->homeUrl.'/order/update/'.$model->id);
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Yii::$app->homeUrl.'order/update/'.$model->id);
                         }
                     },
                     // 'delete' => function ($url, $model) {

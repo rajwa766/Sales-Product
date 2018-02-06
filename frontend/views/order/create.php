@@ -18,7 +18,7 @@ else
 {
 ?>
     <div style="margin-bottom:20px;margin-top:20px;" class="col-md-12">
-       <img style="display: block;margin: 0 auto;" src="/images/logo.png" class="img-reponsive">
+       <img style="display: block;margin: 0 auto;" src="<?=Yii::$app->homeUrl?>images/logo.png" class="img-reponsive">
        <div style="text-align:center;margin-top:10px;">
        <?php if(!empty($product))
        {?>
