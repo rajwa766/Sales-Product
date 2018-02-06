@@ -51,7 +51,7 @@ class Postcode extends \yii\db\ActiveRecord
         $query->select(['id as id, CONCAT(province, "-", district, "-", zip) AS text'])
                 ->from('postcode');
                 if (!is_null($q)) 
-                $query->where(['like', 'province', $q]);
+                    $query->where(['like', 'zip', $q]);
                 $query->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();
