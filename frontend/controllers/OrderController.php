@@ -39,11 +39,14 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+      
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (!isset($Role['super_admin'])) {
             $dataProvider->query->andwhere(['created_by' => Yii::$app->user->identity->id]);
         }
+        var_dump($dataProvider);
+        exit();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -52,17 +55,18 @@ class OrderController extends Controller
 
     public function actionPending()
     {
+        $pending_status = array_search('Pending', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search([Yii::$app->request->queryParams]);
+        $searchModel->status=$pending_status;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        $pending_status = array_search('Pending', \common\models\Lookup::$status);
-        $dataProvider->query->where(['o.status' => $pending_status]);
         if (!isset($Role['super_admin'])) {
             $dataProvider->query->andFilterWhere(['or',
                 ['order_request_id' => Yii::$app->user->identity->id],
                 ['user_id' => Yii::$app->user->identity->id]]);
         }
+        
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
