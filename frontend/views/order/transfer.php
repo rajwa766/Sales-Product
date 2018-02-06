@@ -110,7 +110,17 @@ $this->params['breadcrumbs'][] = $this->title;
             //'entity_type',
             //'requested_date',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/'.$model->id);
+                    },
+                 
+                
+                    
+                ],
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

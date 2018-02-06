@@ -112,7 +112,22 @@ if(!isset($Role['seller'])){ ?>
             //'entity_type',
             //'requested_date',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template' => '{view}',
+            'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/order/'.$model->id);
+                    },
+                 
+                    // 'delete' => function ($url, $model) {
+                    //     if($model->status == array_search('Pending', \common\models\Lookup::$status)){
+                    //         return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/order/delete/'.$model->id);
+                    //     }
+                    
+                    // },
+                    
+                ],
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

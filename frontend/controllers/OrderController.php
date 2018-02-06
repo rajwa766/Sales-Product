@@ -192,10 +192,10 @@ class OrderController extends Controller
         $model = \common\models\ProductOrder::productOrderDetail($model);
         $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
         $model->total_stock = $currentStock;
-
         if ($model->load(Yii::$app->request->post())) {
             $isSaved=\common\models\ShippingAddress::updateShippingAddress($model);
-            if($isSaved)
+            $isSavedPorder=\common\models\ProductOrder::updateProductOrder($model);
+            if($isSaved && $isSavedPorder && $model->save())
             {
                 return $this->redirect(['view', 'id' => $model->id]);
             }

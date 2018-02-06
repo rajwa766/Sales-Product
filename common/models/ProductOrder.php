@@ -103,6 +103,18 @@ class ProductOrder extends \yii\db\ActiveRecord
         $product_order->save();
 
     }
+    public static function updateProductOrder($model)
+    {
+        $product_order = ProductOrder::findOne(['order_id' => $model->id]);
+        $product_order->order_id = $model->id;
+        $product_order->product_id = $model->product_id;
+        $product_order->quantity = $model->quantity;
+        $product_order->order_price = $model->single_price;;
+        $product_order->requested_price = $model->single_price;;
+        $product_order->requested_quantity = $model->quantity;;
+        return  $product_order->save();
+
+    }
     public static function order_quantity($order_id)
     {
         return $order_quantity = (new Query())

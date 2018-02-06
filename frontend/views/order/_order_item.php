@@ -38,7 +38,7 @@ use yii\db\Query;
             </div>
     </div>
     <?php } ?>   
-    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->textInput(['maxlength' => true,'readonly' => !$model->isNewRecord]); ?></div>
+    <div class="col-md-4"><?php echo $form->field($model, 'quantity')->textInput(['maxlength' => true]); ?></div>
     <div class="col-md-4"><?php echo $form->field($model, 'single_price')->textInput(['readonly' => true]); ?></div>
     <div class="col-md-4"><?php echo $form->field($model, 'total_price')->textInput(['readonly' => true]); ?></div>
     <div class="noproduct"></div>
