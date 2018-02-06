@@ -44,30 +44,27 @@ class OrderSearch extends Order
         $query = Order::find()->alias('o');
         $query->joinWith(['user as u']);
         // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
         $this->load($params);
-
         if (!$this->validate()) {
+          
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'user_id' => $this->user_id,
             'o.status' => $this->status,
             'order_request_id' => $this->order_request_id,
-            // 'requested_date' => $this->requested_date,
+             'requested_date' => $this->requested_date,
         ]);
       
-        //->andFilterWhere(['like', 'order_ref_no', $this->order_ref_no])
-        $query->andFilterWhere(['like', 'shipper', $this->shipper])
+        $query->andFilterWhere(['like', 'order_ref_no', $this->order_ref_no])
+            ->andFilterWhere(['like', 'shipper', $this->shipper])
             ->andFilterWhere(['like', 'cod', $this->cod])
             ->andFilterWhere(['like', 'additional_requirements', $this->additional_requirements])
             ->andFilterWhere(['like', 'file', $this->file]);

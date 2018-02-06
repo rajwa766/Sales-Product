@@ -1,6 +1,7 @@
 <?php
 use kartik\select2\Select2;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 ?>
 <!-- Agent order starts from here-->
 <div class="transfer-setting">
@@ -52,7 +53,7 @@ if (isset($Role['super_admin'])) {
                                             'allowClear' => true,
                                             //'autocomplete' => true,
                                             'ajax' => [
-                                                'url' => '../user/get-users',
+                                                'url' => Url::base().'/user/get-users',
                                                 'dataType' => 'json',
                                                 'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
                                             ],
@@ -82,7 +83,7 @@ if (isset($Role['super_admin'])) {
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../user/get-users',
+                'url' => Url::base().'/user/get-users',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
                           var user_id = $("#order-parent_user").val();
@@ -100,7 +101,7 @@ if (isset($Role['super_admin'])) {
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '../user/get-users',
+                'url' => Url::base().'/user/get-users',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
                     var user_id = $("#order-parent_user").val();

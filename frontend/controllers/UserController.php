@@ -199,7 +199,7 @@ class UserController extends Controller
         $cust_addr = "g5/2";
         $mobile_no = '1223232';
         $sku = "ABSOLUT"; //BEYDEY1
-        $external_id = 2;
+        $external_id = 3;
         $amount = 780;
         $quantity = 1;
         if (preg_match('/^10.{3}$/', $postal_code) || preg_match('/^11.{3}$/', $postal_code) || preg_match('/^12.{3}$/', $postal_code)) {

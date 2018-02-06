@@ -147,10 +147,14 @@ class Order extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
+        $action = Yii::$app->controller->action->id;
         if (parent::beforeValidate()) {
-            $ref_no = (Order::find()->max('id')) + 1;
-            $this->order_ref_no = '' . $ref_no;
-            $this->requested_date = date('Y-m-d');
+            if($action=='create')
+            {
+                $ref_no = (Order::find()->max('id')) + 1;
+                $this->order_ref_no = '' . $ref_no;
+                $this->requested_date = date('Y-m-d');
+            }
             return true;
         }
     }
@@ -371,12 +375,15 @@ public static function getShippingDetail($model){
     }
     public function OrderTypeValidation($Role)
     {
-
-        if (empty($this->postal_code)) {
-            $this->addError('postal_code', 'Postal Code is required.');
-        }
-        if (empty($this->name)) {
-            $this->addError('name', 'Name is required.');
+        $user_id = $this->user_id;
+        $RoleofRequester = Yii::$app->authManager->getRolesByUser($user_id);
+        if (isset($RoleofRequester['customer'])) {
+            if (empty($this->postal_code)) {
+                $this->addError('postal_code', 'Postal Code is required.');
+            }
+            if (empty($this->name)) {
+                $this->addError('name', 'Name is required.');
+            }
         }
         if (isset($Role['super_admin'])) {
             if (empty($this->request_user_level)) {

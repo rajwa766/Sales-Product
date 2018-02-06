@@ -66,6 +66,7 @@ use yii\helpers\Url;
         echo $form->field($model, 'postal_code')->widget(Select2::classname(), [
             'theme' => Select2::THEME_BOOTSTRAP,
             'options' => ['placeholder' => 'Select a Postal Code ...'],
+            'initValueText' => isset($model->postal_code) ? $model->province."-".$model->district."-".$model->postal_code : "",
             'pluginOptions' => [
                 'allowClear' => true,
                 //'autocomplete' => true,

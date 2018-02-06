@@ -5,6 +5,7 @@ use kartik\select2\Select2;
 use yii\models\order;
 use kartik\file\FileInput;
 use yii\db\Query;
+use yii\helpers\Url;
 ?>
 <!-- Agent order starts from here-->
 <div class="request-setting">
@@ -42,7 +43,7 @@ use yii\db\Query;
                             'allowClear' => true,
                             //'autocomplete' => true,
                             'ajax' => [
-                                'url' => '../user/get-users',
+                                'url' => Url::base().'/user/get-users',
                                 'dataType' => 'json',
                                 'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-all_level").val();return {q:params.term,user_level:user_level}; }'),
                             ],
@@ -72,7 +73,7 @@ use yii\db\Query;
                                 'allowClear' => true,
                                 //'autocomplete' => true,
                                 'ajax' => [
-                                    'url' => '../user/get-levels',
+                                    'url' => Url::base().'/user/get-levels',
                                     'dataType' => 'json',
                                     'data' => new \yii\web\JsExpression('function(params) { var parent_id = $("#order-all_level").val(); return {q:params.term,parent_id:parent_id}; }'),
                                 ],
@@ -102,7 +103,7 @@ use yii\db\Query;
                                 'allowClear' => true,
                                 //'autocomplete' => true,
                                 'ajax' => [
-                                    'url' => '../user/get-users',
+                                    'url' => Url::base().'/user/get-users',
                                     'dataType' => 'json',
                                     'data' => new \yii\web\JsExpression('function(params) { var parent_id = $("#order-parent_user").val();
                                                                         var user_level = $("#order-child_level").val();

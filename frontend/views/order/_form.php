@@ -6,6 +6,7 @@ use kartik\select2\Select2;
 use yii\models\order;
 use kartik\file\FileInput;
 use yii\db\Query;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
@@ -160,7 +161,8 @@ if (!Yii::$app->user->isGuest) {
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            var url="../user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            var url="/user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            
             if (type == "Request"){
             $.post(url, function (data) {
                 var json = $.parseJSON(data);
@@ -177,7 +179,7 @@ if (!Yii::$app->user->isGuest) {
         } else{
                 if(type!="Return")
                 {
-                    url="../product/get-product?id=1";    
+                    url="/product/get-product?id=1";    
                 }
                 else
                 {
@@ -259,7 +261,7 @@ if (!Yii::$app->user->isGuest) {
         }
         function GetUserStock(user_id)
         {
-            $.post("../stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + user_id, function (data) {
+            $.post("/stock-in/getunits?id=" + $('#order-product_id').val() + "&user_id=" + user_id, function (data) {
                 $('#available-stock').val(data);
                 var data = $('#order-request_agent_name').select2('data');
                 var user_name=data[0].text;

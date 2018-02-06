@@ -48,7 +48,7 @@ class Postcode extends \yii\db\ActiveRecord
     public static function getCodes($q){
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
-        $query->select(['id as id, CONCAT(province, "-", district, "-", zip) AS text'])
+        $query->select(['zip as id, CONCAT(province, "-", district, "-", zip) AS text'])
                 ->from('postcode');
                 if (!is_null($q)) 
                     $query->where(['like', 'zip', $q]);

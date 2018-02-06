@@ -5,6 +5,7 @@ use kartik\select2\Select2;
 use yii\models\order;
 use kartik\file\FileInput;
 use yii\db\Query;
+use yii\helpers\Url;
 ?>
 
 <!-- customer part start here -->
@@ -50,22 +51,16 @@ use yii\db\Query;
             <div class="col-md-10">
 
                 <?php
-                if(!$model->isNewRecord){
-                    $customerAgentNmae = \common\models\User::findOne(['id'=>$model->request_agent_name ]);
-                    $customerAgentNmae->username;
-                }else{
-                    $customerAgentNmae->username = ''; 
-                }
                 if (isset($Role['super_admin'])) {
                     echo $form->field($model, 'request_agent_name')->widget(Select2::classname(), [
                         'theme' => Select2::THEME_BOOTSTRAP,
                         'options' => ['placeholder' => 'Select a agent name ...'],
-                        'initValueText' => $customerAgentNmae->username,
+                         'initValueText' => isset($model->request_agent_name) ? $model->username($model->request_agent_name) : "",
                         'pluginOptions' => [
                             'allowClear' => true,
                             //'autocomplete' => true,
                             'ajax' => [
-                                'url' => '../user/get-users',
+                                'url' => Url::base().'/user/get-users',
                                 'dataType' => 'json',
                                 'data' => new \yii\web\JsExpression('function(params) { var user_level = $("#order-request_user_level").val(); return {q:params.term,user_level:user_level}; }')
                             ],

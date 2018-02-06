@@ -54,9 +54,15 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $pending_status = array_search('Pending', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' => $pending_status]);
+        $dataProvider->query->where(['o.status' => $pending_status]);
+        if (!isset($Role['super_admin'])) {
+            $dataProvider->query->andFilterWhere(['or',
+                ['order_request_id' => Yii::$app->user->identity->id],
+                ['user_id' => Yii::$app->user->identity->id]]);
+        }
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -81,11 +87,17 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $approved_status = array_search('Approved', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' => $approved_status]);
+        $dataProvider->query->where(['o.status' => $approved_status]);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        if (!isset($Role['super_admin'])) {
+            $dataProvider->query->andFilterWhere(['or',
+                ['order_request_id' => Yii::$app->user->identity->id],
+                ['user_id' => Yii::$app->user->identity->id]]);
+        }
+        
+       
         if (isset($Role['super_admin'])) {
             $view = 'pending';
         } else {
@@ -104,7 +116,7 @@ class OrderController extends Controller
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $transfer_request_status = array_search('Transfer Request', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' => $transfer_request_status]);
+        $dataProvider->query->where(['o.status' => $transfer_request_status]);
         if (isset($Role['super_admin'])) {
             $view = 'transfer';
         } else {
@@ -124,10 +136,15 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
         $return_request_status = array_search('Return Request', \common\models\Lookup::$status);
-        $dataProvider->query->andWhere(['o.status' => $return_request_status]);
-
+        $dataProvider->query->where(['o.status' => $return_request_status]);
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        if (!isset($Role['super_admin'])) {
+            $dataProvider->query->andFilterWhere(['or',
+                ['order_request_id' => Yii::$app->user->identity->id],
+                ['user_id' => Yii::$app->user->identity->id]]);
+        }
         return $this->render('return', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -162,8 +179,6 @@ class OrderController extends Controller
         $model = new Order();
         $product = \common\models\Product::findOne(['id' => '1']);
         if ($model->load(Yii::$app->request->post())) {
-            var_dump($model);
-            exit();
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -192,10 +207,11 @@ class OrderController extends Controller
         $model = \common\models\ProductOrder::productOrderDetail($model);
         $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
         $model->total_stock = $currentStock;
-        if ($model->load(Yii::$app->request->post())) {
-            $isSaved=\common\models\ShippingAddress::updateShippingAddress($model);
-            $isSavedPorder=\common\models\ProductOrder::updateProductOrder($model);
-            if($isSaved && $isSavedPorder && $model->save())
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $isOrderSaved=$model->save();
+            $isShippingSaved=\common\models\ShippingAddress::updateShippingAddress($model);
+            $isProductOrderSaved=\common\models\ProductOrder::updateProductOrder($model);
+            if($isShippingSaved && $isProductOrderSaved && $isOrderSaved)
             {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -205,7 +221,6 @@ class OrderController extends Controller
                 return $this->redirect(['error', 'error' => $result["error"]]);
             }
         }
-
         return $this->render('update', [
             'model' => $model,
             'type' => $type,
