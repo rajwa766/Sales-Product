@@ -5,6 +5,7 @@ use kartik\select2\Select2;
 use yii\db\Query;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -136,11 +137,6 @@ $form->field($model, 'profile')->widget(FileInput::classname(), [
         </div>
     </div>
     <?php
-$level_id = Yii::$app->user->identity->user_level_id;
-$pro_level = array_search('PRO Level', \common\models\Lookup::$user_levels);
-$inter_level = array_search('INTER Level', \common\models\Lookup::$user_levels);
-$advanced_level = array_search('ADVANCE Level', \common\models\Lookup::$user_levels);
-$begin_level = array_search('BEGIN Level', \common\models\Lookup::$user_levels);
 
 if (!$model->isNewRecord && isset($Role['super_admin'])) {
     if (array_search($model->user_level_id, array_keys(\common\models\Lookup::$seller_levels))>0) {
@@ -165,7 +161,7 @@ if (!$model->isNewRecord && isset($Role['super_admin'])) {
                     'pluginOptions' => [
                         'allowClear' => true,
                         'ajax' => [
-                            'url' => '/user/get-seller-levels',
+                            'url' => Url::base().'/user/get-seller-levels',
                             'dataType' => 'json',
                             'data' => new \yii\web\JsExpression('function(params) {
                              return {q:params.term,parent_level:'.$user_level_name["parent_id"].'}; }'),
@@ -233,7 +229,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => '/user/get-users',
+                    'url' => Url::base().'/user/get-users',
                     'dataType' => 'json',
                     'data' => new \yii\web\JsExpression('function(params) {
             if($("#user-company_user").is(":checked")){
@@ -282,7 +278,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => '/user/get-levels',
+                'url' => Url::base().'/user/get-levels',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
             if($("#user-company_user").is(":checked")){
