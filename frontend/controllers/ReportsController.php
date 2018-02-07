@@ -197,8 +197,12 @@ public function actionReceivablePayableReportResult(){
          $fromDate = Yii::$app->request->post('from_date');
          $toDate = Yii::$app->request->post('to_date');
          $userId = Yii::$app->request->post('user_id');
-         $account_type = Yii::$app->request->post('account_type');
-      
+         $type = Yii::$app->request->post('account_type');
+         $account_type =2;// Yii::$app->request->post('account_type');
+        if($type=="Receivable")
+        {
+            $account_type=1;
+        }
          if(!$userId){
             $userId = Yii::$app->user->getId();
          }
@@ -245,7 +249,7 @@ public function actionReceivablePayableReportResult(){
                 $rpArray[]=$rp;
             }
          }
-         
+       
          usort($rpArray, function($a, $b) {
             return strtotime($a['date']) - strtotime($b['date']);
         });
@@ -253,7 +257,7 @@ public function actionReceivablePayableReportResult(){
             'payable_in_hand'=>$payable_in_hand,
             'receivable_in_hand'=>$receivable_in_hand,
             'ReceivablePayableArr' => $rpArray,
-            'AccountType'=>$account_type,
+            'AccountType'=>$type,
         ]);
 
 }
