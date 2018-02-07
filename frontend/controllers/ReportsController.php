@@ -174,13 +174,20 @@ public function actionOrderReportResult(){
 
 }
 
-public function actionReceivablePayableReport()
+public function actionReceivableReport()
 {
      $model = new Order(); 
            return $this->render('receivable-payable/index', [
             'model' => $model,
-       
-            
+            'type'=>'Receivable'
+        ]);
+}
+public function actionPayableReport()
+{
+     $model = new Order(); 
+           return $this->render('receivable-payable/index', [
+            'model' => $model,
+            'type'=>'Payable'
         ]);
 }
 public function actionReceivablePayableReportResult(){
@@ -246,6 +253,7 @@ public function actionReceivablePayableReportResult(){
             'payable_in_hand'=>$payable_in_hand,
             'receivable_in_hand'=>$receivable_in_hand,
             'ReceivablePayableArr' => $rpArray,
+            'AccountType'=>$account_type,
         ]);
 
 }

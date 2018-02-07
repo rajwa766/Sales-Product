@@ -10,7 +10,7 @@ use kartik\select2\Select2;
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'ORDERS');
+$this->title = "Pending Order";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">

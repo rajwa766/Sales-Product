@@ -208,7 +208,11 @@ use yii\models\users_level;
 
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-payable-report"><?= Yii::t('app', 'Receivables / Payables');?></a>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-report">Receivable</a>
+
+                                </li>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/payable-report">Payable</a>
 
                                 </li>
                             </ul>
