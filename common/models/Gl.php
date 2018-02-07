@@ -129,7 +129,7 @@ class Gl extends \yii\db\ActiveRecord
             $receivable_account = \common\models\Account::findOne(['user_id' => $user_id, 'account_type' => 1]);
             $payable_account = \common\models\Account::findOne(['user_id' => $resquester_id, 'account_type' => 2]);
 
-            if (!empty($receivable_account) && !empty($payable_account)) {
+           // if (!empty($receivable_account) && !empty($payable_account)) {
                 for ($i = 0; $i < 2; $i++) {
                     $gl = new Gl();
                     $gl->isNewRecord = true;
@@ -152,7 +152,7 @@ class Gl extends \yii\db\ActiveRecord
                     }
                 }
 
-            }
+            //}
 
             return true;
         }

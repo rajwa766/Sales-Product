@@ -218,6 +218,7 @@ class StockIn extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return false;
         } else {
+           
             $total_amount = array_sum(array_map(create_function('$o', 'return $o["total_price"];'), $total_order_quantity));
             \common\models\Gl::create_gl($total_amount, $order_request_id, $user_id, $order_id, '1');
             \common\models\Order::update_status($order_id);
