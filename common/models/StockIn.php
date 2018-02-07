@@ -34,6 +34,7 @@ class StockIn extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['price','initial_quantity'], 'required'],
             [['timestamp'], 'safe'],
             [['initial_quantity', 'remaining_quantity', 'product_id', 'user_id'], 'integer'],
             [['price'], 'number'],
