@@ -427,19 +427,6 @@ jQuery(document).ready(function() {
     }
    
 });
-$('#user-user_level_id').on('change', function () {
-                var data = $('#user-user_level_id').select2('data');
-                var user_level=data[0].text;
-                if (user_level.indexOf('Seller') >= 0) {
-                    $('.order-panel').hide();
-                    $("#user-quantity").prop('required',false);
-                }
-                else
-                {
-                    $('.order-panel').show();
-                    $("#user-quantity").prop('required',true);
-                }
-         });
 $('#user-quantity').on('blur', function () {
     var product_id = '1';
         $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id, function (data) {

@@ -142,7 +142,7 @@ class StockIn extends \yii\db\ActiveRecord
             return false;
             die("cURL Error #:" . $err);
         } else {
-            
+
             $resp = json_decode($response, true);
 
             if ($resp['code'] == 200) {
@@ -196,9 +196,9 @@ class StockIn extends \yii\db\ActiveRecord
                 }
                 \common\models\StockIn::CalculateBonus($order_request_id, $user_id, $order_id, $total_quantity);
                 $Role = Yii::$app->authManager->getRolesByUser($user_id);
-               
+
                 if (!$transaction_failed && isset($Role['customer'])) {
-                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id,$single_order['order_price'], $total_quantity);
+                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity);
                     if ($fullfillmentResult != false) {
                         Yii::$app->db->createCommand()
                             ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
@@ -208,7 +208,7 @@ class StockIn extends \yii\db\ActiveRecord
                         $transaction_failed = true;
                     }
                 }
-               
+
             }
         } catch (Exception $e) {
             $transaction_failed = true;
@@ -278,10 +278,12 @@ class StockIn extends \yii\db\ActiveRecord
         $MR_Level_Id = array_search('Management Team', \common\models\Lookup::$user_levels);
         $MRUsers = \common\models\User::find()->where(['user_level_id' => $MR_Level_Id])->all();
 
-        $MRComission = ($quantity * $MR_Comission) / count($MRUsers);
+        if (count($MRUsers) > 0) {
+            $MRComission = ($quantity * $MR_Comission) / count($MRUsers);
 
-        foreach ($MRUsers as $parent_user) {
-            \common\models\Gl::create_gl(strval($MRComission), $parent_user->id, 1, $order_id, '1');
+            foreach ($MRUsers as $parent_user) {
+                \common\models\Gl::create_gl(strval($MRComission), $parent_user->id, 1, $order_id, '1');
+            }
         }
         $Super_Vip_Level_Id = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
         $Super_VIP_Comission = 5;
