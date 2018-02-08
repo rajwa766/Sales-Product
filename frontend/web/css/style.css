@@ -101,6 +101,10 @@ Mobile Menu Settings - Since 3.1
 
 /* code by waqar */
 
+.not_in_print {
+    background: #fff;
+}
+
 .main-wrapper {
     background-color: #ffffff !important;
 }
@@ -381,7 +385,7 @@ a:focus {
 }
 
 .text-primary {
-    color:#222;
+    color: #222;
 }
 
 .text-info {
@@ -1654,24 +1658,29 @@ textarea,
     border-right: 0px;
 }
 /*******Loader********/
+
 .pace .pace-progress {
     background: #e1b451;
 }
+
 .pace .pace-progress-inner {
     box-shadow: 0 0 10px #e1b451, 0 0 5px #e1b451;
 }
+
 .pace .pace-activity {
     border-top-color: #e1b451;
     border-left-color: #e1b451;
 }
 
-/******hidden portion*******/
-.payment_button_general_approved{
 
+/******hidden portion*******/
+
+.payment_button_general_approved {
     border: 1px solid #e1b451 !important;
     padding: 5px !important;
     border-radius: 3px !important;
 }
+
 .order-panel {
     margin-top: 13px;
 }
@@ -9656,12 +9665,14 @@ h1,
     border-radius: 3px !important;
     cursor: pointer;
 }
+
 .pending_approval {
     border: 1px solid #e1b451 !important;
     padding: 5px !important;
     border-radius: 3px !important;
     cursor: pointer;
 }
+
 .jsgrid-insert-row,
 .vehicle-form .jsgrid-filter-row,
 .vehicle-form .jsgrid-edit-button,

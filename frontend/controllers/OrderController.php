@@ -142,7 +142,23 @@ class OrderController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
+    public function actionPaymentMethod()
+    {
+       $method = Yii::$app->request->post('payment_method');
+       $id = Yii::$app->request->post('id');
+       if($method){
+        $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
+        Yii::$app->db->createCommand()
+        ->update('order', ['status' => $paymentCard], 'id =' . $id)
+        ->execute();
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+       }else{
+        $this->actionUpdate($id);
+       }
+       
+    }
     /**
      * Displays a single Order model.
      * @param integer $id
@@ -155,7 +171,12 @@ class OrderController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
+    public function actionPayment($id)
+    {
+        return $this->render('payment', [
+            'model' => $this->findModel($id),
+        ]);
+    }
     /**
      * Creates a new Order model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -171,9 +192,16 @@ class OrderController extends Controller
         $model = new Order();
         $product = \common\models\Product::findOne(['id' => '1']);
         if ($model->load(Yii::$app->request->post())) {
+            
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
+                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+               if($model->status == $orderStatus){
+                return $this->redirect(['payment', 'id' => $model->id]);
+               }else{
+                   
                 return $this->redirect(['view', 'id' => $model->id]);
+               }
             }
         }
         return $this->render('create', [
@@ -194,6 +222,7 @@ class OrderController extends Controller
     {
         
         $model = $this->findModel($id);
+       
         // shipping detail for order
         $model = Order::getShippingDetail($model);
         // Order type and dropdown vaalues for setting
