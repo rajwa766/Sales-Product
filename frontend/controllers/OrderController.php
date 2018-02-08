@@ -257,6 +257,8 @@ class OrderController extends Controller
                 return $this->redirect(['error', 'error' => $result["error"]]);
             }
         }
+        
+       
         return $this->render('update', [
             'model' => $model,
             'type' => $type,
