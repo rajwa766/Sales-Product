@@ -111,7 +111,7 @@ if(!isset($Role['seller'])){ ?>
                     },
                  
                     // 'delete' => function ($url, $model) {
-                    //     if($model->status == array_search('Pending', \common\models\Lookup::$status)){
+                    //     if($model->status == array_search('Pending', \common\models\Lookup::$status && $model->created_by == Yii::$app->user->identity->id)){
                     //         return Html::a('<span class="glyphicon glyphicon-trash"></span>', Yii::$app->homeUrl.'order/delete/'.$model->id);
                     //     }
                     

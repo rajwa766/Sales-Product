@@ -228,8 +228,13 @@ class OrderController extends Controller
      */
     public function actionDelete($id)
     {
+        $command = Yii::$app->db->createCommand()
+        ->delete('shipping_address', 'order_id = '.$id)
+        ->execute();
+        $command = Yii::$app->db->createCommand()
+        ->delete('product_order', 'order_id = '.$id)
+        ->execute();
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
     public function actionError($error)
