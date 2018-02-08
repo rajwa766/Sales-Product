@@ -221,13 +221,10 @@ public static function getShippingDetail($model){
                     $model->email = 'customer@gmail.com';
                 }
                 $check_user_already_exist = \common\models\User::find()->where(['email' => $model->email])->one();
-
                 if ($check_user_already_exist) {
                     $model->user_id = $check_user_already_exist->id;
                 } else {
-
                     $customer_user = \common\models\User::insert_user($model);
-
                     $auth = \Yii::$app->authManager;
                     $role = $auth->getRole('customer');
                     $auth->assign($role, $customer_user->id);
@@ -266,6 +263,38 @@ public static function getShippingDetail($model){
             $result = "transaction_failed";
         }
         return $result;
+    }
+    public static function updateSave($model){
+        if ($model->order_type == "Order") {
+            $model->order_request_id = $model->request_agent_name;
+        } else {
+            $model->order_request_id = $model->parent_user;
+            $model->user_id = $model->child_user;
+         }
+         return $model->save();
+}
+    public static function updateBeforeLoad($model){
+            // shipping detail for order
+            $model = Order::getShippingDetail($model);
+            // Order type and dropdown values for setting customer and agent
+            $model = \common\models\User::RequestedUserDetail($model);
+            // Product detail for price and quantity
+            $model = \common\models\ProductOrder::productOrderDetail($model);
+            // check status of order
+            $orderReturn = array_search('Return Request', \common\models\Lookup::$status);
+            $orderTransfer = array_search('Transfer Request', \common\models\Lookup::$status);
+            // order type for return and transfer
+            if($orderReturn == $model->status){
+                $model->order_type = 'Return';
+                $currentStock = \common\models\helpers\Statistics::CurrentStock($model->child_user);
+            }else{
+                $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
+            }
+            if($orderTransfer == $model->status){
+            $model->order_type = 'Transfer';
+            }
+            $model->total_stock = $currentStock;
+            return  $model;
     }
     public static function insertOrder($user_model, $approve_order = false, $is_bonus = false,$validate=true)
     {

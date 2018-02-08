@@ -221,30 +221,11 @@ class OrderController extends Controller
     public function actionUpdate($id)
     {
         
-        $model = $this->findModel($id);
-       
-        // shipping detail for order
-        $model = Order::getShippingDetail($model);
-        // Order type and dropdown vaalues for setting
-        $model = \common\models\User::RequestedUserDetail($model);
-        // Product detail for price and quantity
-        $model = \common\models\ProductOrder::productOrderDetail($model);
-        // check status of order
-        $orderReturn = array_search('Return Request', \common\models\Lookup::$status);
-        $orderTransfer = array_search('Transfer Request', \common\models\Lookup::$status);
-        if($orderReturn == $model->status){
-            $model->order_type = 'Return';
-            $currentStock = \common\models\helpers\Statistics::CurrentStock($model->child_user);
-        }else{
-            $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
-        }
-        if($orderTransfer == $model->status);
-        $model->order_type = 'Transfer';
+    $model = $this->findModel($id);
+        $model = Order::updateBeforeLoad($model);
         $type = $model->order_type;
-        $model->total_stock = $currentStock;
-       
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $isOrderSaved=$model->save();
+            $isOrderSaved= Order::updateSave($model);
             $isShippingSaved=\common\models\ShippingAddress::updateShippingAddress($model);
             $isProductOrderSaved=\common\models\ProductOrder::updateProductOrder($model);
             if($isShippingSaved && $isProductOrderSaved && $isOrderSaved)

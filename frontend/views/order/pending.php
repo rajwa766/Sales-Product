@@ -128,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'edit' => function ($url, $model) {
                         $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
-                        if($model->status == array_search('Pending', \common\models\Lookup::$status) && isset($Role['customer'])){
+                        if($model->status == array_search('Pending', \common\models\Lookup::$status) && $model->created_by == Yii::$app->user->identity->id){
                             return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Yii::$app->homeUrl.'order/update/'.$model->id);
                         }
                     },

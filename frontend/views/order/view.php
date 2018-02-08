@@ -44,6 +44,12 @@ if($model->payment_slip){
 
                         </div>
                     </div>
+                    <style>
+                        #viewslip {
+    cursor: pointer;
+    color: #e1b451;
+}
+                        </style>
                     <div class="clearfix"></div>
 
                     <div class="col-lg-12">
@@ -115,7 +121,7 @@ if($model->payment_slip){
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
                                                     <span class='text-muted'><?php 
-                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?>/<span id="viewslip" >View</span><br>
+                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?>/<span id="viewslip" >View Slip</span><br>
                                                                        <?php  $paymentMethod = array_search('Bank Transfer', \common\models\Lookup::$order_status);
                                                                        if($model->payment_method == (int)$paymentMethod){?>
                                                                        
