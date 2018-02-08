@@ -79,13 +79,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                         </div>
                                         <div class="uprofile-buttons">
                                         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php 
+        // echo Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+        //     'class' => 'btn btn-danger',
+        //     'data' => [
+        //         'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+        //         'method' => 'post',
+        //     ],
+        // ]);
+        ?>
                                         </div>
                                     </div>
                                     <div class="col-md-9 col-sm-8 col-xs-12">

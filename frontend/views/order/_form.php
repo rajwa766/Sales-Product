@@ -53,7 +53,7 @@ if (!Yii::$app->user->isGuest) {
 <?php } ?>
         <div class="order-form">
         <?php if(!$model->isNewRecord){?>
-  <p>Payment failed</p>
+  <!-- <p>Payment failed</p> -->
        <?php } ?>
             <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
                     <?php if (!Yii::$app->user->isGuest) { ?>  

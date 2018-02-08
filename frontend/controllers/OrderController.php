@@ -168,13 +168,16 @@ class OrderController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $response = \common\models\StockIn::GetOrderExternalStatus($model->order_external_code);
-        if ($response != null) {
-            $response=json_decode($response);
-            if ($model->shipping_status != $response->shipping_status) {
-                $model->shipping_status = $response->shipping_status;
-                $model->order_tracking_code = $response->tracking_no;
-                $model->save();
+        if ($model->order_external_code != null) {
+            $response = \common\models\StockIn::GetOrderExternalStatus($model->order_external_code);
+            if ($response != null) {
+
+                $response = json_decode($response);
+                if ($model->shipping_status != $response->shipping_status) {
+                    $model->shipping_status = $response->shipping_status;
+                    $model->order_tracking_code = $response->tracking_no;
+                    $model->save();
+                }
             }
         }
         return $this->render('view', [
@@ -209,9 +212,8 @@ class OrderController extends Controller
                 // if ($model->status == $orderStatus) {
                 //     return $this->redirect(['payment', 'id' => $model->id]);
                 // } else {
-
-                    return $this->redirect(['view', 'id' => $model->id]);
-               // }
+                return $this->redirect(['view', 'id' => $model->id]);
+                // }
             }
         }
         return $this->render('create', [
@@ -234,7 +236,7 @@ class OrderController extends Controller
         $model = Order::updateBeforeLoad($model);
         $type = $model->order_type;
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $isOrderSaved = $model->save();
+            $isOrderSaved = \common\models\Order::updateSave($model);
             $isShippingSaved = \common\models\ShippingAddress::updateShippingAddress($model);
             $isProductOrderSaved = \common\models\ProductOrder::updateProductOrder($model);
             if ($isShippingSaved && $isProductOrderSaved && $isOrderSaved) {
@@ -244,8 +246,7 @@ class OrderController extends Controller
                 return $this->redirect(['error', 'error' => $result["error"]]);
             }
         }
-        
-       
+
         return $this->render('update', [
             'model' => $model,
             'type' => $type,
@@ -261,13 +262,14 @@ class OrderController extends Controller
      */
     public function actionDelete($id)
     {
-        $command = Yii::$app->db->createCommand()
-            ->delete('shipping_address', 'order_id = ' . $id)
-            ->execute();
-        $command = Yii::$app->db->createCommand()
-            ->delete('product_order', 'order_id = ' . $id)
-            ->execute();
-        $this->findModel($id)->delete();
+        $model=$this->findModel($id);
+        $Role = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+        if($model!=null && ($model->created_by==Yii::$app->user->identity->id || isset($Role['super_admin'])))
+        {
+            Yii::$app->db->createCommand()->delete('shipping_address', 'order_id = ' . $id)->execute();
+            Yii::$app->db->createCommand()->delete('product_order', 'order_id = ' . $id)->execute();
+            $model->delete();
+        }
         return $this->redirect(['index']);
     }
     public function actionError($error)

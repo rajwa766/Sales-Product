@@ -55,7 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'attribute' => 'user_id',
         'label'=>Yii::t('app', 'Transfer to'),
         'value'=>function ($model) { 
-            return $model->username($model->user_id);
+            if($model->username($model->user_id)!="customer")
+            {
+                return $model->username($model->user_id);
+            }
+            else
+            {
+                return $model->name;
+            }
         },
         'filter'=>Select2::widget([
         'model' => $searchModel,
@@ -74,6 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
     // ... other params
     ]),
     ], 
+    
   
             'order_ref_no',
             [
@@ -81,6 +89,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function($model) {
                     return $model->productorder($model->id);
+                },
+            ],
+            [
+                'label' => 'Payment Mode',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if(isset($model->payment_method))
+                    {
+                        return  \common\models\Lookup::$payment_method[$model->payment_method];
+                    }
+                    return '';
                 },
             ],
             // 'productOrders.quantity',
@@ -150,49 +169,52 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
         $("body").delegate(".payment_button_general_cancel a", "click", function () {
-       var id =    $(this).attr('class');
+            if (window.confirm("Are you sure?")) {
+            var id = $(this).attr('class');
             $.ajax({
                 type: "POST",
                 context: this,
                 data:  {id:id},
-               // data: "id="+id+"status+"+status,
+            // data: "id="+id+"status+"+status,
                 url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/cancel'); ?>",
                 success: function (test) {
-                   $(this).parent().removeClass('payment_button_general_cancel');
-                   $(this).text('Cancled');
-                   
+                $(this).parent().removeClass('payment_button_general_cancel');
+                $(this).text('Cancled');
+                
                 },
                 error: function (exception) {
                     alert(exception);
                 }
             });
+        }
 
         });
         $("body").delegate(".payment_button_general_approve a", "click", function () {
-       var id =    $(this).attr('class');
-       var user_id =    $(this).attr('user_id');
-       var order_request_id =    $(this).attr('ref_id');
-            $.ajax({
-                type: "POST",
-                context: this,
-                data:  {id:id, user_id:user_id,order_request_id: order_request_id },
-               // data: "id="+id+"status+"+status,
-                url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
-                success: function (test) {
-                   if(test == '1'){
-                    $(this).parent().removeClass('payment_button_general_approve');
-                   $(this).text('Approved');
-                   }else{
-                    $(this).text('Out of Stock');
-                    $(this).css("color", "red"); 
-                   }
-                  
-                },
-                error: function (exception) {
-                    alert(exception);
-                }
-            });
-
+            if (window.confirm("Are you sure?")) {
+                var id = $(this).attr('class');
+                var user_id =    $(this).attr('user_id');
+                var order_request_id =    $(this).attr('ref_id');
+                $.ajax({
+                    type: "POST",
+                    context: this,
+                    data:  {id:id, user_id:user_id,order_request_id: order_request_id },
+                // data: "id="+id+"status+"+status,
+                    url: "<?php echo Yii::$app->getUrlManager()->createUrl('stock-in/approve'); ?>",
+                    success: function (test) {
+                    if(test == '1'){
+                        $(this).parent().removeClass('payment_button_general_approve');
+                    $(this).text('Approved');
+                    }else{
+                        $(this).text('Out of Stock');
+                        $(this).css("color", "red"); 
+                    }
+                    
+                    },
+                    error: function (exception) {
+                        alert(exception);
+                    }
+                });
+            }
         });
     </script>
 

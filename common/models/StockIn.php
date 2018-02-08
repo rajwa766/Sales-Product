@@ -220,7 +220,7 @@ class StockIn extends \yii\db\ActiveRecord
                 $Role = Yii::$app->authManager->getRolesByUser($user_id);
 
                 if (!$transaction_failed && isset($Role['customer'])) {
-                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity);
+                    $fullfillmentResult =true;// StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity);
                     if ($fullfillmentResult != false) {
                         Yii::$app->db->createCommand()
                             ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)

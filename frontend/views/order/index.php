@@ -65,7 +65,14 @@ $this->params['breadcrumbs'][] = $this->title;
     'attribute' => 'user_id',
     'label'=>Yii::t('app', 'Transfer to'),
     'value'=>function ($model, $key, $index, $widget) { 
-        return $model->username($model->user_id);
+        if($model->username($model->user_id)!="customer")
+            {
+                return $model->username($model->user_id);
+            }
+            else
+            {
+                return $model->name;
+            }
     },
     'filter'=>Select2::widget([
     'model' => $searchModel,
@@ -103,6 +110,17 @@ $this->params['breadcrumbs'][] = $this->title;
        8 => "Return Canceled",],
    ],
             'order_ref_no',
+            [
+                'label' => 'Payment Mode',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if(isset($model->payment_method))
+                    {
+                        return  \common\models\Lookup::$payment_method[$model->payment_method];
+                    }
+                    return '';
+                },
+            ],
             'shipper',
              ['class' => 'yii\grid\ActionColumn',
             'template' => '{view}{edit}{delete}',

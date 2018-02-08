@@ -149,6 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
         $("body").delegate(".payment_button_general_cancel a", "click", function () {
+            if (window.confirm("Are you sure?")) {
        var id =    $(this).attr('class');
             $.ajax({
                 type: "POST",
@@ -165,8 +166,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     alert(exception);
                 }
             });
+            }
         });
         $("body").delegate(".payment_button_general_approve a", "click", function () {
+            if (window.confirm("Are you sure?")) {
        var id =    $(this).attr('class');
        var user_id =    $(this).attr('user_id');
        var order_request_id =    $(this).attr('ref_id');
@@ -190,7 +193,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     alert(exception);
                 }
             });
-
+        }
         });
     </script>
 

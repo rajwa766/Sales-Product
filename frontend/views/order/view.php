@@ -95,15 +95,22 @@ if($model->payment_slip){
                                                 </div>
                                             </div>
                                             <div class="clearfix"></div><br>
-
-                                            <div class="col-xs-6 invoice-infoblock pull-left">
-                                            <h4>External Code: <?=$model->order_external_code?> </h4>
-                                               
-                                            </div>
-                                            <div class="col-xs-6 invoice-infoblock text-right">
-                                               
-                                                <h4>Tracking Code: <?=$model->shipping_status?>  (<?=$model->order_tracking_code?>)</h4>
-                                            </div>
+                                            <?php
+                                            $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
+                                            if(isset($Role['customer']))
+                                            {
+                                            ?>
+                                                <div class="col-xs-6 invoice-infoblock pull-left">
+                                                <h4>External Code: <?=$model->order_external_code?> </h4>
+                                                
+                                                </div>
+                                                <div class="col-xs-6 invoice-infoblock text-right">
+                                                
+                                                    <h4>Tracking Code: <?=$model->shipping_status?>  (<?=$model->order_tracking_code?>)</h4>
+                                                </div>
+                                            <?php
+                                            }
+                                            ?>
                                             <div class="clearfix"></div><br>
                                             <div class="col-xs-6 invoice-infoblock pull-left">
                                             <h4><?=Yii::t('app', 'Billed To:')?></h4>

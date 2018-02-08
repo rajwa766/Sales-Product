@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'format' => 'raw',
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-                if (($model->order_request_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
+                if (($model->user_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
                     if ($model->status == '5') {
                         return "<div class='payment_button_general_approve' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >Approve</a></div>";
                     } else {
@@ -113,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-                if ($model->order_request_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
+                if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
                     if ($model->status == '5') {
                         return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
                     } else {
@@ -155,6 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
         $("body").delegate(".payment_button_general_cancel a", "click", function () {
+            if (window.confirm("Are you sure?")) {
        var id =    $(this).attr('class');
             $.ajax({
                 type: "POST",
@@ -171,8 +172,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     alert(exception);
                 }
             });
+            }
         });
         $("body").delegate(".payment_button_general_approve a", "click", function () {
+            if (window.confirm("Are you sure?")) {
        var id =    $(this).attr('class');
        var user_id =    $(this).attr('user_id');
        var order_request_id =    $(this).attr('ref_id');
@@ -191,7 +194,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     alert(exception);
                 }
             });
-
+            }
         });
     </script>
 

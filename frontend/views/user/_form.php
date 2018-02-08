@@ -385,7 +385,7 @@ jQuery(document).ready(function() {
 });
 $('#user-quantity').on('blur', function () {
     var product_id = '1';
-        $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id, function (data) {
+        $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id+"&type=null&check_units="+false, function (data) {
 
         var json = $.parseJSON(data);
         if(json.price){

@@ -99,6 +99,7 @@ if (isset($Role['super_admin'])) {
     echo $form->field($model, 'child_user')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a child user Level ...'],
+        'initValueText' => isset($model->child_user) ? $model->username($model->child_user) : "",
         'pluginOptions' => [
             'allowClear' => true,
             //'autocomplete' => true,

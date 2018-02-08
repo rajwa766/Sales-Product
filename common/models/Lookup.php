@@ -30,7 +30,12 @@ class Lookup
 
     ];
    
-    public static $order_status = [
+    public static $order_status = [// What does this name means sajid?
+        '1' => 'Credit Card',
+        '2' => 'Cash on Delivery',
+        '3' => 'Bank Transfer',
+    ];
+    public static $payment_method = [
         '1' => 'Credit Card',
         '2' => 'Cash on Delivery',
         '3' => 'Bank Transfer',
