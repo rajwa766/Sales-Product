@@ -39,13 +39,13 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-      
+
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (!isset($Role['super_admin'])) {
             $dataProvider->query->andwhere(['created_by' => Yii::$app->user->identity->id]);
         }
-       
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -56,7 +56,7 @@ class OrderController extends Controller
     {
         $pending_status = array_search('Pending', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $searchModel->status=$pending_status;
+        $searchModel->status = $pending_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
@@ -65,7 +65,7 @@ class OrderController extends Controller
                 ['order_request_id' => Yii::$app->user->identity->id],
                 ['user_id' => Yii::$app->user->identity->id]]);
         }
-        
+
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -76,7 +76,7 @@ class OrderController extends Controller
     {
         $cancel_status = array_search('Request Canceled', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $searchModel->status=$cancel_status;
+        $searchModel->status = $cancel_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
 
@@ -90,7 +90,7 @@ class OrderController extends Controller
     {
         $approved_status = array_search('Approved', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $searchModel->status=$approved_status;
+        $searchModel->status = $approved_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
@@ -109,7 +109,7 @@ class OrderController extends Controller
     {
         $transfer_request_status = array_search('Transfer Request', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $searchModel->status=$transfer_request_status;
+        $searchModel->status = $transfer_request_status;
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -128,7 +128,7 @@ class OrderController extends Controller
     {
         $return_request_status = array_search('Return Request', \common\models\Lookup::$status);
         $searchModel = new OrderSearch();
-        $searchModel->status=$return_request_status;
+        $searchModel->status = $return_request_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
@@ -144,20 +144,20 @@ class OrderController extends Controller
     }
     public function actionPaymentMethod()
     {
-       $method = Yii::$app->request->post('payment_method');
-       $id = Yii::$app->request->post('id');
-       if($method){
-        $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
-        Yii::$app->db->createCommand()
-        ->update('order', ['status' => $paymentCard], 'id =' . $id)
-        ->execute();
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-       }else{
-        $this->actionUpdate($id);
-       }
-       
+        $method = Yii::$app->request->post('payment_method');
+        $id = Yii::$app->request->post('id');
+        if ($method) {
+            $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
+            Yii::$app->db->createCommand()
+                ->update('order', ['status' => $paymentCard], 'id =' . $id)
+                ->execute();
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        } else {
+            $this->actionUpdate($id);
+        }
+
     }
     /**
      * Displays a single Order model.
@@ -167,8 +167,18 @@ class OrderController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $response = \common\models\StockIn::GetOrderExternalStatus($model->order_external_code);
+        if ($response != null) {
+            $response=json_decode($response);
+            if ($model->shipping_status != $response->shipping_status) {
+                $model->shipping_status = $response->shipping_status;
+                $model->order_tracking_code = $response->tracking_no;
+                $model->save();
+            }
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
     public function actionPayment($id)
@@ -192,16 +202,16 @@ class OrderController extends Controller
         $model = new Order();
         $product = \common\models\Product::findOne(['id' => '1']);
         if ($model->load(Yii::$app->request->post())) {
-            
+
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
-                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
-               if($model->status == $orderStatus){
-                return $this->redirect(['payment', 'id' => $model->id]);
-               }else{
-                   
-                return $this->redirect(['view', 'id' => $model->id]);
-               }
+                // $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+                // if ($model->status == $orderStatus) {
+                //     return $this->redirect(['payment', 'id' => $model->id]);
+                // } else {
+
+                    return $this->redirect(['view', 'id' => $model->id]);
+               // }
             }
         }
         return $this->render('create', [
@@ -220,9 +230,8 @@ class OrderController extends Controller
      */
     public function actionUpdate($id)
     {
-        
+
         $model = $this->findModel($id);
-       
         // shipping detail for order
         $model = Order::getShippingDetail($model);
         // Order type and dropdown vaalues for setting
@@ -232,28 +241,25 @@ class OrderController extends Controller
         // check status of order
         $orderReturn = array_search('Return Request', \common\models\Lookup::$status);
         $orderTransfer = array_search('Transfer Request', \common\models\Lookup::$status);
-        if($orderReturn == $model->status){
+        if ($orderReturn == $model->status) {
             $model->order_type = 'Return';
             $currentStock = \common\models\helpers\Statistics::CurrentStock($model->child_user);
-        }else{
+        } else {
             $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
         }
-        if($orderTransfer == $model->status);
+        if ($orderTransfer == $model->status);
         $model->order_type = 'Transfer';
         $type = $model->order_type;
         $model->total_stock = $currentStock;
-       
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $isOrderSaved=$model->save();
-            $isShippingSaved=\common\models\ShippingAddress::updateShippingAddress($model);
-            $isProductOrderSaved=\common\models\ProductOrder::updateProductOrder($model);
-            if($isShippingSaved && $isProductOrderSaved && $isOrderSaved)
-            {
+            $isOrderSaved = $model->save();
+            $isShippingSaved = \common\models\ShippingAddress::updateShippingAddress($model);
+            $isProductOrderSaved = \common\models\ProductOrder::updateProductOrder($model);
+            if ($isShippingSaved && $isProductOrderSaved && $isOrderSaved) {
                 return $this->redirect(['view', 'id' => $model->id]);
-            }
-            else
-            {
-                $result = array("error"=>"Some error occured, please try again later.");
+            } else {
+                $result = array("error" => "Some error occured, please try again later.");
                 return $this->redirect(['error', 'error' => $result["error"]]);
             }
         }
@@ -273,11 +279,11 @@ class OrderController extends Controller
     public function actionDelete($id)
     {
         $command = Yii::$app->db->createCommand()
-        ->delete('shipping_address', 'order_id = '.$id)
-        ->execute();
+            ->delete('shipping_address', 'order_id = ' . $id)
+            ->execute();
         $command = Yii::$app->db->createCommand()
-        ->delete('product_order', 'order_id = '.$id)
-        ->execute();
+            ->delete('product_order', 'order_id = ' . $id)
+            ->execute();
         $this->findModel($id)->delete();
         return $this->redirect(['index']);
     }

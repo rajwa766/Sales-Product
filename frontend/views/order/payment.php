@@ -14,15 +14,20 @@ use yii\widgets\ListView;
 
 
 <div class="attendence-index">
-   <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data'],
-       'action' => ['order/payment-method'],
-       ]
-           ); ?>
+   
     <h1>EPAYLINK Testing</h1>
-    <input type="text" name="payment_method" value="">
-    <input type="hidden" name="id" value="<?= $model->id; ?>">
+    <form method="post" action="https://www.thaiepay.com/epaylink/payment.aspx">
+        <input type="hidden" name="refno" value="99999">
+        <input type="hidden" name="merchantid" value="46511428">
+                    <input type="hidden" name="customeremail" value="">
+        <input type="hidden" name="c">
+        <input type="hidden" name="productdetail" value="Testing Product">
+        <input type="hidden" name="total" value="400">
+        <input type="hidden" name="postbackurl" value="http://salesmanagement.dev:8080/order/view/787">
+        <input type="submit" name="Submit" value="Comfirm Order">
+    </form>
     <div class="form-group">
-                                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success save-button']) ?>
+                                   
                                 </div>
-      <?php ActiveForm::end(); ?>
+      
 </div>
