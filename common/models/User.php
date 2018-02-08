@@ -277,7 +277,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
-    public static function getUsers($q, $parent_id = null, $user_id=null, $user_level = null, $company_user = null, $include_parent = false,$include_self=true)
+    public static function getUsers($q, $parent_id = null, $user_id = null, $user_level = null, $company_user = null, $include_parent = false, $include_self = true)
     {
         $out = ['results' => ['id' => '', 'text' => '']];
         $query = new \yii\db\Query();
@@ -287,9 +287,8 @@ class User extends ActiveRecord implements IdentityInterface
         if (!is_null($q)) {
             $query->andWhere(['like', 'username', $q]);
         }
-       
-        if(!$include_self)
-        {
+
+        if (!$include_self) {
             $query->andWhere(['!=', 'id', $user_id]);
         }
         if (!is_null($parent_id)) {
@@ -361,20 +360,12 @@ class User extends ActiveRecord implements IdentityInterface
 
             //    check not company user and not seller and user space remain
             if ($current_level->max_user != '-1' && $total_parent_user_current_level > $current_level->max_user && $model->company_user != '1') {
-                $result = array("error"=>"Max users reached.");
+                $result = array("error" => "Max users reached.");
             } else {
                 if ($model->save()) {
                     \common\models\Account::create_accounts($model);
-                    $sellers = array_filter(\common\models\Lookup::$user_levels, function ($key) {
-                        if (strpos(\common\models\Lookup::$user_levels[$key], 'Seller') !== false) {
-                            return $key;
-                        }
-                    }, ARRAY_FILTER_USE_KEY);
-                    if(!array_key_exists($model->user_level_id, $sellers))
-                    {
-                        \common\models\StockStatus::set_minimum_stock_level($model->id);
-                        $order = \common\models\Order::insertOrder($model, true);
-                    }
+                    \common\models\StockStatus::set_minimum_stock_level($model->id);
+                     $order = \common\models\Order::insertOrder($model, true, false, false);
                     //bonus for super vip or vip
                     $super_vip_level = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                     $vip_level = array_search('VIP Team', \common\models\Lookup::$user_levels);
@@ -393,19 +384,16 @@ class User extends ActiveRecord implements IdentityInterface
                     $result = $model->id;
 
                 } else {
-                    if(isset($model->getErrors()['username']))
-                    {
-                        $result = array("username"=>$model->getErrors()['username']);
-                    }
-                    else
-                    {
-                        $result = array("error"=>"Some error occured, please try again later.");
+                    if (isset($model->getErrors()['username'])) {
+                        $result = array("username" => $model->getErrors()['username']);
+                    } else {
+                        $result = array("error" => "Some error occured, please try again later.");
                     }
                 }
             }
         } catch (Exception $e) {
             $transaction->rollBack();
-            $result = array("error"=>"Some error occured, please try again later.");
+            $result = array("error" => "Some error occured, please try again later.");
         }
         return $result;
     }
@@ -470,8 +458,9 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
     }
-    public static function RequestedUserDetail($model){
-        $requstedUserDetail = User::findOne(['id'=>$model->order_request_id]);
+    public static function RequestedUserDetail($model)
+    {
+        $requstedUserDetail = User::findOne(['id' => $model->order_request_id]);
         $model->request_user_level = $requstedUserDetail->user_level_id;
         $model->request_agent_name = $requstedUserDetail->id;
         return $model;

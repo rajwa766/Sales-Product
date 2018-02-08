@@ -25,7 +25,7 @@ use kartik\time\TimePicker;
      ?>
    		
    		<div class="filter">
-           <h1>Receivable/Payable Report</h1>
+           <h1><?=$type?> Report</h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="col-md-4">
@@ -118,25 +118,27 @@ use kartik\time\TimePicker;
 		</div>
                
         <div class="row">
-             <div class="col-md-6">
+        <input type="hidden" value="<?=$type?>" id="account_type"/>
+             <!-- <div class="col-md-6">
 				<div class="col-md-4">
                 Account Type
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-8"> -->
+               
 				<?php
-                   echo Select2::widget([
-                        'id'=>'account_type',
-                       'name'=>'account_type',
-                       'options' => ['placeholder' => 'Select Account Type'],
-                       'data' => ['1'=>'Receivable','2'=>'Payable'],
-                       'theme' => Select2::THEME_BOOTSTRAP,
-                       'pluginOptions' => [
-                           'allowClear' => true,
-                       ],
-                   ]); // Classic Theme
+                //    echo Select2::widget([
+                //         'id'=>'account_type',
+                //        'name'=>'account_type',
+                //        'options' => ['placeholder' => 'Select Account Type'],
+                //        'data' => ['1'=>'Receivable','2'=>'Payable'],
+                //        'theme' => Select2::THEME_BOOTSTRAP,
+                //        'pluginOptions' => [
+                //            'allowClear' => true,
+                //        ],
+                //    ]); // Classic Theme
                ?>
-				</div>
-			</div>
+				<!-- </div>
+			</div> -->
 		</div>
 		<div class="row" style="padding-top: 20px;">
 			<div class="col-md-6">

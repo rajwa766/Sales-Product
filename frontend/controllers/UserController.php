@@ -378,6 +378,13 @@ class UserController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         return \common\models\UsersLevel::getLevels($q, $parent_id, $max_user, $include_parent, $include_all_child);
     }
+    public function actionGetSellerLevels()
+    {
+        $q = Yii::$app->request->get('q');
+        $parent_level = Yii::$app->request->get('parent_level');
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return \common\models\UsersLevel::getSellerLevels($q, $parent_level);
+    }
 
     /**
      * Deletes an existing User model.

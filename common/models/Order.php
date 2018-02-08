@@ -257,7 +257,7 @@ public static function getShippingDetail($model){
         }
         return $result;
     }
-    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false)
+    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false,$validate=true)
     {
         $order = new Order();
         $order->isNewRecord = true;
@@ -274,7 +274,7 @@ public static function getShippingDetail($model){
             $bonus_status = array_search('Bonus', \common\models\Lookup::$status);
             $order->status = $bonus_status;
         }
-        $order->save();
+        $order->save($validate);
         if ($order->id) {
             $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity, $user_model->unit_price, $order);
             $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id);

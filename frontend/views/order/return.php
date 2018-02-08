@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'ORDERS');
+$this->title = "Return Order";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">

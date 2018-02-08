@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'ORDERS');
+$this->title = "Transfer Order";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">

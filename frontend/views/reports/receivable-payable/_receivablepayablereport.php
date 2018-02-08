@@ -3,7 +3,7 @@
 ?>
 <div class="row main-container report_div">    
        <div class="row report-view">
-       <h2>Receivable/Payable Report</h2>
+       <h2><?=$AccountType?> Report</h2>
       <div class="col-md-12" style="margin-bottom:10px;">
 	  <button id="back" class="btn btn-success">Back</button>
 	  <div style="float:right;margin-right:20px;">

@@ -102,6 +102,22 @@ class UsersLevel extends \yii\db\ActiveRecord {
         $out['results'] = array_values($data);
         return $out;
     }
+    public static function getSellerLevels($q,$parent_level_id) {
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $query = new \yii\db\Query();
+        $query->select('id as id, name AS text')
+                ->from('users_level')
+                ->where('true')
+                ->andWhere(['=', 'users_level.parent_id', $parent_level_id])
+                ->andWhere(['=', 'users_level.max_user', -1]);
+        if (!is_null($q))
+            $query->andWhere(['like', 'name', $q]);
+        $query->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+        return $out;
+    }
 
   
 
