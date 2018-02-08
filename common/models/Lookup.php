@@ -26,6 +26,7 @@ class Lookup
         '7' => "Transfer Canceled",
         '8' => "Return Canceled",
         '9' => "Bonus",
+        '100' => "Payment Pending",
 
     ];
    

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 use yii\widgets\DetailView;
 use yii2assets\printthis\PrintThis;
+use yii\bootstrap\Modal;
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
 
@@ -12,7 +13,18 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<?php
+        Modal::begin([
 
+            'id' => 'modal',
+            'size' => 'modal-lg',
+        ]);
+
+        echo '<div id="modalContent">
+        <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
+
+        Modal::end();
+        ?>
 
                     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                         <div class="page-title">
@@ -99,8 +111,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <h4><?=Yii::t('app', 'Payment Method')?>:</h4>
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
-                                                    <span class='text-muted'><?php if (isset($model->payment_method)) {\common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?><br>
-                                                    <?=$billed_to->email?></span>
+                                                    <span class='text-muted'><?php 
+                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?><br>
+                                                                       <?php  $paymentMethod = array_search('Bank Transfer', \common\models\Lookup::$order_status);
+                                                                       if($model->payment_method == (int)$paymentMethod){?>
+                  <button type="button" id="viewslip" class="btn btn-primary"> View</button><br>
+                                                                      <?php } ?>
+                                                    <?=$billed_to->name?></span>
                                                 </address>
 
                                                 <div class="invoice-due">
@@ -173,7 +190,7 @@ foreach ($model->productOrders as $orders) {
                                                 </div>
                                             </div>
                                         </div>
-
+                                   
 
 
                                         <div class="clearfix"></div><br>
@@ -182,20 +199,27 @@ foreach ($model->productOrders as $orders) {
                                 </div>
                             </div>
                         </section>
-          <div class="row">
+         
+
+
+                                        <!-- end -->
+                                        <div class="row">
+                                        <div class="col-md-12 not_in_print">
                                         <?php if (isset($model->payment_slip)) {?>
 
 
                                         <div class="col-md-6 col-sm-6 col-xs-6 text-center">
+                                        <div class="sliptransfer" >
                                         <?php
 $items = array();
     $items[] = [
         'url' => \yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true),
         'src' => \yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true),
-        'options' => array('title' => 'Camposanto monumentale (inside)'),
+        'options' => array('title' => ''),
     ];
     ?>
                                     <?=dosamigos\gallery\Gallery::widget(['items' => $items]);?>
+                                        </div>
                                         </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-center">
                                         <?php } else {?>
@@ -226,21 +250,19 @@ echo PrintThis::widget([
 ?>
                                             </div>
                                         </div>
-
-
-                                        <!-- end -->
-
-
+                                        </div>
                                     </div>
                       </div>
 
 
-
-
-
-
-
-
-
-    </p>
 </div>
+<script>
+$(document).ready(function(){
+
+$("body").delegate("#viewslip","click",function(){
+        $('#modal').modal('show');
+        return false;
+        
+     });
+})
+</script>

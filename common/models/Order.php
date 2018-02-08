@@ -106,7 +106,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
-            [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method','total_stock','shipping_address_id','order_code','order_shipping','order_external_code','order_tracking_code'], 'safe'],
+            [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method','total_stock','shipping_address_id','order_external_code','order_tracking_code','order_external_code','order_tracking_code'], 'safe'],
             [['payment_slip'], 'file'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['payment_slip'], 'string', 'max' => 250],
@@ -177,6 +177,11 @@ class Order extends \yii\db\ActiveRecord
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users->username;
     }
+    public function leveluser($id)
+    {
+        $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
+        return $users->name;
+    }
 public static function getShippingDetail($model){
     $shipping = \common\models\ShippingAddress::findOne(['order_id'=>$model->id]);
     $model->shipping_address_id=$shipping->id;
@@ -238,12 +243,17 @@ public static function getShippingDetail($model){
                 $model->user_id = $model->child_user;
             }
 
-            $payment_method = array_search('Bank Transfer', \common\models\Lookup::$order_status);
-            if ($model->payment_method == $payment_method) {
+            $paymentBank = array_search('Bank Transfer', \common\models\Lookup::$order_status);
+            if ($model->payment_method == $paymentBank) {
                 $photo = UploadedFile::getInstance($model, 'payment_slip');
                 if ($photo !== null) {
                     $photo_save = Order::saveSlip($model, $photo);
                 }
+            }
+            $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
+            if ($model->payment_method == $paymentCard) {
+            $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+            $model->status = $orderStatus;
             }
             if ($model->save()) {
                 $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
