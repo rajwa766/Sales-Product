@@ -273,6 +273,7 @@ class User extends ActiveRecord implements IdentityInterface
         $user->country = $model->country;
         $user->quantity = 0;
         if ($user->save()) {
+            \common\models\Account::create_accounts($user);
             return $user;
         }
     }

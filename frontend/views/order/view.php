@@ -102,7 +102,7 @@ if($model->payment_slip){
                                             </div>
                                             <div class="col-xs-6 invoice-infoblock text-right">
                                                
-                                                <h4>Tracking Code: <?=$model->order_tracking_code?> </h4>
+                                                <h4>Tracking Code: <?=$model->shipping_status?>  (<?=$model->order_tracking_code?>)</h4>
                                             </div>
                                             <div class="clearfix"></div><br>
                                             <div class="col-xs-6 invoice-infoblock pull-left">

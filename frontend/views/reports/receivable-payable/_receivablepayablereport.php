@@ -10,7 +10,7 @@
 		 <?php
      $receivable_total = 0;
      $payable_total = 0;
-      if(isset($receivable_in_hand))
+      if(isset($receivable_in_hand) && $AccountType=="Receivable")
       {
 			      $receivable_total = $receivable_in_hand;
 			?>
@@ -18,7 +18,7 @@
 			<?php
 			echo $receivable_in_hand ;
 		}
-     if(isset($payable_in_hand))
+     if(isset($payable_in_hand) && $AccountType=="Payable")
       {
 			      $payable_total = $payable_in_hand;
 			?>
@@ -61,11 +61,22 @@
 
        </table>
        <div style="float:right;margin-right:20px;">
-		 
-			<span>Total Receivable: </span>
-      <?= $receivable_total ;?>
-      <span>Total Payable: </span>
-			<?= $payable_total ;?>
+       <?php if($AccountType=="Receivable")
+       {
+       ?>
+        	<span>Total Receivable: </span>
+          <?= $receivable_total;?>
+       <?php 
+       } 
+       ?>
+      <?php if($AccountType=="Payable")
+       {
+      ?>
+         <span>Total Payable: </span>
+		    	<?= $payable_total;?>
+    <?php
+      }
+    ?>
 	  </div>
 	   </div>
      </div>

@@ -113,7 +113,7 @@ class StockIn extends \yii\db\ActiveRecord
     {
 
         $curl = curl_init();
-        $sku = "ABSOLUT"; //BEYDEY1
+        $sku = "BEYDEY1"; 
         if (preg_match('/^10.{3}$/', $postal_code) || preg_match('/^11.{3}$/', $postal_code) || preg_match('/^12.{3}$/', $postal_code)) {
             $ship_method = "ALP";
         } else {
@@ -129,7 +129,7 @@ class StockIn extends \yii\db\ActiveRecord
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => '{ 	"external_id":"' . $external_id . '","order_number":"' . $external_id . '", "shipping":"' . $ship_method . '","cod_amount":"' . $amount . '","customer":{ "name":"' . $cust_name . '","address":"' . $cust_addr . '", "province":"' . $province . '", "district":"' . $district . '","postal_code":"' . $postal_code . '","mobile_no":"' . $mobile_no . '"}, 	"order_items":[{"item_sku":"' . $sku . '","item_code":"","item_qty":' . $quantity . '}]}',
             CURLOPT_HTTPHEADER => array(
-                "authorization: Basic QWJzb2x1dGVBUEk6ODBlMTUxYWM4MWU1ZWQ1MGU4NTY0NDk5YWM3NmM1Mjk=",
+                "authorization: Basic QmV5QVBJOjZhOTZlMmUyMjQ1OWRjYjY5MDEzNmNmZTM2ZDgxYjgy",
                 "cache-control: no-cache",
                 "Content-Type: application/json",
             ),
@@ -138,7 +138,6 @@ class StockIn extends \yii\db\ActiveRecord
         $response = curl_exec($curl);
         $err = curl_error($curl);
         curl_close($curl);
-
         if ($err) {
             return false;
             die("cURL Error #:" . $err);
@@ -153,6 +152,28 @@ class StockIn extends \yii\db\ActiveRecord
             }
         }
 
+    }
+    public static function GetOrderExternalStatus($order_external_id)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://oms.sokochan.com/api/1.0/orders/".$order_external_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Basic QmV5QVBJOjZhOTZlMmUyMjQ1OWRjYjY5MDEzNmNmZTM2ZDgxYjgy",
+                "cache-control: no-cache",
+                "Content-Type: application/json",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
     }
     public static function approve($order_id, $user_id, $order_request_id)
     {

@@ -217,6 +217,7 @@ public static function getShippingDetail($model){
             if ($model->order_type == "Order") {
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
+               
                 if (!$model->email) {
                     $model->email = 'customer@gmail.com';
                 }
@@ -249,8 +250,8 @@ public static function getShippingDetail($model){
             }
             $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
             if ($model->payment_method == $paymentCard) {
-            $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
-            $model->status = $orderStatus;
+                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+                $model->status = $orderStatus;
             }
             if ($model->save()) {
                 $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
@@ -482,5 +483,6 @@ public static function getShippingDetail($model){
             }
         }
     }
+    
 
 }
