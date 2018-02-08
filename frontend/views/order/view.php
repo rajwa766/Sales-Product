@@ -15,13 +15,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
         Modal::begin([
-
+            'header' => '<h2 s="">Payment Slip</h2>',
             'id' => 'modal',
             'size' => 'modal-lg',
         ]);
-
-        echo '<div id="modalContent">
-        <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
+if($model->payment_slip){
+    echo '<div id="modalContent"> <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
+}else{
+    echo '<div id="modalContent"> <h3>Slip not found</h3></div>';
+    
+}
 
         Modal::end();
         ?>
@@ -112,12 +115,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
                                                     <span class='text-muted'><?php 
-                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?><br>
+                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?>/<span id="viewslip" >View</span><br>
                                                                        <?php  $paymentMethod = array_search('Bank Transfer', \common\models\Lookup::$order_status);
                                                                        if($model->payment_method == (int)$paymentMethod){?>
-                  <button type="button" id="viewslip" class="btn btn-primary"> View</button><br>
+                                                                       
                                                                       <?php } ?>
-                                                    <?=$billed_to->name?></span>
+                                                   
                                                 </address>
 
                                                 <div class="invoice-due">
