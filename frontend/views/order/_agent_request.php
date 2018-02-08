@@ -38,6 +38,7 @@ use yii\helpers\Url;
                     if (isset($Role['super_admin'])) {
                         echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                         'theme' => Select2::THEME_BOOTSTRAP,
+                        'initValueText' => isset($model->parent_user) ? $model->username($model->parent_user) : "",
                         'options' => ['placeholder' => 'Select a Parent User ...'],
                         'pluginOptions' => [
                             'allowClear' => true,
@@ -68,6 +69,7 @@ use yii\helpers\Url;
                     if (isset($Role['super_admin'])) {
                         echo $form->field($model, 'child_level')->widget(Select2::classname(), [
                             'theme' => Select2::THEME_BOOTSTRAP,
+                        'initValueText' => isset($model->child_level) ? $model->leveluser($model->child_level) : "",
                             'options' => ['placeholder' => 'Select a child user Level ...'],
                             'pluginOptions' => [
                                 'allowClear' => true,
@@ -98,6 +100,7 @@ use yii\helpers\Url;
                     if (isset($Role['super_admin'])) {
                         echo $form->field($model, 'child_user')->widget(Select2::classname(), [
                             'theme' => Select2::THEME_BOOTSTRAP,
+                        'initValueText' => isset($model->child_user) ? $model->username($model->child_user) : "",
                             'options' => ['placeholder' => 'Select a current user Level ...'],
                             'pluginOptions' => [
                                 'allowClear' => true,

@@ -124,43 +124,51 @@ use yii\models\users_level;
                              <?php      if(!isset($Role['seller'])){ ?>
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'Returns Orders');?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'3'])->count(); ?></span>
+                                    <span class="label label-orange"><?php
+                                    if(isset($Role['super_admin'])){
+                                       echo  \common\models\Order::find()->where(['status'=>'3'])->count(); 
+                                    }else {
+                                    echo  \common\models\Order::find()->where(['status'=>'3'])->andWhere(['or',['order_request_id' => Yii::$app->user->identity->id],['user_id' => Yii::$app->user->identity->id]])->count();
+                                    }
+                                        ?></span>
                                 
                                 </a>
 
-                                </li>
-                                <?php
-                                if(isset($Role['super_admin'])){ ?>
-                                <li>
+                         
+                                
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer"><?= Yii::t('app', 'Transfer Request');?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->count(); ?></span>
+                                    <span class="label label-orange"><?php
+                                    if(isset($Role['super_admin'])){
+                                       echo  \common\models\Order::find()->where(['status'=>'5'])->count(); 
+                                    }else {
+                                    echo  \common\models\Order::find()->where(['status'=>'5'])->andWhere(['or',['order_request_id' => Yii::$app->user->identity->id],['user_id' => Yii::$app->user->identity->id]])->count();
+                                    }
+                                        ?></span>
                                 </a>
-                                </li>
-                                <?php }else{ ?>
-                                    <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>order/transfer"><?= Yii::t('app', 'Transfer Request');?>
-                                  <?php  if(isset($Role['super_admin'])){ ?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->count(); ?></span>
-                           <?php     } else {?>
-                            <span class="label label-orange"><?= \common\models\Order::find()->where(['status'=>'5'])->andWhere(['or',
-                ['order_request_id' => Yii::$app->user->identity->id],
-                ['user_id' => Yii::$app->user->identity->id]])->count(); ?></span>
 
-                           <?php } ?>
-                                </a>
                                 </li>
-                                <?php } ?>
                                 <li>
                                 
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/pending"><?= Yii::t('app', 'Pending Orders');?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'0'])->count(); ?></span>
+                                    <span class="label label-orange"><?php
+                                    if(isset($Role['super_admin'])){
+                                       echo  \common\models\Order::find()->where(['status'=>'0'])->count(); 
+                                    }else {
+                                    echo  \common\models\Order::find()->where(['status'=>'0'])->andWhere(['or',['order_request_id' => Yii::$app->user->identity->id],['user_id' => Yii::$app->user->identity->id]])->count();
+                                    }
+                                        ?></span>
                                 </a>
 
                                 </li>
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/approved"><?= Yii::t('app', 'Approved Orders');?>
-                                    <span class="label label-orange"><?= \common\models\Order::find()->where(['order_request_id'=>Yii::$app->user->identity->id])->andWhere(['status'=>'1'])->count(); ?></span>
-                                
+                                    <span class="label label-orange"><?php
+                                    if(isset($Role['super_admin'])){
+                                       echo  \common\models\Order::find()->where(['status'=>'1'])->count(); 
+                                    }else {
+                                    echo  \common\models\Order::find()->where(['status'=>'1'])->andWhere(['or',['order_request_id' => Yii::$app->user->identity->id],['user_id' => Yii::$app->user->identity->id]])->count();
+                                    }
+                                        ?></span>
                                 </a>
 
                                 </li>

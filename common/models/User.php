@@ -460,9 +460,19 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public static function RequestedUserDetail($model)
     {
+       $model->order_type = 'Order';
         $requstedUserDetail = User::findOne(['id' => $model->order_request_id]);
         $model->request_user_level = $requstedUserDetail->user_level_id;
         $model->request_agent_name = $requstedUserDetail->id;
+        $model->all_level = $requstedUserDetail->user_level_id;
+        $model->parent_user = $requstedUserDetail->id;
+        $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
+        if (!isset($Role['customer'])) {
+            $model->order_type = 'Request';
+        $UserDetail = User::findOne(['id' => $model->user_id]);
+        $model->child_level = $UserDetail->user_level_id;
+        $model->child_user = $UserDetail->id;
+        }
         return $model;
     }
 

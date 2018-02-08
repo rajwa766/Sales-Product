@@ -177,6 +177,11 @@ class Order extends \yii\db\ActiveRecord
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users->username;
     }
+    public function leveluser($id)
+    {
+        $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
+        return $users->name;
+    }
 public static function getShippingDetail($model){
     $shipping = \common\models\ShippingAddress::findOne(['order_id'=>$model->id]);
     $model->shipping_address_id=$shipping->id;

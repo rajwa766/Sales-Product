@@ -48,6 +48,7 @@ if (isset($Role['super_admin'])) {
                              <?php
                                 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                                         'theme' => Select2::THEME_BOOTSTRAP,
+                                        'initValueText' => isset($model->parent_user) ? $model->username($model->parent_user) : "",
                                         'options' => ['placeholder' => 'Select a Parent User ...'],
                                         'pluginOptions' => [
                                             'allowClear' => true,
@@ -78,6 +79,7 @@ if (isset($Role['super_admin'])) {
 if (isset($Role['super_admin'])) {
     echo $form->field($model, 'child_user')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
+        'initValueText' => isset($model->child_user) ? $model->username($model->child_user) : "",
         'options' => ['placeholder' => 'Select a child user Level ...'],
         'pluginOptions' => [
             'allowClear' => true,
