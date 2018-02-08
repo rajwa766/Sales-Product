@@ -106,12 +106,12 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'status', 'order_request_id', 'quantity', 'all_level', 'parent_user', 'child_user', 'child_level', 'request_user_level', 'rquest_customer', 'customer_id', 'quantity'], 'integer'],
-            [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method','total_stock','shipping_address_id','order_external_code','order_tracking_code','order_external_code','order_tracking_code'], 'safe'],
+            [['requested_date', 'order_type', 'request_agent_name', 'product_order_info', 'created_at', 'updated_at', 'created_by', 'updated_by', 'address', 'city', 'country', 'postal_code', 'district', 'province', 'mobile_no', 'phone_no', 'email', 'product_id', 'total_price', 'single_price', 'payment_method', 'total_stock', 'shipping_address_id', 'order_external_code', 'order_tracking_code', 'order_external_code', 'order_tracking_code'], 'safe'],
             [['payment_slip'], 'file'],
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
-            [['payment_slip'], 'string', 'max' => 250],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['quantity', 'postal_code', 'name', 'all_level', 'parent_user', 'child_level', 'child_user', 'request_agent_name', 'request_user_level'], 'validate_order', 'skipOnEmpty' => false],
+            ['payment_slip', 'file', 'extensions' => 'pdf, jpg,jpeg,png', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Limit is 2MB', 'skipOnEmpty' => true]
         ];
     }
 
@@ -149,8 +149,7 @@ class Order extends \yii\db\ActiveRecord
     {
         $action = Yii::$app->controller->action->id;
         if (parent::beforeValidate()) {
-            if($action=='create')
-            {
+            if ($action == 'create') {
                 $ref_no = (Order::find()->max('id')) + 1;
                 $this->order_ref_no = '' . $ref_no;
                 $this->requested_date = date('Y-m-d');
@@ -182,22 +181,22 @@ class Order extends \yii\db\ActiveRecord
         $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
         return $users->name;
     }
-public static function getShippingDetail($model){
-    $shipping = \common\models\ShippingAddress::findOne(['order_id'=>$model->id]);
-    $model->shipping_address_id=$shipping->id;
-    $model->address = $shipping->address; 
-    $model->phone_no = $shipping->phone_no; 
-    $model->mobile_no = $shipping->mobile_no; 
-    $model->postal_code = $shipping->postal_code; 
-    $model->district = $shipping->district; 
-    $model->province = $shipping->province; 
-    $model->country = $shipping->country; 
-    $model->email = $shipping->email; 
-    $model->name = $shipping->name; 
-    return $model;
-    
-    
-}
+    public static function getShippingDetail($model)
+    {
+        $shipping = \common\models\ShippingAddress::findOne(['order_id' => $model->id]);
+        $model->shipping_address_id = $shipping->id;
+        $model->address = $shipping->address;
+        $model->phone_no = $shipping->phone_no;
+        $model->mobile_no = $shipping->mobile_no;
+        $model->postal_code = $shipping->postal_code;
+        $model->district = $shipping->district;
+        $model->province = $shipping->province;
+        $model->country = $shipping->country;
+        $model->email = $shipping->email;
+        $model->name = $shipping->name;
+        return $model;
+
+    }
     public static function saveSlip($model, $photo)
     {
         $model->payment_slip = $photo->name;
@@ -217,7 +216,7 @@ public static function getShippingDetail($model){
             if ($model->order_type == "Order") {
                 $model->order_request_id = $model->request_agent_name;
                 $model->user_id = $model->rquest_customer;
-               
+
                 if (!$model->email) {
                     $model->email = 'customer@gmail.com';
                 }
@@ -265,39 +264,41 @@ public static function getShippingDetail($model){
         }
         return $result;
     }
-    public static function updateSave($model){
+    public static function updateSave($model)
+    {
         if ($model->order_type == "Order") {
             $model->order_request_id = $model->request_agent_name;
         } else {
             $model->order_request_id = $model->parent_user;
             $model->user_id = $model->child_user;
-         }
-         return $model->save();
-}
-    public static function updateBeforeLoad($model){
-            // shipping detail for order
-            $model = Order::getShippingDetail($model);
-            // Order type and dropdown values for setting customer and agent
-            $model = \common\models\User::RequestedUserDetail($model);
-            // Product detail for price and quantity
-            $model = \common\models\ProductOrder::productOrderDetail($model);
-            // check status of order
-            $orderReturn = array_search('Return Request', \common\models\Lookup::$status);
-            $orderTransfer = array_search('Transfer Request', \common\models\Lookup::$status);
-            // order type for return and transfer
-            if($orderReturn == $model->status){
-                $model->order_type = 'Return';
-                $currentStock = \common\models\helpers\Statistics::CurrentStock($model->child_user);
-            }else{
-                $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
-            }
-            if($orderTransfer == $model->status){
-            $model->order_type = 'Transfer';
-            }
-            $model->total_stock = $currentStock;
-            return  $model;
+        }
+        return $model->save();
     }
-    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false,$validate=true)
+    public static function updateBeforeLoad($model)
+    {
+        // shipping detail for order
+        $model = Order::getShippingDetail($model);
+        // Order type and dropdown values for setting customer and agent
+        $model = \common\models\User::RequestedUserDetail($model);
+        // Product detail for price and quantity
+        $model = \common\models\ProductOrder::productOrderDetail($model);
+        // check status of order
+        $orderReturn = array_search('Return Request', \common\models\Lookup::$status);
+        $orderTransfer = array_search('Transfer Request', \common\models\Lookup::$status);
+        // order type for return and transfer
+        if ($orderReturn == $model->status) {
+            $model->order_type = 'Return';
+            $currentStock = \common\models\helpers\Statistics::CurrentStock($model->child_user);
+        } else {
+            $currentStock = \common\models\helpers\Statistics::CurrentStock($model->request_agent_name);
+        }
+        if ($orderTransfer == $model->status) {
+            $model->order_type = 'Transfer';
+        }
+        $model->total_stock = $currentStock;
+        return $model;
+    }
+    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false, $validate = true)
     {
         $order = new Order();
         $order->isNewRecord = true;
@@ -392,6 +393,17 @@ public static function getShippingDetail($model){
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
+        {
+            if(empty($this->payment_slip))
+            {
+                $this->addError('payment_slip', 'Payment slip is required.');
+            }
+            else
+            {
+               // $this->ValidateImage();
+            }
+        }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
         }
@@ -423,6 +435,12 @@ public static function getShippingDetail($model){
             }
             if (empty($this->name)) {
                 $this->addError('name', 'Name is required.');
+            }
+            if (empty($this->name)) {
+                $this->addError('address', 'Address is required.');
+            }
+            if (empty($this->name)) {
+                $this->addError('mobile_no', 'Phone no. is required.');
             }
         }
         if (isset($Role['super_admin'])) {
@@ -483,6 +501,16 @@ public static function getShippingDetail($model){
             }
         }
     }
-    
+    public function ValidateImage()
+    {
+        $allowedExts = array("jpeg", "jpg", "png");
+        $tmp = explode('.', $this->payment_slip);
+        $extension = end($tmp);
+        var_dump($_FILES);
+        exit();
+        if (!(($_FILES["payment_slip"]["size"] < 20000) && in_array($extension, $allowedExts))) {
+            $this->addError('payment_slip', 'Only jpeg, jpg and png extensions are allowed. File size should be less than 200000.');
+        }
+    }
 
 }

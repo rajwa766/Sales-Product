@@ -34,7 +34,6 @@ use yii\helpers\Url;
     </div>
     <div class="col-md-10">
         <?php
-        //$model->payment_method_for_rent = '1';
         echo $form->field($model, 'payment_method')->radioList([
             '1' => 'Credit Card',
             // '2' => 'Cash on Delivery',
