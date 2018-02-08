@@ -286,6 +286,11 @@ class StockIn extends \yii\db\ActiveRecord
                 \common\models\Gl::create_gl(strval($MRComission), $parent_user->id, 1, $order_id, '1');
             }
         }
+        else
+        {
+            $MRComission = ($quantity * $MR_Comission) / 1;
+            \common\models\Gl::create_gl(strval($MRComission), $user_id, 1, $order_id, '1');
+        }
         $Super_Vip_Level_Id = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
         $Super_VIP_Comission = 5;
         $Super_VIP = \common\models\User::find()->where(['user_level_id' => $Super_Vip_Level_Id])->andWhere(['id' => $order_request_id])->one();

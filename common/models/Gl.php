@@ -123,12 +123,12 @@ class Gl extends \yii\db\ActiveRecord
         $photo->saveAs($path);
         return $model;
     }
-    public static function create_gl($amount, $user_id, $resquester_id, $order_id, $payment_method, $payment_slip = null)
+    public static function create_gl($amount, $user_id, $requester_id, $order_id, $payment_method, $payment_slip = null)
     {
         if ($amount > 0) {
+           
             $receivable_account = \common\models\Account::findOne(['user_id' => $user_id, 'account_type' => 1]);
-            $payable_account = \common\models\Account::findOne(['user_id' => $resquester_id, 'account_type' => 2]);
-
+            $payable_account = \common\models\Account::findOne(['user_id' => $requester_id, 'account_type' => 2]);
            // if (!empty($receivable_account) && !empty($payable_account)) {
                 for ($i = 0; $i < 2; $i++) {
                     $gl = new Gl();
