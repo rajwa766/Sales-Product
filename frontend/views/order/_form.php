@@ -164,9 +164,9 @@ if (!Yii::$app->user->isGuest) {
         
         //this code is to hidden the grid and show for order and request if user login
         $('#order-quantity').on('blur', function () {
-            var url="<?=Yii::$app->homeUrl?>user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + $('#order-child_level').val() + "&product_id=" + $('#order-product_id').val();
+            var url="<?=Yii::$app->homeUrl?>user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + (typeof($('#order-child_level').val())  === "undefined"?$('#order-all_level').val():$('#order-child_level').val()) + "&product_id=" + $('#order-product_id').val();
             
-            if (type == "Request"){
+            if (type == "Request" || type == "Transfer"){
             $.post(url, function (data) {
                 var json = $.parseJSON(data);
                     if (json.price){

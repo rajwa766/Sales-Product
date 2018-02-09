@@ -182,8 +182,8 @@ class Order extends \yii\db\ActiveRecord
     public function leveluser($id)
     {
         if (!empty($id)) {
-        $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
-        return $users->name;
+            $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
+            return $users->name;
         }
     }
     public static function getShippingDetail($model)
