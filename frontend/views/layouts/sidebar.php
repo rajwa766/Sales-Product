@@ -215,13 +215,10 @@ use yii\models\users_level;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>reports/order-report"><?= Yii::t('app', 'Order');?></a>
 
                                 </li>
-                                <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-report">Receivable</a>
-
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/receivable-report"><?= Yii::t('app','Receivable')?></a>
                                 </li>
                                 <li>
-                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/payable-report">Payable</a>
-
+                                    <a class="" href="<?= Yii::$app->homeUrl; ?>reports/payable-report"><?= Yii::t('app','Payable'); ?></a>
                                 </li>
                             </ul>
                         </li>
