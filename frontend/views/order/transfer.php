@@ -108,16 +108,16 @@ $this->params['breadcrumbs'][] = $this->title;
             },
         ],
         [
-            'header' => 'Reject',
+            'header' => 'Is Rejected',
             'format' => 'raw',
 
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
                 if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
                     if ($model->status == '5') {
-                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Cancel</a></div>";
+                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Yes</a></div>";
                     } else {
-                        return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >Completed</a></div>";
+                        return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >No</a></div>";
                     }
                 } else {
                     return "<div class='pending_approval'>Pending</div>";
