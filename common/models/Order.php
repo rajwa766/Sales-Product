@@ -316,7 +316,7 @@ class Order extends \yii\db\ActiveRecord
         $model->total_stock = $currentStock;
         return $model;
     }
-    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false, $validate = true)
+    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false, $validate = true,$for_customer_creation=false)
     {
         $order = new Order();
         $order->isNewRecord = true;
@@ -338,7 +338,7 @@ class Order extends \yii\db\ActiveRecord
            
             $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity, $user_model->unit_price, $order);
            
-            $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id);
+            $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id,$for_customer_creation);
             if ($approve_order) {
                 $stock_in = \common\models\StockIn::approve($order->id, $user_model->id, $user_model->parent_id);
             }

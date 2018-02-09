@@ -6,10 +6,9 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
-use yii\db\Query;
-
 
 /**
  * User model
@@ -31,6 +30,7 @@ use yii\db\Query;
  * @property integer $user_level_id
  * @property string $phone_no
  * @property string $address
+ * @property string $order_type
  * @property integer $city
  * @property integer $country
  *
@@ -51,6 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
     public $total_price;
     public $product_id;
     public $name;
+    public $order_type;
 
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 1;
@@ -90,7 +91,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['password', 'required', 'on' => 'insert'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id', 'name'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id', 'name', 'order_type'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['profile'], 'file'],
@@ -334,6 +335,7 @@ class User extends ActiveRecord implements IdentityInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             //upload image
+            $model->order_type = "Order";
             $photo = UploadedFile::getInstance($model, 'profile');
             if ($photo !== null) {
                 $profile_save = User::profile_save($photo, $model);
@@ -368,7 +370,7 @@ class User extends ActiveRecord implements IdentityInterface
                 if ($model->save()) {
                     \common\models\Account::create_accounts($model);
                     \common\models\StockStatus::set_minimum_stock_level($model->id);
-                     $order = \common\models\Order::insertOrder($model, true, false, false);
+                    $order = \common\models\Order::insertOrder($model, true, false, false, true);
                     //bonus for super vip or vip
                     $super_vip_level = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                     $vip_level = array_search('VIP Team', \common\models\Lookup::$user_levels);
@@ -376,10 +378,10 @@ class User extends ActiveRecord implements IdentityInterface
                         $model->unit_price = '0';
                         if ($model->user_level_id == $super_vip_level) {
                             $model->quantity = '50';
-                            $order = \common\models\Order::insertOrder($model, true, true);
+                            $order = \common\models\Order::insertOrder($model, true, true, false, true);
                         } else if ($model->user_level_id == $vip_level) {
                             $model->quantity = '20';
-                            $order = \common\models\Order::insertOrder($model, true, true);
+                            $order = \common\models\Order::insertOrder($model, true, true, false, true);
                         }
                     }
                     $auth->assign($role, $model->id);
@@ -418,20 +420,23 @@ class User extends ActiveRecord implements IdentityInterface
         if ($photo !== null) {
             $profile_save = User::profile_save($photo, $model);
         }
-        $changelog_entry = \common\models\ChangeLog::insertData($oldmodel);
+        if ($model->user_level_id != $oldmodel->user_level_id) {
+            $changelog_entry = \common\models\ChangeLog::insertData($oldmodel);
+        }
         if (!empty($model->password)) {
             $model->setPassword($model->password);
             $model->generateAuthKey();
         }
         $model->save();
     }
-    public function userDetail($id){
+    public function userDetail($id)
+    {
         $user_level_name = (new Query())
-        ->select('users_level.name,users_level.id,users_level.parent_id')
-        ->from('user')
-        ->innerJoin('users_level', 'user.user_level_id = users_level.id')
-        ->where(['=', 'user.id', $id])
-        ->one();
+            ->select('users_level.name,users_level.id,users_level.parent_id')
+            ->from('user')
+            ->innerJoin('users_level', 'user.user_level_id = users_level.id')
+            ->where(['=', 'user.id', $id])
+            ->one();
         return $user_level_name;
     }
     public static function getParent($q, $type, $parent)
@@ -472,7 +477,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public static function RequestedUserDetail($model)
     {
-       $model->order_type = 'Order';
+        $model->order_type = 'Order';
         $requstedUserDetail = User::findOne(['id' => $model->order_request_id]);
         $model->request_user_level = $requstedUserDetail->user_level_id;
         $model->request_agent_name = $requstedUserDetail->id;
@@ -481,9 +486,9 @@ class User extends ActiveRecord implements IdentityInterface
         $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
         if (!isset($Role['customer'])) {
             $model->order_type = 'Request';
-        $UserDetail = User::findOne(['id' => $model->user_id]);
-        $model->child_level = $UserDetail->user_level_id;
-        $model->child_user = $UserDetail->id;
+            $UserDetail = User::findOne(['id' => $model->user_id]);
+            $model->child_level = $UserDetail->user_level_id;
+            $model->child_user = $UserDetail->id;
         }
         return $model;
     }

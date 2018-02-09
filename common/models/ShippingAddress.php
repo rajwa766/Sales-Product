@@ -67,7 +67,7 @@ class ShippingAddress extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
-    public static function insertShippingAddress($model, $order_id)
+    public static function insertShippingAddress($model, $order_id, $for_user_creation = false)
     {
         $shipping_address = new ShippingAddress();
         $shipping_address->isNewRecord = true;
@@ -75,23 +75,20 @@ class ShippingAddress extends \yii\db\ActiveRecord
         $shipping_address->order_id = $order_id;
         // $shipping_address->email = $model->email;
         $shipping_address->phone_no = $model->phone_no;
-        if(isset($model->user_id)){
-        if (isset($model->name) && !empty($model->name)) {//For Customer
-            $shipping_address->name = $model->name;
-        }
-        else // For Agent
-        {
-            if ($model->order_type == "Transfer") {
-                $shipping_address->name =$model->username($model->user_id);
-            }
-            else
+        if ($for_user_creation) {
+            $shipping_address->name = $model->first_name . ' ' . $model->last_name;
+        } else {
+            if (isset($model->name) && !empty($model->name)) { //For Customer
+                $shipping_address->name = $model->name;
+            } else // For Agent
             {
-                $shipping_address->name =$model->username($model->order_request_id); 
+                if ($model->order_type == "Transfer") {
+                    $shipping_address->name = $model->username($model->user_id);
+                } else {
+                    $shipping_address->name = $model->username($model->order_request_id);
+                }
             }
         }
-    }else{
-        $shipping_address->name =$model->first_name;   
-    }
         $shipping_address->mobile_no = $model->mobile_no;
         $shipping_address->postal_code = $model->postal_code;
         $shipping_address->district = $model->district;
@@ -106,17 +103,14 @@ class ShippingAddress extends \yii\db\ActiveRecord
         $shipping = \common\models\ShippingAddress::findOne(['order_id' => $model->id]);
         // $shipping_address->email = $model->email;
         $shipping->phone_no = $model->phone_no;
-         if (isset($model->name) && !empty($model->name)) {//For Customer
+        if (isset($model->name) && !empty($model->name)) { //For Customer
             $shipping->name = $model->name;
-        }
-        else // For Agent
+        } else // For Agent
         {
             if ($model->order_type == "Transfer") {
-                $shipping_address->name =$model->username($model->user_id);
-            }
-            else
-            {
-                $shipping_address->name =$model->username($model->order_request_id); 
+                $shipping_address->name = $model->username($model->user_id);
+            } else {
+                $shipping_address->name = $model->username($model->order_request_id);
             }
         }
         $shipping->mobile_no = $model->mobile_no;
