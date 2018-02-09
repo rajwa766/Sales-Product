@@ -304,7 +304,6 @@ class UserController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $oldmodel = $this->findModel($id);
             $updateUser = User::updateUser($model, $oldmodel);
-
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
