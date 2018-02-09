@@ -413,17 +413,13 @@ class Order extends \yii\db\ActiveRecord
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        // if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
-        // {
-        //     if(empty($this->payment_slip))
-        //     {
-        //         $this->addError('payment_slip', 'Payment slip is required.');
-        //     }
-        //     else
-        //     {
-        //        // $this->ValidateImage();
-        //     }
-        // }
+        if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
+        {
+            if(empty($_FILES['Order']['name']['payment_slip']))
+            {
+                $this->addError('payment_slip', 'Payment slip is required.');
+            }
+        }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
         }
