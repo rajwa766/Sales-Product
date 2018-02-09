@@ -22,7 +22,7 @@ use yii\helpers\Url;
                             'data' => common\models\UsersLevel::getAllLevels(),
                             'theme' => Select2::THEME_BOOTSTRAP,
                             'options' => ['placeholder' => 'Select a Level  ...'],
-                            //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                            'initValueText' => isset($model->request_user_level) ? $model->leveluser($model->request_user_level) : "",
                             'theme' => Select2::THEME_BOOTSTRAP,
                             'pluginOptions' => [
                                 'allowClear' => true,
@@ -33,7 +33,7 @@ use yii\helpers\Url;
 
                             'theme' => Select2::THEME_BOOTSTRAP,
                             'options' => ['placeholder' => 'Select a Level  ...', 'value' => Yii::$app->user->identity->user_level_id],
-                            //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                            'initValueText' => isset($model->request_user_level) ? $model->leveluser($model->request_user_level) : "",
                             'theme' => Select2::THEME_BOOTSTRAP,
                             'pluginOptions' => [
                                 'allowClear' => true,
@@ -73,6 +73,7 @@ use yii\helpers\Url;
                     echo $form->field($model, 'request_agent_name')->widget(Select2::classname(), [
                         'theme' => Select2::THEME_BOOTSTRAP,
                         'options' => ['placeholder' => 'Select a agent name ...', 'value' => Yii::$app->user->identity->id],
+                        'initValueText' => isset($model->request_agent_name) ? $model->username($model->request_agent_name) : "",
                     ])->label(false);
                 }
                 ?>

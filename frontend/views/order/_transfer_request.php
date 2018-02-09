@@ -19,7 +19,7 @@ echo $form->field($model, 'all_level')->widget(Select2::classname(), [
         'data' => common\models\UsersLevel::getAlllevels(),
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Level  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+        'initValueText' => isset($model->all_level) ? $model->leveluser($model->all_level) : "",
         'theme' => Select2::THEME_BOOTSTRAP,
         'pluginOptions' => [
             'allowClear' => true,

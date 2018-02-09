@@ -20,7 +20,7 @@ use yii\helpers\Url;
                     'data' => common\models\UsersLevel::getAllLevels(),
                     'theme' => Select2::THEME_BOOTSTRAP,
                     'options' => ['placeholder' => 'Select a Level  ...'],
-                    //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                    'initValueText' => isset($model->all_level) ? $model->leveluser($model->all_level) : "",
                     'theme' => Select2::THEME_BOOTSTRAP,
                     'pluginOptions' => [
                         'allowClear' => true,
@@ -53,6 +53,7 @@ use yii\helpers\Url;
                     } else {
                         echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                             'theme' => Select2::THEME_BOOTSTRAP,
+                            'initValueText' => isset($model->parent_user) ? $model->username($model->parent_user) : "",
                             'options' => ['placeholder' => 'Select a Parent User ...', 'value' => Yii::$app->user->identity->parent_id],
                         ])->label(false);
                     }
@@ -84,6 +85,7 @@ use yii\helpers\Url;
                     } else {
                         echo $form->field($model, 'child_level')->widget(Select2::classname(), [
                             'theme' => Select2::THEME_BOOTSTRAP,
+                            'initValueText' => isset($model->child_level) ? $model->leveluser($model->child_level) : "",
                             'options' => ['placeholder' => 'Select a Parent User ...', 'value' => Yii::$app->user->identity->user_level_id],
                         ])->label(false);
                     }
