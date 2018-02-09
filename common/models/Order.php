@@ -263,11 +263,11 @@ class Order extends \yii\db\ActiveRecord
                     $photo_save = Order::saveSlip($model, $photo);
                 }
             }
-            // $paymentCard = array_search('Credit Card', \common\models\Lookup::$order_status);
-            // if ($model->payment_method == $paymentCard) {
-            //     $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
-            //     $model->status = $orderStatus;
-            // }
+            $paymentCard = array_search('Credit Card', \common\models\Lookup::$payment_method);
+            if ($model->payment_method == $paymentCard) {
+                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+                $model->status = $orderStatus;
+            }
             if ($model->save()) {
                 $product_order = \common\models\ProductOrder::insertProductOrder($model->quantity, $model->single_price, $model);
                 $shipping_address = \common\models\ShippingAddress::insertShippingAddress($model, $model->id);

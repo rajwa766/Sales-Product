@@ -80,7 +80,6 @@ class OrderController extends Controller
         $searchModel->status = $cancel_status;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where(['order_request_id' => Yii::$app->user->identity->id]);
-
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -209,12 +208,7 @@ class OrderController extends Controller
 
             $orderCreate = \common\models\Order::CreateOrder($model);
             if ($orderCreate == 'transaction_complete') {
-                // $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
-                // if ($model->status == $orderStatus) {
-                //     return $this->redirect(['payment', 'id' => $model->id]);
-                // } else {
                 return $this->redirect(['view', 'id' => $model->id]);
-                // }
             }
         }
         return $this->render('create', [

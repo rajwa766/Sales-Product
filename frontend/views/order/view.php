@@ -128,10 +128,10 @@ if($model->payment_slip){
                                                 <address>
                                                     <!-- <h3>Credit Card</h3> -->
                                                     <span class='text-muted'><?php 
-                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?>/<span id="viewslip" >View Slip</span><br>
+                                                    if (isset($model->payment_method)) { echo \common\models\Lookup::$order_status[$model->payment_method];} else {echo 'Out of System';}?>
                                                                        <?php  $paymentMethod = array_search('Bank Transfer', \common\models\Lookup::$order_status);
                                                                        if($model->payment_method == (int)$paymentMethod){?>
-                                                                       
+                                                                       /<span id="viewslip" >View Slip</span><br>
                                                                       <?php } ?>
                                                    
                                                 </address>
@@ -243,6 +243,22 @@ $items = array();
 
                                         <?php }?>
                                                 <?php
+                                                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+                                                
+                                                if($model->status == $orderStatus){?>
+  <form method="post" action="https://www.thaiepay.com/epaylink/payment.aspx">
+        <input type="hidden" name="refno" value="99999">
+        <input type="hidden" name="merchantid" value="46511428">
+                    <input type="hidden" name="customeremail" value="">
+        <input type="hidden" name="c">
+        <input type="hidden" name="productdetail" value="Testing Product">
+        <input type="hidden" name="total" value="400">
+        <input type="hidden" name="postbackurl" value="http://salesmanagement.dev:8080/order/view/787">
+        <input type="submit" name="Submit" class="btn btn-primary" value="Checkout">
+        
+    </form>
+                                                <?php
+                                                }else{
 echo PrintThis::widget([
     'htmlOptions' => [
         'id' => 'orderbtn',
@@ -263,8 +279,9 @@ echo PrintThis::widget([
         'formValues' => true,
     ]
 ]);
+    }
 ?>
-                                            </div>
+                                      </div>
                                         </div>
                                         </div>
                                     </div>
