@@ -121,7 +121,7 @@ use yii\models\users_level;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order"> <?= Yii::t('app', 'Order');?></a>
 
                                 </li>
-                             <?php      if(!isset($Role['seller'])){ ?>
+                             <?php     // if(!isset($Role['seller'])){ ?>
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>order/return"><?= Yii::t('app', 'Returns Orders');?>
                                     <span class="label label-orange"><?php
@@ -172,14 +172,14 @@ use yii\models\users_level;
                                 </a>
 
                                 </li>
- <?php }?>
+ <?php //}?>
                             </ul>
                         </li>
                                 <!-- order -->
             
               
                      <!-- order ends -->
-              <?php       if(!isset($Role['seller'])){ 
+              <?php      // if(!isset($Role['seller'])){ 
                        if(isset($Role['super_admin'])){ ?>
                   
                     
@@ -222,7 +222,7 @@ use yii\models\users_level;
                                 </li>
                             </ul>
                         </li>
-                     <?php } ?>
+                     <?php //} ?>
                     
                         <!-- reports ends here -->
                     </ul>
