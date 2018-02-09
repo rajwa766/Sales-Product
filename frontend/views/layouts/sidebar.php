@@ -175,9 +175,7 @@ use yii\models\users_level;
  <?php //}?>
                             </ul>
                         </li>
-                                <!-- order -->
-            
-              
+                                <!-- order -->              
                      <!-- order ends -->
               <?php      // if(!isset($Role['seller'])){ 
                        if(isset($Role['super_admin'])){ ?>

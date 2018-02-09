@@ -95,16 +95,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'format' => 'raw',
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-                if (($model->user_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
-                    if ($model->status == '5') {
+
+                if ($model->status == '5') {
+                    if (($model->user_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
                         return "<div class='payment_button_general_approve' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >Approve</a></div>";
                     } else {
-                        return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
-
+                        return "<div class='pending_approval'>Pending</div>";
                     }
+
                 } else {
-                    return "<div class='pending_approval'>Pending</div>";
+                    return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
+
                 }
+
             },
         ],
         [
@@ -113,38 +116,38 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-                if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
-                    if ($model->status == '5') {
+
+                if ($model->status == '5') {
+                    if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
                         return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Yes</a></div>";
                     } else {
-                        return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >No</a></div>";
+                        return "<div class='pending_approval'>Pending</div>";
                     }
                 } else {
-                    return "<div class='pending_approval'>Pending</div>";
+                    return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >No</a></div>";
                 }
             },
         ],
         ['class' => 'yii\grid\ActionColumn',
-        'template' => '{view}{edit}{delete}',
-        'buttons' => [
+            'template' => '{view}{edit}{delete}',
+            'buttons' => [
                 'view' => function ($url, $model) {
-                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl.'order/view/'.$model->id);
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl . 'order/view/' . $model->id);
                 },
                 'edit' => function ($url, $model) {
                     $Role = Yii::$app->authManager->getRolesByUser($model->user_id);
-                    if($model->status == array_search('Transfer Request', \common\models\Lookup::$status) && $model->created_by == Yii::$app->user->identity->id){
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Yii::$app->homeUrl.'order/update/'.$model->id);
+                    if ($model->status == array_search('Transfer Request', \common\models\Lookup::$status) && $model->created_by == Yii::$app->user->identity->id) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', Yii::$app->homeUrl . 'order/update/' . $model->id);
                     }
                 },
-              
-                
+
             ],
             'visibleButtons' => [
                 'delete' => function ($model) {
-                    if($model->status == array_search('Transfer Request', \common\models\Lookup::$status) && $model->created_by == Yii::$app->user->identity->id){
+                    if ($model->status == array_search('Transfer Request', \common\models\Lookup::$status) && $model->created_by == Yii::$app->user->identity->id) {
                         return true;
                     }
-                
+
                 },
             ],
         ],

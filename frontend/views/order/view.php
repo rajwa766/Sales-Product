@@ -247,11 +247,11 @@ $items = array();
                                                 
                                                 if($model->status == $orderStatus){?>
   <form method="post" action="https://www.thaiepay.com/epaylink/payment.aspx">
-        <input type="hidden" name="refno" value="99999">
+        <input type="hidden" name="refno" value="<?=?>">
         <input type="hidden" name="merchantid" value="46511428">
-                    <input type="hidden" name="customeremail" value="">
+        <input type="hidden" name="customeremail" value="customer@gmail.com">
         <input type="hidden" name="c">
-        <input type="hidden" name="productdetail" value="Testing Product">
+        <input type="hidden" name="productdetail" value="BeyDey">
         <input type="hidden" name="total" value="400">
         <input type="hidden" name="postbackurl" value="http://salesmanagement.dev:8080/order/view/787">
         <input type="submit" name="Submit" class="btn btn-primary" value="Checkout">
