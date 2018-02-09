@@ -1,5 +1,4 @@
 <?php 
-
 return [
 'Order Ref/No'=>'เลขที่ใบสั่งซื้อี',
 'Search items here'=>'ค้นหารายการที่นี่',
@@ -93,7 +92,7 @@ return [
 'Address'=>'ที่อยู่',
 'Country'=>'ประเทศ',
 'Customer Name'=>'ชื่อลูกค้า',
-'Inventory Report'=>'รายงานพื้นที่โฆษณา',
+'Inventory Report'=>'รายงานสินค้าคงคลัง',
 'From Date'=>'จากวันที่',
 'To Date'=>'ถึงวันที่',
 'User Levels'=>'ระดับผู้ใช้',
@@ -131,6 +130,8 @@ return [
 'User'=>'ผู้ใช้งาน',
 'E-Franchise Innovative Co, Ltd All right reserved'=>'บริษัท อี - แฟรนไชส์อินโนเวชั่น จำกัด สงวนลิขสิทธิ์',
 'Update Profile'=>'อัปเดตโปรไฟล์',
+'Receivable'=>'ยอดรับ',
+'Payable'=>'ยอดค้างจ่าย',
 'Receivables / Payables'=>'ลูกหนี้ / เจ้าหนี้',
 'First Name'=>'ชื่อจริง',
 'Last Name'=>'นามสกุล',
