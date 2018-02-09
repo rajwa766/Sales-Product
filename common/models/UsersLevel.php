@@ -57,10 +57,10 @@ class UsersLevel extends \yii\db\ActiveRecord {
        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
         return $value;
     }
-    public static function getAllLevels() {
+    public static function getAllLevels($show_parent=false) {
         $user_id = Yii::$app->user->getId();
         $user_level_id = Yii::$app->user->identity->user_level_id;
-        $parent_id = Yii::$app->user->identity->parent_id;
+        $parent_level_id = UsersLevel::find()->where(['id'=>$user_level_id])->one()['parent_id'];
         $data=null;
         $Role =   Yii::$app->authManager->getRolesByUser($user_id);
         if(isset($Role['super_admin']))
@@ -71,7 +71,14 @@ class UsersLevel extends \yii\db\ActiveRecord {
         }
         else
         {
-            $data = UsersLevel::find()->where(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id],['id'=>$parent_id]])->all();
+            if($show_parent)
+            {
+                $data = UsersLevel::find()->where(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id],['id'=>$parent_level_id]])->all();
+            }
+            else
+            {
+                $data = UsersLevel::find()->where(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
+            }
            // $data = UsersLevel::find()->where(['!=','max_user','-1'])->andWhere(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
         }
         

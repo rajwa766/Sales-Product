@@ -75,7 +75,7 @@ use kartik\time\TimePicker;
 				<div class="col-md-8">
                 <?php
     echo $form->field($model, 'all_level')->widget(Select2::classname(), [
-        'data' => common\models\UsersLevel::getAllLevels(),
+        'data' => common\models\UsersLevel::getAllLevels(true),
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Level  ...'],
         //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
