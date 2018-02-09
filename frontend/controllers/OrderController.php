@@ -63,7 +63,8 @@ class OrderController extends Controller
         if (!isset($Role['super_admin'])) {
             $dataProvider->query->andFilterWhere(['or',
                 ['order_request_id' => Yii::$app->user->identity->id],
-                ['user_id' => Yii::$app->user->identity->id]]);
+                ['user_id' => Yii::$app->user->identity->id],
+            ]);
         }
 
         return $this->render('pending', [
@@ -235,16 +236,18 @@ class OrderController extends Controller
         $model = $this->findModel($id);
         $model = Order::updateBeforeLoad($model);
         $type = $model->order_type;
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $isOrderSaved = \common\models\Order::updateSave($model);
-          
-            $isShippingSaved = \common\models\ShippingAddress::updateShippingAddress($model);
-            $isProductOrderSaved = \common\models\ProductOrder::updateProductOrder($model);
-            if ($isShippingSaved && $isProductOrderSaved && $isOrderSaved) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                $result = array("error" => "Some error occured, please try again later.");
-                return $this->redirect(['error', 'error' => $result["error"]]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                $isOrderSaved = \common\models\Order::updateSave($model);
+
+                $isShippingSaved = \common\models\ShippingAddress::updateShippingAddress($model);
+                $isProductOrderSaved = \common\models\ProductOrder::updateProductOrder($model);
+                if ($isShippingSaved && $isProductOrderSaved && $isOrderSaved) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    $result = array("error" => "Some error occured, please try again later.");
+                    return $this->redirect(['error', 'error' => $result["error"]]);
+                }
             }
         }
 
@@ -263,10 +266,9 @@ class OrderController extends Controller
      */
     public function actionDelete($id)
     {
-        $model=$this->findModel($id);
+        $model = $this->findModel($id);
         $Role = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
-        if($model!=null && ($model->created_by==Yii::$app->user->identity->id || isset($Role['super_admin'])))
-        {
+        if ($model != null && ($model->created_by == Yii::$app->user->identity->id || isset($Role['super_admin']))) {
             Yii::$app->db->createCommand()->delete('shipping_address', 'order_id = ' . $id)->execute();
             Yii::$app->db->createCommand()->delete('product_order', 'order_id = ' . $id)->execute();
             $model->delete();

@@ -302,7 +302,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
         <?php
  
 if (!isset($Role['super_admin'])) {
-    $order_quantity = \common\models\Order::orderQuantity($order_quantity);
+    $order_quantity = \common\models\Order::orderQuantity($user_id);
         ?>
     <input type="text" id="order-orde" readonly="true" class="form-control" value="<?=$order_quantity['remaning_stock']?>" name="Order[total_stock]" maxlength="45">
 

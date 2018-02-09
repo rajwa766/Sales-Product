@@ -111,7 +111,7 @@ class Order extends \yii\db\ActiveRecord
             [['order_ref_no', 'shipper', 'cod', 'additional_requirements'], 'string', 'max' => 45],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['quantity', 'postal_code', 'name', 'all_level', 'parent_user', 'child_level', 'child_user', 'request_agent_name', 'request_user_level'], 'validate_order', 'skipOnEmpty' => false],
-            ['payment_slip', 'file', 'extensions' => 'pdf, jpg,jpeg,png', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Limit is 2MB', 'skipOnEmpty' => true]
+            ['payment_slip', 'file', 'extensions' => 'pdf, jpg,jpeg,png', 'maxSize' => 1024 * 1024 * 2, 'tooBig' => 'Limit is 2MB', 'skipOnEmpty' => true],
         ];
     }
 
@@ -173,13 +173,18 @@ class Order extends \yii\db\ActiveRecord
 
     public function username($id)
     {
-        $users = \common\models\User::find()->where(['id' => $id])->one();
-        return $users->username;
+        if (!empty($id)) {
+            $users = \common\models\User::find()->where(['id' => $id])->one();
+            return $users->username;
+        }
+        return '';
     }
     public function leveluser($id)
     {
+        if (!empty($id)) {
         $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
         return $users->name;
+        }
     }
     public static function getShippingDetail($model)
     {
@@ -206,14 +211,15 @@ class Order extends \yii\db\ActiveRecord
         $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
         $photo->saveAs($path);
     }
-    public static function orderQuantity($user_id){
+    public static function orderQuantity($user_id)
+    {
         $order_quantity = (new Query())
-        ->select('SUM(remaining_quantity) as remaning_stock')
-        ->from('stock_in')
-        ->where("user_id = '$user_id'")
-        ->andWhere("product_id = '1'")
-        ->groupby(['product_id'])
-        ->one();
+            ->select('SUM(remaining_quantity) as remaning_stock')
+            ->from('stock_in')
+            ->where("user_id = '$user_id'")
+            ->andWhere("product_id = '1'")
+            ->groupby(['product_id'])
+            ->one();
         return $order_quantity;
     }
     public static function CreateOrder($model)
@@ -289,7 +295,7 @@ class Order extends \yii\db\ActiveRecord
                 $photo_save = Order::saveSlip($model, $photo);
             }
         }
-   
+
         return $model->save();
     }
     public static function updateBeforeLoad($model)
@@ -316,7 +322,7 @@ class Order extends \yii\db\ActiveRecord
         $model->total_stock = $currentStock;
         return $model;
     }
-    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false, $validate = true)
+    public static function insertOrder($user_model, $approve_order = false, $is_bonus = false, $validate = true, $for_customer_creation = false)
     {
         $order = new Order();
         $order->isNewRecord = true;
@@ -335,10 +341,10 @@ class Order extends \yii\db\ActiveRecord
         }
         $order->save($validate);
         if ($order->id) {
-           
+
             $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity, $user_model->unit_price, $order);
-           
-            $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id);
+
+            $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id, $for_customer_creation);
             if ($approve_order) {
                 $stock_in = \common\models\StockIn::approve($order->id, $user_model->id, $user_model->parent_id);
             }
@@ -413,17 +419,11 @@ class Order extends \yii\db\ActiveRecord
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        // if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
-        // {
-        //     if(empty($this->payment_slip))
-        //     {
-        //         $this->addError('payment_slip', 'Payment slip is required.');
-        //     }
-        //     else
-        //     {
-        //        // $this->ValidateImage();
-        //     }
-        // }
+        if ($this->payment_method == array_search('Bank Transfer', \common\models\Lookup::$payment_method)) {
+            if (empty($_FILES['Order']['name']['payment_slip'])) {
+                $this->addError('payment_slip', 'Payment slip is required.');
+            }
+        }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
         }
@@ -447,22 +447,22 @@ class Order extends \yii\db\ActiveRecord
     }
     public function OrderTypeValidation($Role)
     {
-        $user_id = $this->user_id;
-        $RoleofRequester = Yii::$app->authManager->getRolesByUser($user_id);
-        if (isset($RoleofRequester['customer'])) {
-            if (empty($this->postal_code)) {
-                $this->addError('postal_code', 'Postal Code is required.');
-            }
-            if (empty($this->name)) {
-                $this->addError('name', 'Name is required.');
-            }
-            if (empty($this->name)) {
-                $this->addError('address', 'Address is required.');
-            }
-            if (empty($this->name)) {
-                $this->addError('mobile_no', 'Phone no. is required.');
-            }
+        // $user_id = $this->user_id;
+        // $RoleofRequester = Yii::$app->authManager->getRolesByUser($user_id);
+        // if (isset($RoleofRequester['customer'])) {
+        if (empty($this->postal_code)) {
+            $this->addError('postal_code', 'Postal Code is required.');
         }
+        if (empty($this->name)) {
+            $this->addError('name', 'Name is required.');
+        }
+        if (empty($this->name)) {
+            $this->addError('address', 'Address is required.');
+        }
+        if (empty($this->name)) {
+            $this->addError('mobile_no', 'Phone no. is required.');
+        }
+        //}
         if (isset($Role['super_admin'])) {
             if (empty($this->request_user_level)) {
                 $this->addError('request_user_level', 'User level is required.');
@@ -521,16 +521,4 @@ class Order extends \yii\db\ActiveRecord
             }
         }
     }
-    public function ValidateImage()
-    {
-        $allowedExts = array("jpeg", "jpg", "png");
-        $tmp = explode('.', $this->payment_slip);
-        $extension = end($tmp);
-        var_dump($_FILES);
-        exit();
-        if (!(($_FILES["payment_slip"]["size"] < 20000) && in_array($extension, $allowedExts))) {
-            $this->addError('payment_slip', 'Only jpeg, jpg and png extensions are allowed. File size should be less than 200000.');
-        }
-    }
-
 }

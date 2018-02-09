@@ -1,10 +1,11 @@
 <?php
 
 namespace common\models;
-use yii\behaviors\TimestampBehavior;
-use yii\behaviors\BlameableBehavior;
-use yii\db\Expression;
+
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "change_log".
@@ -27,7 +28,8 @@ class ChangeLog extends \yii\db\ActiveRecord
     {
         return 'change_log';
     }
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             [
                 'class' => BlameableBehavior::className(),
@@ -69,14 +71,15 @@ class ChangeLog extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    public static function insertData($model){
-$change_log = new ChangeLog();
-$change_log->isNewRecord = true;
-$change_log->id = null;
-$change_log->user_id = $model->id;
-$change_log->parent_id = $model->parent_id;
-$change_log->level_id = $model->user_level_id;
-$change_log->save();
+    public static function insertData($model)
+    {
+        $change_log = new ChangeLog();
+        $change_log->isNewRecord = true;
+        $change_log->id = null;
+        $change_log->user_id = $model->id;
+        $change_log->parent_id = $model->parent_id;
+        $change_log->level_id = $model->user_level_id;
+        $change_log->save();
 
     }
 }
