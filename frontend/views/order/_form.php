@@ -230,7 +230,7 @@ if (!Yii::$app->user->isGuest) {
             $('.order-setting-panel').show();
             $('.order-settings').show();
         }
-        else if (role == 'general')
+        else if (role == 'general' || role=='seller')
         {
             $('.admin').hide();
             $('.agent').show();
