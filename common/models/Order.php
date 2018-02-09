@@ -335,7 +335,9 @@ class Order extends \yii\db\ActiveRecord
         }
         $order->save($validate);
         if ($order->id) {
+           
             $product_order = \common\models\ProductOrder::insertProductOrder($user_model->quantity, $user_model->unit_price, $order);
+           
             $shipping_address = \common\models\ShippingAddress::insertShippingAddress($user_model, $order->id);
             if ($approve_order) {
                 $stock_in = \common\models\StockIn::approve($order->id, $user_model->id, $user_model->parent_id);

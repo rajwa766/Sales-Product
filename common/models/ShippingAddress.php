@@ -74,6 +74,7 @@ class ShippingAddress extends \yii\db\ActiveRecord
         $shipping_address->id = null;
         $shipping_address->order_id = $order_id;
         // $shipping_address->email = $model->email;
+        if(isset($model->user_id)){
         $shipping_address->phone_no = $model->phone_no;
         if (isset($model->name) && !empty($model->name)) {//For Customer
             $shipping_address->name = $model->name;
@@ -88,6 +89,9 @@ class ShippingAddress extends \yii\db\ActiveRecord
                 $shipping_address->name =$model->username($model->order_request_id); 
             }
         }
+    }else{
+        $shipping_address->name =$model->first_name;   
+    }
         $shipping_address->mobile_no = $model->mobile_no;
         $shipping_address->postal_code = $model->postal_code;
         $shipping_address->district = $model->district;

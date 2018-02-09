@@ -101,6 +101,7 @@ class ProductOrder extends \yii\db\ActiveRecord
         $product_order->requested_price = $unit_price;
         $product_order->requested_quantity = $quantity;
         $product_order->save();
+      
 
     }
     public static function updateProductOrder($model)
