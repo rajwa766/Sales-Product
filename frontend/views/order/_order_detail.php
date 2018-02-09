@@ -27,7 +27,13 @@ use yii\helpers\Url;
 </div>
 <?php } ?>
 
-
+<?php if($model->payment_slip && !$model->isNewRecord) {?>
+<style>
+.payment_slip{
+    display:block !important;
+}
+</style>
+<?php } ?>
 <div class="row">
     <div class="col-md-2">
         <?= Yii::t('app', 'Payment Method') ?>
@@ -45,11 +51,12 @@ use yii\helpers\Url;
             $form->field($model, 'payment_slip')->widget(FileInput::classname(), [
 
                 'pluginOptions' => [
+                    'previewFileType' => 'image',
                     'showUpload' => true,
                     'initialPreview' => [
-                        $model->payment_slip ? Html::img(Yii::$app->request->baseUrl . '../../uploads/' . $model->payment_slip) : null, // checks the models to display the preview
+                        $model->payment_slip ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->payment_slip) : null, // checks the models to display the preview
                     ],
-                    'overwriteInitial' => false,
+                    'overwriteInitial' => true,
                 ],
             ]);
             ?>

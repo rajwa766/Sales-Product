@@ -43,7 +43,7 @@ $all_images = '';
                     'pluginOptions' => [
                         'showUpload' => true,
                         'initialPreview'=>$all_images,
-                        'overwriteInitial' => false,
+                        'overwriteInitial' => true,
                     ],
                 ]);
                 ?>

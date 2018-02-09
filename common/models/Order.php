@@ -206,6 +206,16 @@ class Order extends \yii\db\ActiveRecord
         $path = Yii::getAlias('@app') . '/web/uploads/' . $model->payment_slip;
         $photo->saveAs($path);
     }
+    public static function orderQuantity($user_id){
+        $order_quantity = (new Query())
+        ->select('SUM(remaining_quantity) as remaning_stock')
+        ->from('stock_in')
+        ->where("user_id = '$user_id'")
+        ->andWhere("product_id = '1'")
+        ->groupby(['product_id'])
+        ->one();
+        return $order_quantity;
+    }
     public static function CreateOrder($model)
     {
         $result = "";
@@ -272,6 +282,14 @@ class Order extends \yii\db\ActiveRecord
             $model->order_request_id = $model->parent_user;
             $model->user_id = $model->child_user;
         }
+        $paymentBank = array_search('Bank Transfer', \common\models\Lookup::$order_status);
+        if ($model->payment_method == $paymentBank) {
+            $photo = UploadedFile::getInstance($model, 'payment_slip');
+            if ($photo !== null) {
+                $photo_save = Order::saveSlip($model, $photo);
+            }
+        }
+   
         return $model->save();
     }
     public static function updateBeforeLoad($model)
@@ -393,17 +411,17 @@ class Order extends \yii\db\ActiveRecord
     {
         $user_id = Yii::$app->user->getId();
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
-        if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
-        {
-            if(empty($this->payment_slip))
-            {
-                $this->addError('payment_slip', 'Payment slip is required.');
-            }
-            else
-            {
-               // $this->ValidateImage();
-            }
-        }
+        // if($this->payment_method==array_search('Bank Transfer', \common\models\Lookup::$payment_method))
+        // {
+        //     if(empty($this->payment_slip))
+        //     {
+        //         $this->addError('payment_slip', 'Payment slip is required.');
+        //     }
+        //     else
+        //     {
+        //        // $this->ValidateImage();
+        //     }
+        // }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
         }

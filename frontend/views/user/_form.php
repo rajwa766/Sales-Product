@@ -126,7 +126,7 @@ $form->field($model, 'profile')->widget(FileInput::classname(), [
         'initialPreview' => [
             $model->profile ? Html::img(Yii::$app->request->baseUrl . '/uploads/' . $model->profile) : null, // checks the models to display the preview
         ],
-        'overwriteInitial' => false,
+        'overwriteInitial' => true,
     ],
 ])->label(false);
 ?>
@@ -139,13 +139,9 @@ $form->field($model, 'profile')->widget(FileInput::classname(), [
     <?php
 
 if (!$model->isNewRecord && isset($Role['super_admin'])) {
+  
     if (array_search($model->user_level_id, array_keys(\common\models\Lookup::$seller_levels))>0) {
-        $user_level_name = (new Query())
-            ->select('users_level.name,users_level.id,users_level.parent_id')
-            ->from('user')
-            ->innerJoin('users_level', 'user.user_level_id = users_level.id')
-            ->where(['=', 'user.id', $model->id])
-            ->one();
+        $user_level_name = $model->userDetail($model->id);
         ?>
     <div class="row no-margin">
         <div class="col-md-6">
@@ -304,14 +300,9 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
         </div>
         <div class="col-md-8">
         <?php
+ 
 if (!isset($Role['super_admin'])) {
-        $order_quantity = (new Query())
-            ->select('SUM(remaining_quantity) as remaning_stock')
-            ->from('stock_in')
-            ->where("user_id = '$user_id'")
-            ->andWhere("product_id = '1'")
-            ->groupby(['product_id'])
-            ->one();
+    $order_quantity = \common\models\Order::orderQuantity($order_quantity);
         ?>
     <input type="text" id="order-orde" readonly="true" class="form-control" value="<?=$order_quantity['remaning_stock']?>" name="Order[total_stock]" maxlength="45">
 

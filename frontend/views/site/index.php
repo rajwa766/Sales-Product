@@ -73,7 +73,7 @@
                         <i class='pull-left fa fa-list-ul fa-2x icon-md icon-rounded icon-orange'></i>
                         <div class="stats">
                             <h4><strong><?= $all_status['total_order'] ?></strong></h4>
-                            <span><?= Yii::t('app', 'Total Processed Orders') ?></span>
+                            <span><a class="" href="<?= Yii::$app->homeUrl; ?>order"><?= Yii::t('app', 'Total Processed Orders') ?></a></span>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                         <i class='pull-left fa fa-list-ul fa-2x icon-md icon-rounded icon-purple'></i>
                         <div class="stats">
                             <h4><strong><?= $all_status['pending_order'] ?></strong></h4>
-                            <span><?= Yii::t('app', 'Total Pending Orders') ?></span>
+                            <span><a class="" href="<?= Yii::$app->homeUrl; ?>order/pending"><?= Yii::t('app', 'Total Pending Orders') ?></a></span>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                         <i class='pull-left fa fa-check fa-2x icon-md icon-rounded icon-warning'></i>
                         <div class="stats">
                             <h4><strong><?= $all_status['approved_order'] ?></strong></h4>
-                            <span> <?= Yii::t('app', 'Total Approved Orders') ?></span>
+                            <span> <a href="<?= Yii::$app->homeUrl; ?>order/approved"><?= Yii::t('app', 'Total Approved Orders') ?></a></span>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                         <i class='pull-left fa fa-undo fa-2x icon-md icon-rounded icon-primary'></i>
                         <div class="stats">
                             <h4><strong><?= $all_status['returned_order'] ?></strong></h4>
-                            <span> <?= Yii::t('app', 'Returned Units') ?></span>
+                            <span><a href="<?= Yii::$app->homeUrl; ?>order/return"> <?= Yii::t('app', 'Returned Units') ?></a></span>
                         </div>
                     </div>
                 </div>

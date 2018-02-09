@@ -237,6 +237,7 @@ class OrderController extends Controller
         $type = $model->order_type;
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $isOrderSaved = \common\models\Order::updateSave($model);
+          
             $isShippingSaved = \common\models\ShippingAddress::updateShippingAddress($model);
             $isProductOrderSaved = \common\models\ProductOrder::updateProductOrder($model);
             if ($isShippingSaved && $isProductOrderSaved && $isOrderSaved) {

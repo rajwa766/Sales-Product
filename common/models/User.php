@@ -8,6 +8,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
+use yii\db\Query;
+
 
 /**
  * User model
@@ -422,6 +424,15 @@ class User extends ActiveRecord implements IdentityInterface
             $model->generateAuthKey();
         }
         $model->save();
+    }
+    public function userDetail($id){
+        $user_level_name = (new Query())
+        ->select('users_level.name,users_level.id,users_level.parent_id')
+        ->from('user')
+        ->innerJoin('users_level', 'user.user_level_id = users_level.id')
+        ->where(['=', 'user.id', $id])
+        ->one();
+        return $user_level_name;
     }
     public static function getParent($q, $type, $parent)
     {
