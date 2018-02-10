@@ -109,9 +109,8 @@ class StockIn extends \yii\db\ActiveRecord
         $out['results'] = array_values($data);
         return $out;
     }
-    public static function Fullfillment($postal_code, $province, $district, $cust_name, $cust_addr, $mobile_no, $external_id, $amount, $quantity,$payment_method)
+    public static function Fullfillment($postal_code, $province, $district, $cust_name, $cust_addr, $mobile_no, $external_id, $amount, $quantity,$payment_method,$representative)
     {
-
         $curl = curl_init();
         $sku = "BEYDEY1"; 
         if (preg_match('/^10.{3}$/', $postal_code) || preg_match('/^11.{3}$/', $postal_code) || preg_match('/^12.{3}$/', $postal_code)) {
@@ -131,7 +130,7 @@ class StockIn extends \yii\db\ActiveRecord
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => '{ 	"external_id":"' . $external_id . '","order_number":"' . $external_id . '", "shipping":"' . $ship_method . '","cod_amount":"' . $amount . '","customer":{ "name":"' . $cust_name . '","address":"' . $cust_addr . '", "province":"' . $province . '", "district":"' . $district . '","postal_code":"' . $postal_code . '","mobile_no":"' . $mobile_no . '"}, 	"order_items":[{"item_sku":"' . $sku . '","item_code":"","item_qty":' . $quantity . '}]}',
+            CURLOPT_POSTFIELDS => '{ 	"external_id":"' . $external_id . '","order_number":"' . $external_id . '","representative":"' . $representative . '", "shipping":"' . $ship_method . '","cod_amount":"' . $amount . '","customer":{ "name":"' . $cust_name . '","address":"' . $cust_addr . '", "province":"' . $province . '", "district":"' . $district . '","postal_code":"' . $postal_code . '","mobile_no":"' . $mobile_no . '"}, 	"order_items":[{"item_sku":"' . $sku . '","item_code":"","item_qty":' . $quantity . '}]}',
             CURLOPT_HTTPHEADER => array(
                 "authorization: Basic QmV5QVBJOjZhOTZlMmUyMjQ1OWRjYjY5MDEzNmNmZTM2ZDgxYjgy",
                 "cache-control: no-cache",
@@ -224,7 +223,7 @@ class StockIn extends \yii\db\ActiveRecord
                 $Role = Yii::$app->authManager->getRolesByUser($user_id);
 
                 if (!$transaction_failed && isset($Role['customer'])) {
-                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity,$order_detail->payment_method);
+                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity,$order_detail->payment_method,$order_detail->username($order_detail->order_request_id));
                     if ($fullfillmentResult != false) {
                         Yii::$app->db->createCommand()
                             ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
