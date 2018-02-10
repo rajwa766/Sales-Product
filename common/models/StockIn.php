@@ -109,7 +109,7 @@ class StockIn extends \yii\db\ActiveRecord
         $out['results'] = array_values($data);
         return $out;
     }
-    public static function Fullfillment($postal_code, $province, $district, $cust_name, $cust_addr, $mobile_no, $external_id, $amount, $quantity)
+    public static function Fullfillment($postal_code, $province, $district, $cust_name, $cust_addr, $mobile_no, $external_id, $amount, $quantity,$payment_method)
     {
 
         $curl = curl_init();
@@ -118,6 +118,10 @@ class StockIn extends \yii\db\ActiveRecord
             $ship_method = "ALP";
         } else {
             $ship_method = "K2D";
+        }
+        $ship_method = "EMS";
+        if ($payment_method != array_search('Cash on Delivery', \common\models\Lookup::$payment_method)) {
+            $amount=0;
         }
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://oms.sokochan.com/api/1.0/orders",
@@ -220,7 +224,7 @@ class StockIn extends \yii\db\ActiveRecord
                 $Role = Yii::$app->authManager->getRolesByUser($user_id);
 
                 if (!$transaction_failed && isset($Role['customer'])) {
-                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity);
+                    $fullfillmentResult = StockIn::Fullfillment($shipping_detail->postal_code, $shipping_detail->province, $shipping_detail->district, $shipping_detail->name, $shipping_detail->address, $shipping_detail->mobile_no, $order_id, $single_order['order_price'], $total_quantity,$order_detail->payment_method);
                     if ($fullfillmentResult != false) {
                         Yii::$app->db->createCommand()
                             ->update('order', ['order_external_code' => $fullfillmentResult], 'id =' . $order_id)
