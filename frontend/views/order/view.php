@@ -235,7 +235,7 @@ $items = array();
         'options' => array('title' => ''),
     ];
     ?>
-                                    <?=dosamigos\gallery\Gallery::widget(['items' => $items]);?>
+                                    <?php //dosamigos\gallery\Gallery::widget(['items' => $items]);?>
                                         </div>
                                         </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-center">
