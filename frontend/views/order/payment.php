@@ -10,11 +10,7 @@ use yii\widgets\ListView;
 /* @var $model common\models\Order */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
-
-
 <div class="attendence-index">
-   
     <h1>EPAYLINK Testing</h1>
     <form method="post" action="https://www.thaiepay.com/epaylink/payment.aspx">
         <input type="hidden" name="refno" value="99999">
