@@ -157,13 +157,13 @@ foreach ($model->productOrders as $orders) {
 
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <h3> <?=Yii::t('app', 'Order summary')?></h3><br>
+                                                <h3> <?=Yii::t('app', 'Order Summary')?></h3><br>
                                                 <div class="table-responsive">
                                                     <table class="table table-hover invoice-table">
                                                         <thead>
                                                             <tr>
                                                                 <td><h4> <?=Yii::t('app', 'Product Name')?></h4></td>
-                                                                <td class="text-center"><h4>Price <?=Yii::t('app', 'Price')?></h4></td>
+                                                                <td class="text-center"><h4> <?=Yii::t('app', 'Price')?></h4></td>
                                                                 <td class="text-center"><h4> <?=Yii::t('app', 'Quantity')?></h4></td>
                                                                 <td class="text-right"><h4><?=Yii::t('app', 'Total')?></h4></td>
                                                             </tr>
@@ -186,7 +186,7 @@ foreach ($model->productOrders as $orders) {
                                                             <tr>
                                                                 <td class="thick-line"></td>
                                                                 <td class="thick-line"></td>
-                                                                <td class="thick-line text-center"><h4><?=Yii::t('app', 'SubTotal')?></h4></td>
+                                                                <td class="thick-line text-center"><h4><?=Yii::t('app', 'Sub total')?></h4></td>
                                                                 <td class="thick-line text-right"><h4><?=$sum?></h4></td>
                                                             </tr>
                                                             <tr>

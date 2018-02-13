@@ -374,6 +374,7 @@ class User extends ActiveRecord implements IdentityInterface
                     //bonus for super vip or vip
                     $super_vip_level = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                     $vip_level = array_search('VIP Team', \common\models\Lookup::$user_levels);
+                    /*-----------Removed  on the request of client 
                     if ($model->user_level_id == $super_vip_level || $model->user_level_id == $vip_level) {
                         $model->unit_price = '0';
                         if ($model->user_level_id == $super_vip_level) {
@@ -383,7 +384,7 @@ class User extends ActiveRecord implements IdentityInterface
                             $model->quantity = '20';
                             $order = \common\models\Order::insertOrder($model, true, true, false, true);
                         }
-                    }
+                    }  ---------*/
                     $auth->assign($role, $model->id);
                     $transaction->commit();
                     $result = $model->id;

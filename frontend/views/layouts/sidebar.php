@@ -196,6 +196,22 @@ use yii\models\users_level;
                                 
                             </ul>
                         </li>
+                        <li class=""> 
+                            <a href="javascript:;">
+                                <i class="fa fa-users"></i>
+                                <span class="title"><?= Yii::t('app','Product'); ?></span>
+                                <span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu" >
+                                <li>
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>user-product-level"><?= Yii::t('app', 'Manage Level Prices');?></a>
+                                <a class="" href="<?= Yii::$app->homeUrl; ?>product"><?= Yii::t('app', 'Manage Product Prices');?></a>
+                                </li>
+                            
+                                
+                                
+                            </ul>
+                        </li>
                        <?php } ?>
                         <!-- reports starts here -->
                         <li class=""> 

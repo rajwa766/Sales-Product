@@ -12,7 +12,19 @@ use kartik\select2\Select2;
 <div class="user-product-level-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?php
+            echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
+                'data' => \common\models\UsersLevel::getAllLevels(),
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => ['placeholder' => 'Select Level  ...'],
+                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'pluginOptions' => [
+                'allowClear' => true,
+                ],
 
+            ]);
+            ?>
     <?php
             echo $form->field($model, 'product_id')->widget(Select2::classname(), [
                 'data' => common\models\Product::getallproduct(),
@@ -30,19 +42,7 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'units')->textInput() ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
-    <?php
-            echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-                'data' => common\models\UsersLevel::getalllevel_with_seller(),
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'options' => ['placeholder' => 'Select Level  ...'],
-                //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-                'theme' => Select2::THEME_BOOTSTRAP,
-                'pluginOptions' => [
-                'allowClear' => true,
-                ],
 
-            ]);
-            ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
