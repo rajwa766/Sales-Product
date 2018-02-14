@@ -9,7 +9,7 @@ return [
 'Post Code'=>'รหัสไปรษณีย์',
 'Super Admin'=>'ผู้ดูแลระบบขั้นสูง',
 'User Level'=>'ระดับผู้ใช้',
-'Total Users'=>'ผู้ใช้ทั้งหมด',
+'Total Users'=>'ตัวแทนทั้งหมดใต้องค์กร',
 'Remaning User'=>'จำนวนผู้ใช้เหลือ',
 'Current Stock'=>'สต้อกปัจจุบัน',
 'PROFIT'=>'กำไร',
