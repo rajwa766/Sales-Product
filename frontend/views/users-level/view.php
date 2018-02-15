@@ -16,13 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+         <?php //Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+          //  'class' => 'btn btn-danger',
+           // 'data' => [
+                //'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+               // 'method' => 'post',
+          //  ],
+        //]) 
+         ?>
     </p>
 
     <?= DetailView::widget([
@@ -30,8 +31,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'parent_id',
-            'max_user',
+            [
+                'label' => 'Parent Name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model->parentName($model->parent_id);
+                },
+            ],
+            [
+                'label' => 'Max User',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if($model->max_user == -1){
+                        return 'Un limited';
+                    }else{
+                        return $model->max_user;
+                        
+                    }
+                },
+            ],
         ],
     ]) ?>
 

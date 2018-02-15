@@ -130,6 +130,9 @@ class UsersLevel extends \yii\db\ActiveRecord {
         return $out;
     }
 
-  
+  public function parentName($id){
+      $levelDetail = UsersLevel::findOne(['id'=>$id]);
+      return $levelDetail['name'];
+  }
 
 }

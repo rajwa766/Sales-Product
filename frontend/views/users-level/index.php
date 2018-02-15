@@ -29,7 +29,25 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'parent_id',
-            'max_user',
+            [
+                'label' => 'Parent Name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model->parentName($model->parent_id);
+                },
+            ],
+            [
+                'label' => 'Max User',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if($model->max_user == -1){
+                        return 'Un limited';
+                    }else{
+                        return $model->max_user;
+                        
+                    }
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn','template' => '{view} {update}'],
             
