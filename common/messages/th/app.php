@@ -148,7 +148,7 @@ return [
 'Price'=>'ราคา',
 'Create Customer Order'=>'ขายของลูกค้า',
 'Create Agent Order'=>'สั่งสินค้าเพิ่ม Stock',
-'Generate Customer Link'=>'ส่งลูกค้าเพื่อซื้อซ้ำ',
+'Generate Customer Link'=>'Link ส่งลูกค้าเพื่อซื้อซ้ำ',
 '(not set)' => '(ไม่ได้ตั้ง)',
 'An internal server error occurred.' => 'เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์',
 'Are you sure you want to delete this item?' => 'คุณแน่ใจหรือไม่ที่จะลบรายการนี้?',
