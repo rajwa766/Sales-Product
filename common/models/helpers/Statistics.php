@@ -129,7 +129,7 @@ class Statistics extends \yii\base\Model
         $all_status['current_stock'] = Statistics::CurrentStock($user_id);
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
         $all_status['current_user'] = Statistics::CurrentUser($user_id);
-        $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id);
+        $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id)-$all_status['current_user'];
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
         $all_status['total_sales'] = Statistics::TotalSales($user_id);
         $all_status['total_order'] = \common\models\Order::find()->where(['user_id' => $user_id])->count();
