@@ -106,6 +106,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="r4_counter db_box">
+                        <i class='pull-left fa fa-undo fa-2x icon-md icon-rounded icon-primary'></i>
+                        <div class="stats">
+                            <h4><strong><?= $all_status['total_sales'] ?></strong></h4>
+                            <span><a href="<?= Yii::$app->homeUrl; ?>order/return"> <?= Yii::t('app', 'Total Sales') ?></a></span>
+                        </div>
+                    </div>
+                </div>
             </div> <!-- End .row -->             
       </div>
     </section>

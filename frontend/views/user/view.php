@@ -194,6 +194,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="r4_counter db_box">
+                        <i class='pull-left fa fa-undo fa-2x icon-md icon-rounded icon-primary'></i>
+                        <div class="stats">
+                            <h4><strong><?= $all_status['total_sales'] ?></strong></h4>
+                            <span> <?= Yii::t('app', 'Total Sales') ?></span>
+                        </div>
+                    </div>
+                </div>
             </div> <!-- End .row --> 
                              <!-- statistic end -->
                                                 </div>	
