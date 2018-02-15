@@ -1,8 +1,9 @@
 <?php
 
 namespace common\models;
-
+use yii\helpers\Html;
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "product".

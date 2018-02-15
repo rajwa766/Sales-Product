@@ -29,7 +29,7 @@ class UsersLevel extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['parent_id', 'max_user'], 'integer'],
-            [['name'], 'string', 'max' => 450],
+            [['name','display_name'], 'string', 'max' => 450],
         ];
     }
 
@@ -54,7 +54,7 @@ class UsersLevel extends \yii\db\ActiveRecord {
     public static function getVipChild() {
         $vip_level_id =  array_search('VIP Team', \common\models\Lookup::$user_levels);
             $data = UsersLevel::find()->where(['=','parent_id',$vip_level_id])->all();
-       $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
+       $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'dsplay_name'); //id = your ID model, name = your caption
         return $value;
     }
     public static function getAllLevels($show_parent=false) {
@@ -82,7 +82,7 @@ class UsersLevel extends \yii\db\ActiveRecord {
            // $data = UsersLevel::find()->where(['!=','max_user','-1'])->andWhere(['or',['parent_id'=>$user_level_id],['id'=>$user_level_id]])->all();
         }
         
-        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'name'); //id = your ID model, name = your caption
+        $value = (count($data) == 0) ? ['' => ''] : \yii\helpers\ArrayHelper::map($data, 'id', 'display_name'); //id = your ID model, name = your caption
         return $value;
     }
 

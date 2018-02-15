@@ -90,6 +90,7 @@ class ProductController extends Controller {
         } 
         if ($model->load(Yii::$app->request->post())) {
             $updateProduct = Product::updateProduct($model,$product_old_images);
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('update', [

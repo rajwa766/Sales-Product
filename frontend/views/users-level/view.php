@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
+            'display_name',
             [
                 'label' => 'Parent Name',
                 'format' => 'raw',
