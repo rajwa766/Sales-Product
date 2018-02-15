@@ -67,6 +67,12 @@ class Lookup
         '15000' => 'VIP Team Begin Level',
 
     ];
+    public static $next_levels = [
+        '1'=>'1000',
+        '1000' => '6000',
+        '6000' => '11000',
+
+    ];
     public static $seller_levels = [
         '3000' => 'Management Team Inter Level',
         '4000' => 'Management Team Pro Level',

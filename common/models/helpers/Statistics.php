@@ -117,6 +117,12 @@ class Statistics extends \yii\base\Model
             return 'infinite';
         }
     }
+    public static function LimitUser($user_id)
+    {
+        $level_id = \common\models\User::findOne(['id' => $user_id]);
+        $next_level= \common\models\Lookup::$next_levels[''.$level_id->user_level_id];
+        return \common\models\User::find()->where(['user_level_id' => $next_level])->andWhere(['parent_id' => $user_id])->count();
+    }
     public static function allStatusDashboard($user_id)
     {
         $all_status = array();
@@ -129,7 +135,12 @@ class Statistics extends \yii\base\Model
         $all_status['current_stock'] = Statistics::CurrentStock($user_id);
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
         $all_status['current_user'] = Statistics::CurrentUser($user_id);
-        $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id)-$all_status['current_user'];
+        $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id);
+        if($all_status['user_limit']!='infinite')
+        {
+            $limit_user=Statistics::LimitUser($user_id);
+            $all_status['user_limit']=$all_status['user_limit']-$limit_user;
+        }
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
         $all_status['total_sales'] = Statistics::TotalSales($user_id);
         $all_status['total_order'] = \common\models\Order::find()->where(['user_id' => $user_id])->count();
