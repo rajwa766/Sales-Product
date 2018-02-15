@@ -21,6 +21,7 @@ use kartik\select2\Select2;
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'pluginOptions' => [
                 'allowClear' => true,
+                'disabled' => !$model->isNewRecord,
                 ],
 
             ]);
@@ -34,6 +35,8 @@ use kartik\select2\Select2;
                 'theme' => Select2::THEME_BOOTSTRAP,
                 'pluginOptions' => [
                 'allowClear' => true,
+                'disabled' => !$model->isNewRecord,
+                
                 ],
 
             ]);

@@ -80,6 +80,7 @@ use yii\models\users_level;
                                
                                 
                             </ul>
+                           
                         </li>
                         <!-- end profile -->
                         <?php  
@@ -104,8 +105,13 @@ use yii\models\users_level;
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>user/create" ><?= Yii::t('app', 'Create User');?></a>
                                 </li>
                                 
-                                
+                                <?php if(isset($Role['super_admin'])){ ?>
+                                <li>
+                                    <a class="" href="<?= Yii::$app->homeUrl;?>users-level/index" ><?= Yii::t('app', 'User Levels');?></a>
+                                </li>
+                            <?php }?>
                             </ul>
+                         
                         </li>
         <?php }
    
