@@ -121,7 +121,7 @@ class Statistics extends \yii\base\Model
     {
         $level_id = \common\models\User::findOne(['id' => $user_id]);
         $next_level= \common\models\Lookup::$next_levels[''.$level_id->user_level_id];
-        return \common\models\User::find()->where(['user_level_id' => $next_level])->andWhere(['parent_id' => $user_id])->count();
+        return \common\models\User::find()->where(['user_level_id' => $next_level])->andWhere(['parent_id' => $user_id])->andWhere(['!=', 'company_user', '1'])->count();
     }
     public static function allStatusDashboard($user_id)
     {
@@ -130,7 +130,6 @@ class Statistics extends \yii\base\Model
         $pending = array_search('Pending', \common\models\Lookup::$status);
         $approved = array_search('Approved', \common\models\Lookup::$status);
         $transfer_approved = array_search('Transfer Approved', \common\models\Lookup::$status);
-        
         $all_status['current_level'] = Statistics::CurrentLevel($user_id);
         $all_status['current_stock'] = Statistics::CurrentStock($user_id);
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
