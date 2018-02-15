@@ -409,7 +409,6 @@ class User extends ActiveRecord implements IdentityInterface
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users['username'];
     }
-
     public function getUserLevel()
     {
         return $this->hasOne(UsersLevel::className(), ['id' => 'user_level_id']);

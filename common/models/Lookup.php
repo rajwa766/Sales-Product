@@ -15,6 +15,10 @@ namespace common\models;
 class Lookup
 {
 
+    public static $account_types = [
+        '1' => 'Receivable',
+        '2' => 'Payable',
+    ];
     public static $status = [
         '0' => "Pending",
         '1' => "Approved",
