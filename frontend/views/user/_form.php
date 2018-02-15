@@ -92,6 +92,57 @@ $Role = Yii::$app->authManager->getRolesByUser($user_id);
         </div>
     </div>
 
+    <div class="row no-margin">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app', 'Postal Code') ?>
+            </div>
+            <div class="col-md-8">
+                    <?php
+                    echo $form->field($model, 'postal_code')->widget(Select2::classname(), [
+                        'theme' => Select2::THEME_BOOTSTRAP,
+                        'options' => ['placeholder' => 'Select a Postal Code ...'],
+                        'initValueText' => isset($model->postal_code) ? $model->province."-".$model->district."-".$model->postal_code : "",
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            //'autocomplete' => true,
+                            'ajax' => [
+                                'url' => Url::base().'/postcode/all-code',
+                                'dataType' => 'json',
+                                'data' => new \yii\web\JsExpression('function(params) { ; return {q:params.term}; }')
+                            ],
+                        ],
+                    ])->label(false);
+                    ?>
+            </div>
+         </div>
+        <div class="col-md-6">
+            <div class="col-md-4">
+             <?= Yii::t('app', 'District') ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'district')->textInput(['readonly' => true,])->label(false) ?>
+            </div>
+        </div>
+    </div>
+    <div class="row no-margin">
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app', 'Province') ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'province')->textInput(['readonly' => true,])->label(false) ?>
+            </div>
+         </div>
+        <div class="col-md-6">
+            <div class="col-md-4">
+                <?= Yii::t('app', 'Country') ?>
+            </div>
+            <div class="col-md-8">
+                <?= $form->field($model, 'country')->textInput(['readonly' => true, 'value' => 'Thailand'])->label(false) ?>
+            </div>
+        </div>
+    </div>
      <div class="row no-margin">
         <div class="col-md-6">
             <div class="col-md-4">
@@ -370,8 +421,16 @@ jQuery(document).ready(function() {
         $("#user-parent_user").select2('val', 'All');
         $("#user-user_level_id").select2('val', 'All');
     }
-
-});
+    
+   });
+    $('#user-postal_code').on('change', function () {
+        var data = $('#user-postal_code').select2('data');
+        var postal_data=data[0].text;
+        var province=postal_data.split('-')[0];
+        var district=postal_data.split('-')[1];
+        $("#user-district").val(district);
+        $("#user-province").val(province);
+    });
 $('#user-quantity').on('blur', function () {
     var product_id = '1';
         $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id+"&type=null&check_units="+false, function (data) {

@@ -49,9 +49,7 @@ use yii\db\Query;
         <?= Yii::t('app', 'Province') ?>
     </div>
     <div class="col-md-10">
-
         <?= $form->field($model, 'province')->textInput(['readonly' => true,])->label(false) ?>
-
     </div>
 </div>
 
