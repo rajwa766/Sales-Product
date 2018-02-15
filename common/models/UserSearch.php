@@ -46,9 +46,13 @@ class UserSearch extends User
         if(isset($Role['super_admin'])){ 
             $query = User::find();
         }else{
-          
-        $query = User::find()
-               ->where(['parent_id' => Yii::$app->user->identity->id]);
+            $children_ids = (new Query())
+                ->select('GetFamilyTree(`id`) as children') //->select('`id`, `parent_id`,GetFamilyTree(`id`) as children ')
+                ->from('user')
+                ->where(['=', 'id', $user_id])->one()['children'];
+            $children_ids = explode(',', $children_ids);
+            $query = User::find()
+               ->where(['in', 'user_id', $children_ids]);
         }
 
         // add conditions that should always apply here
