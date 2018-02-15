@@ -10,7 +10,7 @@ class Statistics extends \yii\base\Model
     public static function CurrentLevel($user_id)
     {
         $current_level = (new Query())
-            ->select('users_level.name as current_level')
+            ->select('users_level.display_name as current_level')
             ->from('user')
             ->innerJoin('users_level', 'user.user_level_id = users_level.id')
             ->where(['=', 'user.id', $user_id])
