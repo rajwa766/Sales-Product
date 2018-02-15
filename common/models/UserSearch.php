@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\User;
+use yii\db\Query;
 
 /**
  * UserSearch represents the model behind the search form about `common\models\User`.
@@ -52,7 +53,7 @@ class UserSearch extends User
                 ->where(['=', 'id', $user_id])->one()['children'];
             $children_ids = explode(',', $children_ids);
             $query = User::find()
-               ->where(['in', 'user_id', $children_ids]);
+               ->where(['in', 'id', $children_ids]);
         }
 
         // add conditions that should always apply here

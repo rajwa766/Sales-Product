@@ -77,6 +77,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <li><i class='fa fa-suitcase'></i><?php echo $model->phone_no; ?></li>
                                             </ul>
                                         </div>
+                                        <?php
+                                            $user_id = Yii::$app->user->getId();
+                                            $Role = Yii::$app->authManager->getRolesByUser($user_id);
+                                            if(isset($Role['super_admin']) ||  $model->id==$user_id){
+                                        ?>
                                         <div class="uprofile-buttons">
                                         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php 
@@ -89,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
         // ]);
         ?>
                                         </div>
+                                    <?php }?>
                                     </div>
                                     <div class="col-md-9 col-sm-8 col-xs-12">
                                     <div class="row">
