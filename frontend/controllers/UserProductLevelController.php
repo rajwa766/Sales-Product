@@ -194,7 +194,11 @@ class UserProductLevelController extends Controller
                 return json_encode($detai_item);
             }
         }
-        $query = UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id]);
+        $query = UserProductLevel::find()->where(['product_id' => $product_id]);
+        if($type!='Request')
+        {
+            $query->andWhere(['user_level_id' => $user_level]);
+        }
         $query->andWhere(['<=','units',$id]);
         if ($check_units=='false') {
             $min_price=UserProductLevel::find()->select('min(price) as price')->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->one();

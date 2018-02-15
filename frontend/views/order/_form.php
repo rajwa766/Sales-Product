@@ -167,6 +167,7 @@ if (!Yii::$app->user->isGuest) {
             var url="<?=Yii::$app->homeUrl?>user-product-level/getunitsprice?id=" + $('#order-quantity').val() + "&user_level=" + (typeof($('#order-child_level').val())  === "undefined"?$('#order-all_level').val():$('#order-child_level').val()) + "&product_id=" + $('#order-product_id').val();
             
             if (type == "Request" || type == "Transfer"){
+                url+="&type="+type;
             $.post(url, function (data) {
                 var json = $.parseJSON(data);
                     if (json.price){
