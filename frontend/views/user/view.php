@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 <!-- Available statuses: online, idle, busy, away and offline -->
                                                 <span class="uprofile-status online"></span>
                                             </h3>
-                                            <p class="uprofile-title"><?php if($model->userLevel){ echo $model->userLevel->name; } ?></p>
+                                            <p class="uprofile-title"><?php if($model->userLevel){ echo $model->userLevel->display_name; } ?></p>
                                         </div>
                                         <div class="uprofile-info">
                                             <ul class="list-unstyled">

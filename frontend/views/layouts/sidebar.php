@@ -33,12 +33,12 @@ use yii\models\users_level;
                             <?php 
                             $user_level = '';
 
-                            $query = (new \yii\db\Query())->select(['name'])->from('users_level')->where(['id' => Yii::$app->user->identity->user_level_id]);
+                            $query = (new \yii\db\Query())->select(['display_name'])->from('users_level')->where(['id' => Yii::$app->user->identity->user_level_id]);
                                 $command = $query->createCommand();
                                 $data = $command->queryAll();
                                 
                                  foreach($data as $row) {
-                                    $user_level .= $row['name'];
+                                    $user_level .= $row['display_name'];
                                 }
 
 

@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->username($model->parent_id);
                 },
             ],
-            'userLevel.name',
+            'userLevel.display_name',
             //'phone_no',
             // 'address',
         // 'city',
