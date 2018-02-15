@@ -2,10 +2,9 @@
 
 use kartik\file\FileInput;
 use kartik\select2\Select2;
-use yii\db\Query;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -139,8 +138,8 @@ $form->field($model, 'profile')->widget(FileInput::classname(), [
     <?php
 
 if (!$model->isNewRecord && isset($Role['super_admin'])) {
-  
-    if (array_search($model->user_level_id, array_keys(\common\models\Lookup::$seller_levels))>0) {
+
+    if (array_search($model->user_level_id, array_keys(\common\models\Lookup::$seller_levels)) > 0) {
         $user_level_name = $model->userDetail($model->id);
         ?>
     <div class="row no-margin">
@@ -150,20 +149,20 @@ if (!$model->isNewRecord && isset($Role['super_admin'])) {
             </div>
             <div class="col-md-8">
                 <?php
-            echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
-                    'initValueText' => $user_level_name['name'],
-                    'theme' => Select2::THEME_BOOTSTRAP,
-                    'options' => ['placeholder' => 'Select a current user Level ...'],
-                    'pluginOptions' => [
-                        'allowClear' => true,
-                        'ajax' => [
-                            'url' => Url::base().'/user/get-seller-levels',
-                            'dataType' => 'json',
-                            'data' => new \yii\web\JsExpression('function(params) {
-                             return {q:params.term,parent_level:'.$user_level_name["parent_id"].'}; }'),
-                        ],
-                    ],
-                ])->label(false);
+echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
+            'initValueText' => $user_level_name['name'],
+            'theme' => Select2::THEME_BOOTSTRAP,
+            'options' => ['placeholder' => 'Select a current user Level ...'],
+            'pluginOptions' => [
+                'allowClear' => true,
+                'ajax' => [
+                    'url' => Url::base() . '/user/get-seller-levels',
+                    'dataType' => 'json',
+                    'data' => new \yii\web\JsExpression('function(params) {
+                             return {q:params.term,parent_level:' . $user_level_name["parent_id"] . '}; }'),
+                ],
+            ],
+        ])->label(false);
         ?>
             </div>
          </div>
@@ -171,7 +170,8 @@ if (!$model->isNewRecord && isset($Role['super_admin'])) {
     <?php }
 }
 ?>
-<?php if ($model->isNewRecord) {?>
+<?php if ($model->isNewRecord) {
+    if (isset($Role['super_admin'])) {?>
 <div class="row no-margin">
     <div class="col-md-6">
         <div class="col-md-4">
@@ -185,9 +185,7 @@ if (!$model->isNewRecord && isset($Role['super_admin'])) {
 
     </div>
 </div>
-<?php
 
-    if (isset($Role['super_admin'])) {?>
 <div class="row no-margin">
 
     <div class="col-md-6">
@@ -225,7 +223,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
                 'allowClear' => true,
                 //'autocomplete' => true,
                 'ajax' => [
-                    'url' => Url::base().'/user/get-users',
+                    'url' => Url::base() . '/user/get-users',
                     'dataType' => 'json',
                     'data' => new \yii\web\JsExpression('function(params) {
             if($("#user-company_user").is(":checked")){
@@ -274,7 +272,7 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
             'allowClear' => true,
             //'autocomplete' => true,
             'ajax' => [
-                'url' => Url::base().'/user/get-levels',
+                'url' => Url::base() . '/user/get-levels',
                 'dataType' => 'json',
                 'data' => new \yii\web\JsExpression('function(params) {
             if($("#user-company_user").is(":checked")){
@@ -300,9 +298,9 @@ echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
         </div>
         <div class="col-md-8">
         <?php
- 
-if (!isset($Role['super_admin'])) {
-    $order_quantity = \common\models\Order::orderQuantity($user_id);
+
+    if (!isset($Role['super_admin'])) {
+        $order_quantity = \common\models\Order::orderQuantity($user_id);
         ?>
     <input type="text" id="order-orde" readonly="true" class="form-control" value="<?=$order_quantity['remaning_stock']?>" name="Order[total_stock]" maxlength="45">
 
