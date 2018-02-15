@@ -195,14 +195,31 @@ class UserProductLevelController extends Controller
             }
         }
         $query = UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id]);
-        if ($check_units!='false') {
-            $query->andWhere(['<=','units',$id]);
+        $query->andWhere(['<=','units',$id]);
+        if ($check_units=='false') {
+            $min_price=UserProductLevel::find()->select('min(price) as price')->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->one();
+            $max_price=UserProductLevel::find()->select('max(price) as price')->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->one();
         }
+       
+        $query->orderBy(['price' => SORT_ASC]);
         $one_unit = $query->one();
         if ($one_unit) {
             $detai_item['price'] = $one_unit->price;
             return json_encode($detai_item);
-        } else {
+        }
+        else if($min_price!=null && $max_price!=null)
+        {
+            if(UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->andWhere(['<','units',$id])->count()>1)
+            {
+                $detai_item['price'] = $min_price['price'];
+            }
+            else
+            {
+                $detai_item['price'] = $max_price['price'];
+            }
+            return json_encode($detai_item);
+        }
+         else {
             $one_unit = UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->min('units');
             if ($one_unit) {
                 $detai_item['units'] = $one_unit;
