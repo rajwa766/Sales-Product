@@ -198,7 +198,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="r4_counter db_box">
                         <i class='pull-left fa fa-undo fa-2x icon-md icon-rounded icon-primary'></i>
                         <div class="stats">
-                            <h4><strong><?= $all_status['total_sales'] ?></strong></h4>
+                            <h4><strong><?= round($all_status['total_sales'],2) ?></strong></h4>
                             <span> <?= Yii::t('app', 'Total Sales') ?></span>
                         </div>
                     </div>
