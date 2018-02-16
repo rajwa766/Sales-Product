@@ -82,7 +82,7 @@ if($model->payment_slip){
                                                         <?php if (isset($model->shippingAddresses)) {?>
                                                         <?=$model->shippingAddresses->address?>
 
-                                                            <?=$model->shippingAddresses->district . '' . $model->shippingAddresses->province . '' . $model->shippingAddresses->country . '' . $model->shippingAddresses->postal_code?><br>
+                                                            <?=$model->shippingAddresses->district . ', ' . $model->shippingAddresses->province . ', ' . $model->shippingAddresses->country . ', ' . $model->shippingAddresses->postal_code?><br>
                                                             Phone: <?php if (!empty($model->shippingAddresses->phone_no)){ 
                                                             echo $model->shippingAddresses->phone_no;}
                                                             else {echo $model->shippingAddresses->mobile_no;} ?>
@@ -122,7 +122,7 @@ if($model->payment_slip){
                                                     <h3><?=$billed_to->name?></h3>
                                                     <p class='text-muted'><?=$billed_to->address;?></p>
                                                     <p class='text-muted'><?=$billed_to->district;?></p>
-                                                    <p class='text-muted'><?=$billed_to->country . ' ' . $billed_to->postal_code;?></p>
+                                                    <p class='text-muted'><?=$billed_to->province.', '.$billed_to->country . ', ' . $billed_to->postal_code;?></p>
                                                 </address>
                                             </div>
 
