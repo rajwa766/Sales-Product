@@ -227,10 +227,10 @@ use yii\models\users_level;
                                 <span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" >
-                                <li>
+                                <!--<li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>reports/inventory-report"><?= Yii::t('app', 'Inventory');?></a>
 
-                                </li>
+                                </li>-->
                                 <li>
                                     <a class="" href="<?= Yii::$app->homeUrl; ?>reports/order-report"><?= Yii::t('app', 'Order');?></a>
 

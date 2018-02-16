@@ -83,7 +83,9 @@ if($model->payment_slip){
                                                         <?=$model->shippingAddresses->address?>
 
                                                             <?=$model->shippingAddresses->district . '' . $model->shippingAddresses->province . '' . $model->shippingAddresses->country . '' . $model->shippingAddresses->postal_code?><br>
-                                                            P: <?=$model->shippingAddresses->phone_no;?>
+                                                            Phone: <?php if (!empty($model->shippingAddresses->phone_no)){ 
+                                                            echo $model->shippingAddresses->phone_no;}
+                                                            else {echo $model->shippingAddresses->mobile_no;} ?>
                                                         <?php }?>
                                                         </span>
                                                     <?php }?>
