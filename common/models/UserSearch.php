@@ -47,11 +47,18 @@ class UserSearch extends User
         if(isset($Role['super_admin'])){ 
             $query = User::find();
         }else{
-            $children_ids = (new Query())
-                ->select('GetFamilyTree(`id`) as children') //->select('`id`, `parent_id`,GetFamilyTree(`id`) as children ')
-                ->from('user')
-                ->where(['=', 'id', $user_id])->one()['children'];
-            $children_ids = explode(',', $children_ids);
+            try
+            {
+                $children_ids = (new Query())
+                    ->select('GetFamilyTree(`id`) as children') //->select('`id`, `parent_id`,GetFamilyTree(`id`) as children ')
+                    ->from('user')
+                    ->where(['=', 'id', $user_id])->one()['children'];
+
+                $children_ids = explode(',', $children_ids);
+            } catch (\Exception $e) {
+                $children_ids = []; 
+            }
+          
             $query = User::find()
                ->where(['in', 'id', $children_ids]);
         }

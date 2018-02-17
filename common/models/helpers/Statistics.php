@@ -68,11 +68,16 @@ class Statistics extends \yii\base\Model
         $management_level_id = array_search('Management Team', \common\models\Lookup::$user_levels);
         $Role = Yii::$app->authManager->getRolesByUser($user_id);
         if (!(isset($Role['super_admin']) || $management_level_id == $levelId)) {
-            $children_ids = (new Query())
-                ->select('GetFamilyTree(`id`) as children') //->select('`id`, `parent_id`,GetFamilyTree(`id`) as children ')
-                ->from('user')
-                ->where(['=', 'id', $user_id])->one()['children'];
-            $children_ids = explode(',', $children_ids);
+            try
+            {
+                $children_ids = (new Query())
+                    ->select('GetFamilyTree(`id`) as children') //->select('`id`, `parent_id`,GetFamilyTree(`id`) as children ')
+                    ->from('user')
+                    ->where(['=', 'id', $user_id])->one()['children'];
+
+                $children_ids = explode(',', $children_ids);
+            } catch (\Exception $e) {
+            }
             $children_ids[] = $user_id;
         }
         // $account_receivables = \common\models\Account::find()->select('id')->where(['account_type' => array_search('Receivable', \common\models\Lookup::$account_types)]);
@@ -94,7 +99,7 @@ class Statistics extends \yii\base\Model
         if (!(isset($Role['super_admin']) || $management_level_id == $levelId)) {
             $sales_quantity->where(['in', 'user_id', $children_ids]);
         }
-        $sales_quantity=$sales_quantity->one();
+        $sales_quantity = $sales_quantity->one();
         return $sales_quantity['quantity'];
     }
 
