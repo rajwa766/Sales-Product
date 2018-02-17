@@ -75,17 +75,27 @@ class Statistics extends \yii\base\Model
             $children_ids = explode(',', $children_ids);
             $children_ids[] = $user_id;
         }
-        $account_receivables = \common\models\Account::find()->select('id')->where(['account_type' => array_search('Receivable', \common\models\Lookup::$account_types)]);
+        // $account_receivables = \common\models\Account::find()->select('id')->where(['account_type' => array_search('Receivable', \common\models\Lookup::$account_types)]);
+        // if (!(isset($Role['super_admin']) || $management_level_id == $levelId)) {
+        //     $account_receivables->andWhere(['in', 'user_id', $children_ids]);
+        // }
+        // $account_receivables = $account_receivables->asArray()->all();
+        // $account_receivables = array_column($account_receivables, 'id');
+        // $sales_amount = (new Query())
+        //     ->select('sum(amount) amount')
+        //     ->from('gl')
+        //     ->where(['in', 'account_id', $account_receivables])->one();
+
+        //return $sales_amount['amount'];
+
+        $sales_quantity = (new Query())
+            ->select('sum(remaining_quantity) quantity')
+            ->from('stock_in');
         if (!(isset($Role['super_admin']) || $management_level_id == $levelId)) {
-            $account_receivables->andWhere(['in', 'user_id', $children_ids]);
+            $sales_quantity->where(['in', 'user_id', $children_ids]);
         }
-        $account_receivables = $account_receivables->asArray()->all();
-        $account_receivables = array_column($account_receivables, 'id');
-        $sales_amount = (new Query())
-            ->select('sum(amount) amount')
-            ->from('gl')
-            ->where(['in', 'account_id', $account_receivables])->one();
-        return $sales_amount['amount'];
+        $sales_quantity=$sales_quantity->one();
+        return $sales_quantity['quantity'];
     }
 
     public static function CurrentUser($user_id)
@@ -120,7 +130,7 @@ class Statistics extends \yii\base\Model
     public static function LimitUser($user_id)
     {
         $level_id = \common\models\User::findOne(['id' => $user_id]);
-        $next_level= \common\models\Lookup::$next_levels[''.$level_id->user_level_id];
+        $next_level = \common\models\Lookup::$next_levels['' . $level_id->user_level_id];
         return \common\models\User::find()->where(['user_level_id' => $next_level])->andWhere(['parent_id' => $user_id])->andWhere(['!=', 'company_user', '1'])->count();
     }
     public static function allStatusDashboard($user_id)
@@ -135,10 +145,9 @@ class Statistics extends \yii\base\Model
         $all_status['current_profit'] = Statistics::CurrentProfit($user_id);
         $all_status['current_user'] = Statistics::CurrentUser($user_id);
         $all_status['user_limit'] = Statistics::CurrentUserLimit($user_id);
-        if($all_status['user_limit']!='infinite')
-        {
-            $limit_user=Statistics::LimitUser($user_id);
-            $all_status['user_limit']=$all_status['user_limit']-$limit_user;
+        if ($all_status['user_limit'] != 'infinite') {
+            $limit_user = Statistics::LimitUser($user_id);
+            $all_status['user_limit'] = $all_status['user_limit'] - $limit_user;
         }
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
         $all_status['total_sales'] = Statistics::TotalSales($user_id);
