@@ -89,7 +89,7 @@ class Statistics extends \yii\base\Model
         //return $sales_amount['amount'];
 
         $sales_quantity = (new Query())
-            ->select('sum(remaining_quantity) quantity')
+            ->select('(sum(initial_quantity) - sum(remaining_quantity)) as quantity')
             ->from('stock_in');
         if (!(isset($Role['super_admin']) || $management_level_id == $levelId)) {
             $sales_quantity->where(['in', 'user_id', $children_ids]);
