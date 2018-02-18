@@ -184,6 +184,20 @@ class OrderController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionHistory($external_code)
+    {
+        $response = \common\models\Order::GetOrderHistory($external_code);
+        if ($response != null) {
+            $response = json_decode($response);
+        }
+        else
+        {
+            $response->order_history=[];
+        }
+        return $this->render('history', [
+            'order_history' => $response->order_history,
+        ]);
+    }
     public function actionPayment($id)
     {
         return $this->render('payment', [

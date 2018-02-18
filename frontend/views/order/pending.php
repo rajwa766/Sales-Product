@@ -135,10 +135,15 @@ $this->params['breadcrumbs'][] = $this->title;
             },
         ],
         ['class' => 'yii\grid\ActionColumn',
-            'template' => '{view}{edit}{delete}',
+            'template' => '{view}{edit}{delete}{history}',
             'buttons' => [
                 'view' => function ($url, $model) {
                     return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl . 'order/view/' . $model->id);
+                },
+                'history' => function ($url, $model) {
+                    if ($model->status == array_search('Approved', \common\models\Lookup::$status) && !empty($model->order_external_code)) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', Yii::$app->homeUrl . 'order/history?external_code=' . $model->order_external_code);
+                    }
                 },
                 'edit' => function ($url, $model) {
                     $Role = Yii::$app->authManager->getRolesByUser($model->user_id);

@@ -521,4 +521,26 @@ class Order extends \yii\db\ActiveRecord
             }
         }
     }
+    public static function GetOrderHistory($order_external_id)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://oms.sokochan.com/api/1.0/orders/".$order_external_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Basic QmV5QVBJOjZhOTZlMmUyMjQ1OWRjYjY5MDEzNmNmZTM2ZDgxYjgy",
+                "cache-control: no-cache",
+                "Content-Type: application/json",
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
 }
