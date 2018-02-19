@@ -136,7 +136,7 @@ if($type=="Pending")
 
                 if ($model->status == '0') {
                     if ($model->order_request_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
-                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Yes</a></div>";
+                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Reject</a></div>";
                     } else {
                         return "<div class='pending_approval'>Pending</div>";
                     }
