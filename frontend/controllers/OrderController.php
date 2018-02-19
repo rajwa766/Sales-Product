@@ -70,6 +70,7 @@ class OrderController extends Controller
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'type' => 'Pending',
         ]);
     }
 
@@ -83,6 +84,7 @@ class OrderController extends Controller
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            
         ]);
     }
 
@@ -102,6 +104,7 @@ class OrderController extends Controller
         return $this->render('pending', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'type' => 'Approved',
         ]);
     }
 
@@ -231,7 +234,32 @@ class OrderController extends Controller
             'product' => $product,
         ]);
     }
-
+    public function actionApproveAll()
+    {
+        $pending_status = array_search('Pending', \common\models\Lookup::$status);
+        $searchModel = new OrderSearch();
+        $searchModel->status = $pending_status;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $user_id = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        if (!isset($Role['super_admin'])) {
+            $dataProvider->query->andFilterWhere(['or',
+                ['order_request_id' => Yii::$app->user->identity->id],
+                ['user_id' => Yii::$app->user->identity->id],
+            ]);
+        }
+        foreach ($dataProvider->models as $model)
+        {
+            try
+            {
+                \common\models\StockIn::approve($model->order_ref_no,$model->user_id,$model->order_request_id);
+            }
+            catch (Exception $e) {
+               
+            }
+        }
+        return $this->redirect(['pending']);
+    }
     /**
      * Updates an existing Order model.
      * If update is successful, the browser will be redirected to the 'view' page.

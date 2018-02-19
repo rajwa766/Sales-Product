@@ -9,8 +9,14 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = "Pending Order";
+if($type=="Pending")
+{
+    $this->title = "Pending Order";
+}
+else
+{
+    $this->title = "Approve Order";
+}
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">
@@ -19,7 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin();?>
     <?php // echo $this->render('_search', ['model' => $searchModel]);
 ?>
-
+<?php 
+if($type=="Pending")
+{
+    echo Html::a(Yii::t('app', 'Approve All'), ['approve-all'], ['class' => 'btn btn-success']); 
+}
+?>
 
 
     <?=GridView::widget([
