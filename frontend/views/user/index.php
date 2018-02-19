@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\select2\Select2;
+use yii\helpers\Url;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -36,13 +40,36 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'link',
             // 'updated_at',
             // 'parent_id',
+            // [
+            //     'label' => 'Parent User',
+            //     'attribute' => 'parent_id',
+            //     'value' => function($model) {
+            //         return $model->username($model->parent_id);
+            //     },
+            // ],
             [
-                'label' => 'Parent User',
                 'attribute' => 'parent_id',
-                'value' => function($model) {
+                'label'=>Yii::t('app', 'Transfer from'),
+                'value'=>function ($model, $key, $index, $widget) { 
                     return $model->username($model->parent_id);
                 },
-            ],
+                'filter'=>Select2::widget([
+                'model' => $searchModel,
+                'initValueText' => isset($model->parent_id) ? $model->username($model->parent_id) : "",
+                'attribute' => 'parent_id',
+                'options' => ['placeholder' => 'Select User Name ...'],
+                'pluginOptions' => [
+                'allowClear' => true,
+                //'autocomplete' => true,
+                'ajax' => [
+                    'url' => Url::base().'/user/get-users',
+                    'dataType' => 'json',
+                    'data' => new \yii\web\JsExpression('function(params) { return {q:params.term}; }')
+                ],
+        ],
+    // ... other params
+]),
+ ],
             'userLevel.display_name',
             //'phone_no',
             // 'address',
