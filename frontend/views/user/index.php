@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // ],
             [
                 'attribute' => 'parent_id',
-                'label'=>Yii::t('app', 'Transfer from'),
+                'label'=>Yii::t('app', 'Parent'),
                 'value'=>function ($model, $key, $index, $widget) { 
                     return $model->username($model->parent_id);
                 },
