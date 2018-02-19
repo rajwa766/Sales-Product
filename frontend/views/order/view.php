@@ -14,20 +14,30 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'ORDERS'), 'url' => [
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php
-        Modal::begin([
-            'header' => '<h2>Payment Slip</h2>',
-            'id' => 'modal',
-            'size' => 'modal-lg',
-        ]);
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Payment Slip</h4>
+      </div>
+      <div class="modal-body">
+       <?php
         if($model->payment_slip){
             echo '<div id="PaymentSlip"> <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
         }else{
-            echo '<div id="PaymentSlip"> <h3>Slip not found</h3></div>';
-            
+            echo '<div id="modalImageContent"> <h3>Slip not found</h3></div>';
         }
-        Modal::end();
-        ?>
+       ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
                     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                         <div class="page-title">
@@ -295,7 +305,7 @@ echo PrintThis::widget([
 $(document).ready(function(){
 
 $("body").delegate("#viewslip","click",function(){
-        $('#modal').modal('show');
+        $('#myModal').modal('show');
         return false;
         
      });
