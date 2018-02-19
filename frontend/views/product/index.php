@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?php // Html::a(Yii::t('app', 'Create Product'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php echo Html::a(Yii::t('app', 'Create Product'), ['create'], ['class' => 'btn btn-success']); ?>
     </p>
 
     <?= GridView::widget([

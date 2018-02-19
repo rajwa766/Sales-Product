@@ -71,7 +71,8 @@ class OrderSearch extends Order
             ->andFilterWhere(['like', 'cod', $this->cod])
             ->andFilterWhere(['like', 'additional_requirements', $this->additional_requirements])
             ->andFilterWhere(['like', 'file', $this->file]);
-     
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
         return $dataProvider;
     }
 }

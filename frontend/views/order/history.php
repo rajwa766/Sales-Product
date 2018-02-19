@@ -9,7 +9,7 @@
                     <td class="text-center">Date/Time</td>
                     <td class="text-center">Location</td>
                     <td class="text-center">Status</td>
-                    <td class="text-right">Remark</td>
+                    <td class="text-center">Remark</td>
                 </tr>
             </thead>
                 <tbody>

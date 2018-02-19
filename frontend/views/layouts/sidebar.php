@@ -18,7 +18,12 @@ use yii\models\users_level;
 
                         <div class="profile-image col-md-4 col-sm-4 col-xs-4">
                             <a href="<?= Yii::$app->homeUrl;?>site/index">
-                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive img-circle">
+                            <?php if(Yii::$app->user->identity->profile){ ?>
+                                <img src="<?=\yii\helpers\Url::to('@web/uploads/'.Yii::$app->user->identity->profile, true)?>" class="img-circle img-inline">
+                                    <?php    }else{?>
+                                    
+                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-responsive">
+                                    <?php  }?>
                             </a>
                         </div>
 

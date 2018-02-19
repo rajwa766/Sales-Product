@@ -16,17 +16,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
         Modal::begin([
-            'header' => '<h2 s="">Payment Slip</h2>',
+            'header' => '<h2>Payment Slip</h2>',
             'id' => 'modal',
             'size' => 'modal-lg',
         ]);
-if($model->payment_slip){
-    echo '<div id="modalContent"> <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
-}else{
-    echo '<div id="modalContent"> <h3>Slip not found</h3></div>';
-    
-}
-
+        if($model->payment_slip){
+            echo '<div id="PaymentSlip"> <img src="'.\yii\helpers\Url::to('@web/uploads/' . $model->payment_slip, true).'"></div>';
+        }else{
+            echo '<div id="PaymentSlip"> <h3>Slip not found</h3></div>';
+            
+        }
         Modal::end();
         ?>
 
@@ -104,7 +103,7 @@ if($model->payment_slip){
                                             {
                                             ?>
                                                 <div class="col-xs-6 invoice-infoblock pull-left">
-                                                <h4>External Code: <?=$model->order_external_code?> </h4>
+                                                <h4>External Code: <a href="<?=Yii::$app->homeUrl . 'order/history?external_code=' . $model->order_external_code?>" target="_blank"><?=$model->order_external_code?> </h4>
                                                 
                                                 </div>
                                                 <div class="col-xs-6 invoice-infoblock text-right">

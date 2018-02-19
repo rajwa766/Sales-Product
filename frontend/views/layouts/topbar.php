@@ -68,7 +68,14 @@
                       <?php }else{?>
                         <li class="profile">
                             <a href="#" data-toggle="dropdown" class="toggle">
-                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" alt="user-image" class="img-circle img-inline">
+                                <?php if(Yii::$app->user->identity->profile){ ?>
+                                     <img src="<?=\yii\helpers\Url::to('@web/uploads/'.Yii::$app->user->identity->profile, true)?>" class="img-circle img-inline">
+                                <?php    
+                                }
+                                else{
+                                ?>
+                                <img src="<?= Yii::$app->homeUrl; ?>images/profile.jpg" class="img-circle img-inline">
+                                    <?php  }?>                            
                                 <span><?php echo Yii::$app->user->identity->username ?> <i class="fa fa-angle-down"></i></span>
                             </a>
                             <ul class="dropdown-menu profile animated fadeIn">
