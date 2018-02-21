@@ -105,11 +105,20 @@ class Statistics extends \yii\base\Model
 
     public static function CurrentUser($user_id)
     {
-        return (new Query())
-            ->select('*')
+        try
+        {
+           
+            $children_ids= (new Query())
+            ->select('GetFamilyTree(`id`) as children') 
             ->from('user')
-            ->where(['=', 'parent_id', $user_id])
-            ->count();
+            ->where(['=', 'id', $user_id])->one()['children'];
+            $children_ids = explode(',', $children_ids);
+            return count($children_ids);
+        }
+        catch(Exception $ex)
+        {
+            return 0;
+        }
     }
 
     public static function CurrentRemaning($user_id, $urent_users)
