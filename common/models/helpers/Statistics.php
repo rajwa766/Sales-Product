@@ -106,7 +106,7 @@ class Statistics extends \yii\base\Model
     public static function CurrentUser($user_id)
     {
         return (new Query())
-            ->select('*')
+            ->select('*,GetFamilyTree(`id`) as children')
             ->from('user')
             ->where(['=', 'parent_id', $user_id])
             ->count();
