@@ -91,14 +91,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
         [
 
-            'header' => 'Approve',
+            'header' => Yii::t('app', 'Approve'),
             'format' => 'raw',
             'value' => function ($model) {
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
 
                 if ($model->status == '5') {
                     if (($model->user_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
-                        return "<div class='payment_button_general_approve' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >Approve</a></div>";
+                        return "<div class='payment_button_general_approve' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >".Yii::t('app', 'Approve')."</a></div>";
                     } else {
                         return "<div class='pending_approval'>Pending</div>";
                     }
@@ -119,12 +119,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 if ($model->status == '5') {
                     if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
-                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >Yes</a></div>";
+                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >".Yii::t('app', 'Yes')."</a></div>";
                     } else {
                         return "<div class='pending_approval'>Pending</div>";
                     }
                 } else {
-                    return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >No</a></div>";
+                    return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >".Yii::t('app', 'No')."</a></div>";
                 }
             },
         ],

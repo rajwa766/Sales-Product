@@ -74,7 +74,7 @@ class StockStatus extends \yii\db\ActiveRecord {
         $stock_status = new StockStatus();
         $stock_status->isNewRecord = true;
         $stock_status->id = Null;
-        $stock_status->below_percentage = '80';
+        $stock_status->below_percentage = '20';
         $stock_status->product_id = 1;
         $stock_status->user_id = $user_id;
         $stock_status->save();
