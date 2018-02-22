@@ -100,11 +100,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (($model->user_id == Yii::$app->user->identity->id) || isset($loggedInUserRole['super_admin'])) {
                         return "<div class='payment_button_general_approve' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >".Yii::t('app', 'Approve')."</a></div>";
                     } else {
-                        return "<div class='pending_approval'>Pending</div>";
+                        return "<div class='pending_approval'>".Yii::t('app','Pending')."</div>";
                     }
 
                 } else {
-                    return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
+                    return "<div class='payment_button_general_approved' ><a>".Yii::t('app','Approved')."</a></div>";
 
                 }
 
@@ -119,9 +119,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 if ($model->status == '5') {
                     if ($model->user_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
-                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >".Yii::t('app', 'Yes')."</a></div>";
+                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >".Yii::t('app', 'Reject')."</a></div>";
                     } else {
-                        return "<div class='pending_approval'>Pending</div>";
+                        return "<div class='pending_approval'>".Yii::t('app','Pending')."</div>";
                     }
                 } else {
                     return "<div class='payment_button_general_approved' ><a class='" . $model->id . "' >".Yii::t('app', 'No')."</a></div>";

@@ -123,7 +123,7 @@ if($type=="Pending")
                         return "<div class='pending_approval'>Pending</div>";
                     }
                 } else {
-                    return "<div class='payment_button_general_approved' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >Approved</a></div>";
+                    return "<div class='payment_button_general_approved' ><a user_id='" . $model->user_id . "' ref_id='" . $model->order_request_id . "' class='" . $model->id . "' >".Yii::t('app','Approved')."</a></div>";
                 }
             },
         ],

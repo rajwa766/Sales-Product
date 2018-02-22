@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return "<div class='pending_approval'>Pending</div>";
                     }
                 } else {
-                    return "<div class='payment_button_general_approved' ><a>Approved</a></div>";
+                    return "<div class='payment_button_general_approved' ><a>".Yii::t('app','Approved')."</a></div>";
                 }
             },
         ],
@@ -109,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $loggedInUserRole = Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
                 if ($model->status == '3') {
                     if ($model->order_request_id == Yii::$app->user->identity->id || isset($loggedInUserRole['super_admin'])) {
-                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >".Yii::t('app', 'Yes')."</a></div>";
+                        return "<div class='payment_button_general_cancel' ><a class='" . $model->id . "' >".Yii::t('app', 'Reject')."</a></div>";
                     } else {
                         return "<div class='pending_approval'>Pending</div>";
                     }
