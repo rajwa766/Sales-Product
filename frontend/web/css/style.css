@@ -178,9 +178,6 @@ html.boxed {
 
 body {
     background-color: #f6f6f6;
-    /*color: rgba(118, 118, 118, 1.0);
-    color: #333;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;*/
     color: #333;
     font-family: 'Raleway';
     font-size: 14px;
@@ -272,7 +269,7 @@ label {
     font-weight: 400;
     padding: 0;
     text-transform: uppercase;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: 'Raleway';
     color: rgba(118, 118, 118, 1.0);
     margin-bottom: 15px;
 }
@@ -298,9 +295,8 @@ h3,
 h4,
 h5,
 h6 {
-    /*  font-family: Oswald, Helvetica, Arial, sans-serif;*/
     margin: 10px 0;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-weight: 300;
     color: #505458;
 }
@@ -965,7 +961,7 @@ a:focus {
     margin: 0px;
     padding-left: 0px;
     list-style-type: none;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-weight: 300;
     font-size: 16px;
 }
@@ -1081,7 +1077,7 @@ a:focus {
 }
 
 #main-menu-wrapper li .label {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-size: 10px;
     padding: 3px 7px;
     float: right;
@@ -1136,7 +1132,7 @@ a:focus {
 }
 
 .profile-info .profile-details h3 a {
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-weight: 300;
     color: rgba(234, 238, 243, 1.0);
     font-size: 19px;
@@ -1262,7 +1258,7 @@ section header {
 
 section header .title {
     margin-top: 10px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-size: 19px;
     padding-left: 15px;
     line-height: 30px;
@@ -1750,7 +1746,7 @@ textarea,
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
     border: 0px;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: 'Raleway';
     font-weight: 300;
     text-shadow: none;
 }
@@ -2788,7 +2784,7 @@ ul.states li {
 ----------------------------------------------*/
 
 .tooltip {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-size: 13px;
     line-height: 21px;
     text-shadow: none;
@@ -2986,7 +2982,7 @@ ul.states li {
 ----------------------------------------------*/
 
 .popover {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-size: 14px;
     font-weight: 400;
     line-height: 23px;
@@ -7219,7 +7215,7 @@ border-left: 3px solid transparent;
 }
 
 .rickshaw_graph .detail .x_label {
-    font-family: Arial, sans-serif;
+    font-family: 'Raleway';
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;
@@ -8144,7 +8140,7 @@ border-left: 3px solid transparent;
     width: auto;
     display: inline-block;
     margin-left: -25px;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     top: 40px;
 }
 
@@ -9607,7 +9603,7 @@ h1,
     font-weight: 400;
     padding: 0;
     text-transform: uppercase;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: 'Raleway';
     color: rgba(118, 118, 118, 1.0);
     margin-bottom: 15px;
 }
@@ -9876,7 +9872,7 @@ h1,
     -moz-border-radius: 0px;
     border-radius: 0px;
     border: 1px solid #e1e1e1;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Raleway';
     font-size: 14px;
     background: none;
     color: inherit;
