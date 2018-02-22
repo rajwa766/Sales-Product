@@ -588,13 +588,6 @@ a:focus {
     font-size: 14px;
 }
 
-.page-topbar .message-toggle-wrapper,
-.page-topbar .notify-toggle-wrapper,
-.page-topbar .searchform,
-.page-topbar li.profile {
-    /* opacity: 0;*/
-}
-
 .page-topbar .message-toggle-wrapper.showopacity,
 .page-topbar .notify-toggle-wrapper.showopacity,
 .page-topbar .searchform.showopacity,
@@ -899,9 +892,6 @@ a:focus {
 
 
 /*--- Search Form ----*/
-
-.page-topbar li.searchform {}
-
 .page-topbar li.searchform .input-group {
     top: 12px;
     width: 30px;
@@ -1332,14 +1322,6 @@ section.box .actions i {
 
 section.box .actions i:hover {
     color: #999999;
-}
-
-section .content-body.collapsed {
-    /*display: none;*/
-    /*  height: 0px !important;
-  overflow: hidden;
-  max-height: 0px !important;
-  padding: 0px 30px !important;*/
 }
 
 
@@ -3161,8 +3143,6 @@ ul.states li {
       Accordions
 ----------------------------------------------*/
 
-.panel-group {}
-
 .panel-default>.panel-heading,
 .panel-group .panel {
     border-radius: 0px;
@@ -4567,8 +4547,6 @@ blockquote.orange{ border-color: rgba(250,133,100,1.0); }
     background-color: rgba(153, 114, 181, 1.0);
 }
 
-#portfolio .portfolio-filter>li a.active:after {}
-
 #portfolio .portfolio-item {
     /*  width: 33.2%;*/
     float: left;
@@ -5596,8 +5574,7 @@ a.cke_button_disabled:hover,
 .loginpage form input[type=checkbox],
 .loginpage input[type=text] {
     /* color: rgba(250, 133, 100, 1)
-   #fa8564*/
-    ;
+   #fa8564;*/
     background: #fbfbfb;
 }
 
@@ -6202,8 +6179,6 @@ code {
 
 /*flot pie*/
 
-#flotpiemenu {}
-
 #flotpiemenu button {
     cursor: pointer;
     min-width: 120px;
@@ -6598,13 +6573,6 @@ border-left: 3px solid transparent;
 .page-sidebar.chat_shift,
 .page-sidebar.collapseit {
     position: absolute !important;
-}
-
-.page-sidebar.chat_shift #main-menu-wrapper,
-.page-sidebar.collapseit #main-menu-wrapper,
-.page-sidebar.chat_shift #main-menu-wrapper .wraplist,
-.page-sidebar.collapseit #main-menu-wrapper .wraplist {
-    /*height: 3000px !important;*/
 }
 
 .page-sidebar.chat_shift #main-menu-wrapper,
@@ -7150,8 +7118,6 @@ border-left: 3px solid transparent;
 .mail_view_title h3 {
     margin: 0px;
 }
-
-.mail_view_info {}
 
 .mail_view {
     margin: 30px 0;
@@ -8310,9 +8276,6 @@ border-left: 3px solid transparent;
     display: block;
     text-align: center;
 }
-
-.tile-counter i,
-.tile-counter h2 {}
 
 .tile-counter i {
     margin-right: 15px;
@@ -9724,14 +9687,10 @@ h1,
     font-size: 14px;
 }
 
-.order-form {}
-
 .order-form .row {
     margin-right: 0px;
     margin-left: 0px;
 }
-
-.customer-detail {}
 
 .customer-detail {
     border: 1px solid #1fb5ac;
