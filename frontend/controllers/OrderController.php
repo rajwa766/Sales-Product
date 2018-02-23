@@ -162,6 +162,11 @@ class OrderController extends Controller
         }
 
     }
+    public function actionPaymentVerified()
+    {
+       echo 'Payment verfied';
+
+    }
     /**
      * Displays a single Order model.
      * @param integer $id

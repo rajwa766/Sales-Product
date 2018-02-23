@@ -171,6 +171,8 @@ class Gl extends \yii\db\ActiveRecord
     }
     public static function get_filtered_result($user_id, $fromDate, $toDate, $account_type)
     {
+        $logged_in_user = Yii::$app->user->getId();
+        $Role = Yii::$app->authManager->getRolesByUser($logged_in_user);
         $gl = (new Query())
             ->select('gl.*,hit_user.username as name')
             ->from('gl')
@@ -178,8 +180,11 @@ class Gl extends \yii\db\ActiveRecord
             ->innerJoin('user as org_user', 'org_user.id = org_acc.user_id')
             ->innerJoin('account as hit_acc', 'hit_acc.id = gl.hit_account_id')
             ->innerJoin('user as hit_user', 'hit_user.id = hit_acc.user_id')
-            ->where(['org_user.id' => $user_id])
-            ->andWhere(['org_acc.account_type' => $account_type]);
+            ->where(['org_user.id' => $user_id]);
+            if (!isset($Role['super_admin'])) {
+                $gl->andWhere(['hit_user.id' => $logged_in_user]); // show only result for logged in user and not all payable/receivables
+            }
+            $gl->andWhere(['org_acc.account_type' => $account_type]);
         if (!empty($fromDate)) {
             $gl->andWhere(['>=', 'DATE(gl.created_at)', $fromDate]);
         }

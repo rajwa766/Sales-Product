@@ -103,13 +103,61 @@ class Statistics extends \yii\base\Model
         return $sales_quantity['quantity'];
     }
 
+    public static function TotalSalesClientRequest($user_id)
+    {
+        $approved_status = array_search('Approved', \common\models\Lookup::$status);
+        $userDetail = \common\models\User::findOne(['id', $user_id]);
+        $levelId = $userDetail->user_level_id;
+        $management_level_id = array_search('Management Team', \common\models\Lookup::$user_levels);
+        $Role = Yii::$app->authManager->getRolesByUser($user_id);
+        $start_date = date('Y-m-01', strtotime(date('Y-m-d')));
+        $end_date = date('Y-m-t', strtotime(date('Y-m-d')));
+        $admin_id = 1;
+        try
+        {
+            $total_sales = (new Query())
+                ->select('SUM(product_order.quantity) as quantity')
+                ->from('order')
+                ->innerJoin('product_order', 'product_order.order_id = order.id')
+                ->where(['=', 'order.status', $approved_status])
+                ->andWhere(['>=', 'order.created_at', $start_date])
+                ->andWhere(['<=', 'order.created_at', $end_date]);
+            if ((isset($Role['super_admin']) || $management_level_id == $levelId)) {
+                $MrUsers = (new Query())
+                    ->select('id')
+                    ->from('user')
+                    ->where(['=', 'user_level_id', $management_level_id])
+                    ->indexby('id')
+                    ->all();
+                $MrUsers = array_keys($MrUsers);
+                $total_sales->andWhere(['=', 'order.order_request_id', $admin_id])
+                    ->andWhere(['in', 'order.user_id', $MrUsers]);
+            } else {
+                $total_sales->andWhere(['in', 'order.user_id', $user_id])
+                    ->andWhere(['=', 'order.order_request_id', $userDetail->parent_id]);
+            }
+
+            $total_sales=$total_sales->one();
+            return $total_sales['quantity'];
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
     public static function CurrentUser($user_id)
     {
-        return (new Query())
-            ->select('*,GetFamilyTree(`id`) as children')
-            ->from('user')
-            ->where(['=', 'parent_id', $user_id])
-            ->count();
+        try
+        {
+
+            $children_ids = (new Query())
+                ->select('GetFamilyTree(`id`) as children')
+                ->from('user')
+                ->where(['=', 'id', $user_id])->one()['children'];
+            $children_ids = explode(',', $children_ids);
+            return count($children_ids);
+        } catch (Exception $ex) {
+            return 0;
+        }
     }
 
     public static function CurrentRemaning($user_id, $urent_users)
@@ -155,7 +203,7 @@ class Statistics extends \yii\base\Model
             $all_status['user_limit'] = $all_status['user_limit'] - $limit_user;
         }
         $all_status['user_remning'] = Statistics::CurrentRemaning($user_id, $all_status['current_user']);
-        $all_status['total_sales'] = Statistics::TotalSales($user_id);
+        $all_status['total_sales'] = Statistics::TotalSalesClientRequest($user_id);
         $all_status['total_order'] = \common\models\Order::find()->where(['user_id' => $user_id])->count();
         $all_status['pending_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $pending])->count();
         $all_status['approved_order'] = \common\models\Order::find()->where(['order_request_id' => $user_id])->andWhere(['status' => $approved])->count();
