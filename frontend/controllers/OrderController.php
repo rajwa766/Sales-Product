@@ -162,17 +162,24 @@ class OrderController extends Controller
         }
 
     }
-    public function actionPaymentVerified($id)
+    public function actionThankyou()
     {
-           $order_detail = Order::findOne(['id',$id]);
-            $stock_in = \common\models\StockIn::approve($id, $order_detail->user_id, $order_detail->order_request_id);
-            if($stock_in){
-                return $this->render('thankyou');
-            }else{
-                return $this->render('transaction_failed');
-                
-            }
+        return $this->render('thankyou');
+    }
 
+    public function actionPaymentVerified()
+    {
+        try{
+            $id = Yii::$app->request->get('rid');
+            $ref_id = Yii::$app->request->get('refno');
+            $ref_id= ltrim($ref_id,'0');
+            $order_detail = Order::findOne(['id',$ref_id]);
+            $stock_in = \common\models\StockIn::approve($ref_id, $order_detail->user_id, $order_detail->order_request_id);
+        }
+        catch(Exception  $e)
+        {
+
+        }
 
     }
     /**

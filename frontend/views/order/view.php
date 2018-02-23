@@ -255,9 +255,9 @@ $items = array();
 
                                         <?php }?>
                                                 <?php
-                                                $orderStatus = array_search('Payment Pending', \common\models\Lookup::$status);
+                                                $pamentMethod = array_search('Credit Card', \common\models\Lookup::$payment_method);
                                                 
-                                                if($model->status == $orderStatus){?>
+                                                if($model->payment_method == $pamentMethod){?>
                                                 <form method="post" action="https://www.thaiepay.com/epaylink/payment.aspx">
                                                         <input type="hidden" name="refno" value="<?=$model->id?>">
                                                         <input type="hidden" name="merchantid" value="46511428">
@@ -265,7 +265,7 @@ $items = array();
                                                         <input type="hidden" name="c">
                                                         <input type="hidden" name="productdetail" value="BeyDey">
                                                         <input type="hidden" name="total" value="<?=$sum?>">
-                                                        <input type="hidden" name="postbackurl" value="<?=Url::base()?>/order/view/787">
+                                                        <input type="hidden" name="postbackurl" value="<?=Url::base()?>/order/payment-verified?rid=<?=$model->id?>">
                                                         <input type="submit" name="Submit" class="btn btn-primary" value="Checkout">
                                                         
                                                     </form>
