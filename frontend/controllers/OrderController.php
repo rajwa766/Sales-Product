@@ -162,9 +162,17 @@ class OrderController extends Controller
         }
 
     }
-    public function actionPaymentVerified()
+    public function actionPaymentVerified($id)
     {
-       echo 'Payment verfied';
+           $order_detail = Order::findOne(['id',$id]);
+            $stock_in = \common\models\StockIn::approve($id, $order_detail->user_id, $order_detail->order_request_id);
+            if($stock_in){
+                return $this->render('thankyou');
+            }else{
+                return $this->render('transaction_failed');
+                
+            }
+
 
     }
     /**
