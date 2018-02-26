@@ -90,9 +90,10 @@ use yii\models\users_level;
                         <!-- end profile -->
                         <?php  
                       
-                        $vip_level_id = array_search('VIP Team', \common\models\Lookup::$user_levels);
+                        //$vip_level_id = array_search('VIP Team', \common\models\Lookup::$user_levels);
+                        $vip_level_id = array_search('VIP Team Advance Level', \common\models\Lookup::$user_levels);
                        $user_level_id =  Yii::$app->user->identity->user_level_id;
-        if(!isset($Role['seller']) &&  $user_level_id <= $vip_level_id){
+        if($user_level_id <= $vip_level_id){
         
                         ?>
                         <li class=""> 

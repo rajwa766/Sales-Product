@@ -178,11 +178,9 @@ html.boxed {
 
 body {
     background-color: #f6f6f6;
-    /*color: rgba(118, 118, 118, 1.0);
     color: #333;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;*/
-    color: #333;
-    font-family: 'Raleway';
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 14px;
     padding: 0px !important;
     margin: 0px !important;
@@ -269,10 +267,10 @@ label {
 .page-title h1 {
     font-size: 30px;
     background-color: transparent;
-    font-weight: 400;
     padding: 0;
     text-transform: uppercase;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     color: rgba(118, 118, 118, 1.0);
     margin-bottom: 15px;
 }
@@ -298,9 +296,8 @@ h3,
 h4,
 h5,
 h6 {
-    /*  font-family: Oswald, Helvetica, Arial, sans-serif;*/
     margin: 10px 0;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
     font-weight: 300;
     color: #505458;
 }
@@ -586,13 +583,6 @@ a:focus {
 
 .page-topbar i {
     font-size: 14px;
-}
-
-.page-topbar .message-toggle-wrapper,
-.page-topbar .notify-toggle-wrapper,
-.page-topbar .searchform,
-.page-topbar li.profile {
-    /* opacity: 0;*/
 }
 
 .page-topbar .message-toggle-wrapper.showopacity,
@@ -899,9 +889,6 @@ a:focus {
 
 
 /*--- Search Form ----*/
-
-.page-topbar li.searchform {}
-
 .page-topbar li.searchform .input-group {
     top: 12px;
     width: 30px;
@@ -975,8 +962,8 @@ a:focus {
     margin: 0px;
     padding-left: 0px;
     list-style-type: none;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 300;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 16px;
 }
 
@@ -1091,7 +1078,8 @@ a:focus {
 }
 
 #main-menu-wrapper li .label {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 10px;
     padding: 3px 7px;
     float: right;
@@ -1146,8 +1134,8 @@ a:focus {
 }
 
 .profile-info .profile-details h3 a {
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 300;
+    font-family: 'lato';
+    font-weight: 500;
     color: rgba(234, 238, 243, 1.0);
     font-size: 19px;
     line-height: 23px;
@@ -1272,12 +1260,12 @@ section header {
 
 section header .title {
     margin-top: 10px;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 19px;
     padding-left: 15px;
     line-height: 30px;
     color: #676767;
-    font-weight: 300;
     text-transform: uppercase;
     display: inline-block;
 }
@@ -1332,14 +1320,6 @@ section.box .actions i {
 
 section.box .actions i:hover {
     color: #999999;
-}
-
-section .content-body.collapsed {
-    /*display: none;*/
-    /*  height: 0px !important;
-  overflow: hidden;
-  max-height: 0px !important;
-  padding: 0px 30px !important;*/
 }
 
 
@@ -1768,8 +1748,8 @@ textarea,
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
     border: 0px;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
-    font-weight: 300;
+    font-family: 'lato';
+    font-weight: 500;
     text-shadow: none;
 }
 
@@ -2806,7 +2786,8 @@ ul.states li {
 ----------------------------------------------*/
 
 .tooltip {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 13px;
     line-height: 21px;
     text-shadow: none;
@@ -3004,9 +2985,9 @@ ul.states li {
 ----------------------------------------------*/
 
 .popover {
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 14px;
-    font-weight: 400;
     line-height: 23px;
     background: #ffffff;
     border: 1px solid #f5f5f5;
@@ -3160,8 +3141,6 @@ ul.states li {
 /*---------------------------------------------
       Accordions
 ----------------------------------------------*/
-
-.panel-group {}
 
 .panel-default>.panel-heading,
 .panel-group .panel {
@@ -4567,8 +4546,6 @@ blockquote.orange{ border-color: rgba(250,133,100,1.0); }
     background-color: rgba(153, 114, 181, 1.0);
 }
 
-#portfolio .portfolio-filter>li a.active:after {}
-
 #portfolio .portfolio-item {
     /*  width: 33.2%;*/
     float: left;
@@ -5596,8 +5573,7 @@ a.cke_button_disabled:hover,
 .loginpage form input[type=checkbox],
 .loginpage input[type=text] {
     /* color: rgba(250, 133, 100, 1)
-   #fa8564*/
-    ;
+   #fa8564;*/
     background: #fbfbfb;
 }
 
@@ -6202,8 +6178,6 @@ code {
 
 /*flot pie*/
 
-#flotpiemenu {}
-
 #flotpiemenu button {
     cursor: pointer;
     min-width: 120px;
@@ -6598,13 +6572,6 @@ border-left: 3px solid transparent;
 .page-sidebar.chat_shift,
 .page-sidebar.collapseit {
     position: absolute !important;
-}
-
-.page-sidebar.chat_shift #main-menu-wrapper,
-.page-sidebar.collapseit #main-menu-wrapper,
-.page-sidebar.chat_shift #main-menu-wrapper .wraplist,
-.page-sidebar.collapseit #main-menu-wrapper .wraplist {
-    /*height: 3000px !important;*/
 }
 
 .page-sidebar.chat_shift #main-menu-wrapper,
@@ -7151,8 +7118,6 @@ border-left: 3px solid transparent;
     margin: 0px;
 }
 
-.mail_view_info {}
-
 .mail_view {
     margin: 30px 0;
 }
@@ -7253,7 +7218,8 @@ border-left: 3px solid transparent;
 }
 
 .rickshaw_graph .detail .x_label {
-    font-family: Arial, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;
@@ -8178,7 +8144,8 @@ border-left: 3px solid transparent;
     width: auto;
     display: inline-block;
     margin-left: -25px;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     top: 40px;
 }
 
@@ -8310,9 +8277,6 @@ border-left: 3px solid transparent;
     display: block;
     text-align: center;
 }
-
-.tile-counter i,
-.tile-counter h2 {}
 
 .tile-counter i {
     margin-right: 15px;
@@ -9644,7 +9608,8 @@ h1,
     font-weight: 400;
     padding: 0;
     text-transform: uppercase;
-    font-family: Oswald, Helvetica, Arial, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     color: rgba(118, 118, 118, 1.0);
     margin-bottom: 15px;
 }
@@ -9716,7 +9681,8 @@ h1,
     padding: 10px;
     border-top-right-radius: 7px;
     border-top-left-radius: 7px;
-    font-family: 'Raleway';
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 16px;
 }
 
@@ -9724,14 +9690,10 @@ h1,
     font-size: 14px;
 }
 
-.order-form {}
-
 .order-form .row {
     margin-right: 0px;
     margin-left: 0px;
 }
-
-.customer-detail {}
 
 .customer-detail {
     border: 1px solid #1fb5ac;
@@ -9917,7 +9879,8 @@ h1,
     -moz-border-radius: 0px;
     border-radius: 0px;
     border: 1px solid #e1e1e1;
-    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-family: 'lato';
+    font-weight: 500;
     font-size: 14px;
     background: none;
     color: inherit;
