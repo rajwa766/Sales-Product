@@ -31,6 +31,16 @@ class OrderController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+	{           
+
+		if ($action->id == 'payment-verified') {
+			
+			$this->enableCsrfValidation = false;
+		}
+
+		return parent::beforeAction($action);
+	}
     /**
      * Lists all Order models.
      * @return mixed
@@ -170,7 +180,6 @@ class OrderController extends Controller
     public function actionPaymentVerified()
     {
         try{
-            $id = Yii::$app->request->get('rid');
             $ref_id = Yii::$app->request->get('refno');
             $ref_id= ltrim($ref_id,'0');
             $order_detail = Order::findOne(['id',$ref_id]);
