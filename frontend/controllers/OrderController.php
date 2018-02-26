@@ -183,7 +183,10 @@ class OrderController extends Controller
             $ref_id = Yii::$app->request->get('refno');
             $ref_id= ltrim($ref_id,'0');
             $order_detail = Order::findOne(['id',$ref_id]);
-            $stock_in = \common\models\StockIn::approve($ref_id, $order_detail->user_id, $order_detail->order_request_id);
+            if($order_detail!=null)
+            {
+                $stock_in = \common\models\StockIn::approve($ref_id, $order_detail->user_id, $order_detail->order_request_id);
+            }
         }
         catch(Exception  $e)
         {
