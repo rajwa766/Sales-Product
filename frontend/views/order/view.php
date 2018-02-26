@@ -265,7 +265,6 @@ $items = array();
                                                         <input type="hidden" name="c">
                                                         <input type="hidden" name="productdetail" value="BeyDey">
                                                         <input type="hidden" name="total" value="<?=$sum?>">
-                                                        <input type="hidden" name="postbackurl" value="<?=Url::base()?>/order/payment-verified?rid=<?=$model->id?>">
                                                         <input type="submit" name="Submit" class="btn btn-primary" value="Checkout">
                                                         
                                                     </form>
