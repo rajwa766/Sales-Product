@@ -190,7 +190,7 @@ class UserProductLevelController extends Controller
     {
         if ($type != null) {
             if ($type == "Return") {
-                $unit_price = UserProductLevel::find()->select(['min(price) as price'])->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->groupby(['user_level_id', 'product_id'])->one();
+                $unit_price = UserProductLevel::find()->select(['min(price) as price'])->where(['product_id' => $product_id])->one();
                 $detai_item['price'] = $unit_price['price'];
                 return json_encode($detai_item);
             }
