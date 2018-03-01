@@ -228,12 +228,12 @@ class UserController extends Controller
         curl_close($curl);
 
         if ($err) {
-          
+
             return false;
             die("cURL Error #:" . $err);
         } else {
             $resp = json_decode($response, true);
-           
+
             if ($resp['code'] == 200) {
                 return $resp['order_code'];
             } else {
@@ -257,17 +257,23 @@ class UserController extends Controller
     {
         $model = new User();
         if ($model->load(Yii::$app->request->post())) {
-            $result = \common\models\User::CreateUser($model);
-            if (isset($result["error"])) {
-                return $this->redirect(['error', 'error' => $result["error"]]);
+            if ($model->validate()) {
+                $result = \common\models\User::CreateUser($model);
+                if (isset($result["error"])) {
+                    return $this->redirect(['error', 'error' => $result["error"]]);
 
-            } else if (isset($result["username"])) {
-                return $this->render('create',
-                    [
-                        'model' => $model,
-                    ]);
+                } else if (isset($result["username"])) {
+                    return $this->render('create',
+                        [
+                            'model' => $model,
+                        ]);
+                } else {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             } else {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
         } else {
             return $this->render('create', [
@@ -329,19 +335,15 @@ class UserController extends Controller
         $include_self = Yii::$app->request->get('include_self');
         if (empty($include_parent)) {
             $include_parent = false;
-        }
-        else
-        {
-            $include_parent=filter_var($include_parent, FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $include_parent = filter_var($include_parent, FILTER_VALIDATE_BOOLEAN);
         }
         if (empty($include_self)) {
             $include_self = true;
+        } else {
+            $include_self = filter_var($include_self, FILTER_VALIDATE_BOOLEAN);
         }
-        else
-        {
-            $include_self=filter_var($include_self, FILTER_VALIDATE_BOOLEAN);
-        }
-       
+
         $super_vip_level = array_search('Super Admin', \common\models\Lookup::$user_levels);
         if ($user_level == $super_vip_level) {
             $company_user = false;

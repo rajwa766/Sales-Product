@@ -87,11 +87,11 @@ class User extends ActiveRecord implements IdentityInterface
         return [
 
             [['username', 'password', 'email', 'first_name', 'last_name'], 'string', 'max' => 255],
-            [['username', 'email', 'first_name', 'last_name', 'user_level_id'], 'required'],
+            [['username', 'email', 'first_name', 'last_name', 'user_level_id', 'unit_price'], 'required'],
             ['password', 'required', 'on' => 'insert'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             [['status', 'created_at', 'updated_at', 'parent_id', 'user_level_id'], 'integer'],
-            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id', 'name', 'order_type','province','district','postal_code'], 'safe'],
+            [['created_at', 'updated_at', 'phone_no', 'address', 'city', 'country', 'all_level', 'parent_user', 'stock_in', 'quantity', 'product_order_info', 'price', 'unit_price', 'total_price', 'company_user', 'product_id', 'name', 'order_type', 'province', 'district', 'postal_code'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['profile'], 'file'],
@@ -100,6 +100,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['address'], 'string', 'max' => 5000],
             [['username'], 'unique'],
             [['password_reset_token'], 'unique'],
+            [['quantity'], 'validate_quantity'],
         ];
     }
 
@@ -245,6 +246,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
+    
 
     public function getProfile()
     {
@@ -374,16 +376,16 @@ class User extends ActiveRecord implements IdentityInterface
                     //bonus for super vip or vip
                     $super_vip_level = array_search('Super Vip Team', \common\models\Lookup::$user_levels);
                     $vip_level = array_search('VIP Team', \common\models\Lookup::$user_levels);
-                    /*-----------Removed  on the request of client 
+                    /*-----------Removed  on the request of client
                     if ($model->user_level_id == $super_vip_level || $model->user_level_id == $vip_level) {
-                        $model->unit_price = '0';
-                        if ($model->user_level_id == $super_vip_level) {
-                            $model->quantity = '50';
-                            $order = \common\models\Order::insertOrder($model, true, true, false, true);
-                        } else if ($model->user_level_id == $vip_level) {
-                            $model->quantity = '20';
-                            $order = \common\models\Order::insertOrder($model, true, true, false, true);
-                        }
+                    $model->unit_price = '0';
+                    if ($model->user_level_id == $super_vip_level) {
+                    $model->quantity = '50';
+                    $order = \common\models\Order::insertOrder($model, true, true, false, true);
+                    } else if ($model->user_level_id == $vip_level) {
+                    $model->quantity = '20';
+                    $order = \common\models\Order::insertOrder($model, true, true, false, true);
+                    }
                     }  ---------*/
                     $auth->assign($role, $model->id);
                     $transaction->commit();
@@ -408,6 +410,13 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $users = \common\models\User::find()->where(['id' => $id])->one();
         return $users['username'];
+    }
+    public function leveluser($id)
+    {
+        if (!empty($id)) {
+            $level = \common\models\UsersLevel::find()->where(['id' => $id])->one();
+            return $level->display_name;
+        }
     }
     public function getUserLevel()
     {
@@ -491,6 +500,17 @@ class User extends ActiveRecord implements IdentityInterface
             $model->child_user = $UserDetail->id;
         }
         return $model;
+    }
+    public function validate_quantity($attribute, $params)
+    {
+        if (empty($this->quantity)) {
+            $this->addError('quantity', 'Quanity must be greater than 0.');
+            return false;
+        } else if (\common\models\StockIn::getRemaningStock($this->product_id, $this->parent_user) < $this->quantity) {
+            $this->addError('quantity', 'Parent stock must be greater than child stock.');
+            return false;
+        }
+        return true;
     }
 
 }

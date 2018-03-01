@@ -183,7 +183,7 @@ class Order extends \yii\db\ActiveRecord
     {
         if (!empty($id)) {
             $users = \common\models\UsersLevel::find()->where(['id' => $id])->one();
-            return $users->name;
+            return $users->display_name;
         }
     }
     public static function getShippingDetail($model)

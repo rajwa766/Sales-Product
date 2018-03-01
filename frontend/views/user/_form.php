@@ -249,8 +249,7 @@ echo $form->field($model, 'all_level')->widget(Select2::classname(), [
         'data' => common\models\UsersLevel::getAllLevels(),
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a Level  ...'],
-        //'initValueText' => isset($model->customerUser->customer_name) ? $model->customerUser->company_name : "",
-
+        
         'theme' => Select2::THEME_BOOTSTRAP,
         'pluginOptions' => [
             'allowClear' => true,
@@ -270,6 +269,7 @@ echo $form->field($model, 'all_level')->widget(Select2::classname(), [
 echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
             'theme' => Select2::THEME_BOOTSTRAP,
             'options' => ['placeholder' => 'Select a Parent User ...'],
+            'initValueText' => isset($model->parent_user) ? $model->username($model->parent_user) : "",
             'pluginOptions' => [
                 'allowClear' => true,
                 //'autocomplete' => true,
@@ -319,6 +319,7 @@ echo $form->field($model, 'parent_user')->widget(Select2::classname(), [
 echo $form->field($model, 'user_level_id')->widget(Select2::classname(), [
         'theme' => Select2::THEME_BOOTSTRAP,
         'options' => ['placeholder' => 'Select a current user Level ...'],
+        'initValueText' => isset($model->user_level_id) ? $model->leveluser($model->user_level_id) : "",
         'pluginOptions' => [
             'allowClear' => true,
             //'autocomplete' => true,
@@ -432,21 +433,25 @@ jQuery(document).ready(function() {
         $("#user-province").val(province);
     });
 $('#user-quantity').on('blur', function () {
+        $(".noproduct").hide();
     var product_id = '1';
         $.post("../user-product-level/getunitsprice?id=" + $('#user-quantity').val()+"&user_level="+$('#user-user_level_id').val()+"&product_id="+product_id+"&type=null&check_units="+false, function (data) {
 
         var json = $.parseJSON(data);
-        if(json.price){
+        if($('#user-quantity').val()  * parseFloat(json.price) > 0){
             $(".noproduct").hide();
                        $('#user-unit_price').val(json.price);
                        $('#user-total_price').val(parseFloat($('#user-quantity').val())  * parseFloat(json.price));
 
         }else{
+            $('#user-quantity').val(''); 
             $(".noproduct").show();
             $(".noproduct").html("<h5 style='text-align:center;color:red;'>You cannot purchase less than "+json.units+"</h5>");
         }
         });
+ 
     });
+
 });
 
     $('#user-parent_user').on('change', function () {
