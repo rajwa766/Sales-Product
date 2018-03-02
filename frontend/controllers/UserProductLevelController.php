@@ -188,53 +188,8 @@ class UserProductLevelController extends Controller
     }
     public function actionGetunitsprice($id, $user_level, $product_id, $type = null, $check_units = true)
     {
-        if ($type != null) {
-            if ($type == "Return") {
-                $unit_price = UserProductLevel::find()->select(['min(price) as price'])->where(['product_id' => $product_id])->one();
-                $detai_item['price'] = $unit_price['price'];
-                return json_encode($detai_item);
-            }
-        }
-        $query = UserProductLevel::find()->where(['product_id' => $product_id]);
-        if ($type != 'Request') {
-            $query->andWhere(['user_level_id' => $user_level]);
-        }
-        $query->andWhere(['<=', 'units', $id]);
-        if ($check_units == 'false') {
-            $price_query = new \yii\db\Query();
-            $price_query->select('min(price) as min_price,max(price) as max_price')
-                ->from('user_product_level')
-                ->where(['product_id' => $product_id]);
-            if ($type != 'Request') {
-                $price_query->andWhere(['user_level_id' => $user_level]);
-            }
-            $price_query = $price_query->one();
-        }
-        $query->orderBy(['price' => SORT_ASC]);
-        $one_unit = $query->one();
-        if ($one_unit) {
-            $detai_item['price'] = $one_unit->price;
-            return json_encode($detai_item);
-        } else if ($price_query != null) {
 
-            if (UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->andWhere(['<', 'units', $id])->count() > 1) {
-                $detai_item['price'] = $price_query['min_price'];
-            } else {
-                $detai_item['price'] = $price_query['max_price'];
-            }
-            return json_encode($detai_item);
-        } else {
-            $one_unit = UserProductLevel::find()->where(['user_level_id' => $user_level])->andWhere(['product_id' => $product_id])->min('units');
-            if ($one_unit) {
-                $detai_item['units'] = $one_unit;
-                return json_encode($detai_item);
-            } else {
-                $product = \common\models\Product::find()->where(['id' => $product_id])->one();
-                $detai_item['price'] = $product['price'];
-                return json_encode($detai_item);
-            }
-        }
-
+        return  \common\models\UserProductLevel::GetUnitPrice($id, $user_level, $product_id, $type, $check_units);
     }
     /**
      * Finds the UserProductLevel model based on its primary key value.

@@ -246,13 +246,29 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
-    
 
     public function getProfile()
     {
         $user = User::find()
             ->where(['id' => Yii::app()->user->id])
             ->one();
+    }
+    public function afterValidate()
+    {
+        $action = Yii::$app->controller->action->id;
+        $current_price = $this->unit_price;
+        if ($action == 'create') {
+            try
+            {
+                $result = \common\models\UserProductLevel::GetUnitPrice($this->quantity, $this->user_level_id, $this->product_id);
+                $result=json_decode($result);
+                $this->unit_price = $result->price;
+            } catch (\Exception $e) {
+                $this->unit_price = $current_price;
+            }
+        }
+        return parent::afterValidate();
+
     }
 
     public static function insert_user($model)
@@ -503,15 +519,15 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public function validate_quantity($attribute, $params)
     {
-        $parent_id=$this->parent_user;
-        if(empty( $parent_id))// Admin is not logged in
+        $parent_id = $this->parent_user;
+        if (empty($parent_id)) // Admin is not logged in
         {
-            $parent_id=Yii::$app->user->getId();
+            $parent_id = Yii::$app->user->getId();
         }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
             return false;
-        } else if (\common\models\StockIn::getRemaningStock($this->product_id,$parent_id) < $this->quantity) {
+        } else if (\common\models\StockIn::getRemaningStock($this->product_id, $parent_id) < $this->quantity) {
             $this->addError('quantity', 'Parent stock must be greater than child stock.');
             return false;
         }
