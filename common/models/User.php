@@ -449,10 +449,11 @@ class User extends ActiveRecord implements IdentityInterface
             $changelog_entry = \common\models\ChangeLog::insertData($oldmodel);
         }
         if (!empty($model->password)) {
+            
             $model->setPassword($model->password);
             $model->generateAuthKey();
         }
-        $model->save();
+        $model->save(false);
     }
     public function userDetail($id)
     {

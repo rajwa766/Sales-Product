@@ -238,7 +238,7 @@ public function actionReceivablePayableReportResult(){
         
          if(empty($account_type) ||  $account_type==2)
          {
-            
+           
             $gl_payable=\common\models\Gl::get_filtered_result($userId,$fromDate,$toDate,2);
             foreach ($gl_payable as $gl) {
                 $rp=new \common\models\helpers\reports\ReceivablePayableReport();
