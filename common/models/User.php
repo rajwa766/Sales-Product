@@ -503,10 +503,15 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public function validate_quantity($attribute, $params)
     {
+        $parent_id=$this->parent_user;
+        if(empty( $parent_id))// Admin is not logged in
+        {
+            $parent_id=Yii::$app->user->getId();
+        }
         if (empty($this->quantity)) {
             $this->addError('quantity', 'Quanity must be greater than 0.');
             return false;
-        } else if (\common\models\StockIn::getRemaningStock($this->product_id, $this->parent_user) < $this->quantity) {
+        } else if (\common\models\StockIn::getRemaningStock($this->product_id,$parent_id) < $this->quantity) {
             $this->addError('quantity', 'Parent stock must be greater than child stock.');
             return false;
         }
